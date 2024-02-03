@@ -10,21 +10,24 @@ body {
 }
 
 button {
+    color: white;
     border-width: 3px;
     border-radius: 10px;
     height: 90px;
     min-width: 30%;
     border: solid;
     padding: 10px;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    cursor: pointer;
 }
 
-
-
 .MainButtons {
-    position: relative;
+    position: absolute;
     display: flex;
     justify-content: space-between;
-    
+    bottom: 30px;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -50,11 +53,24 @@ button {
 }
 
 .scrollwindow {
-    overflow: auto;
+    overflow: scroll;
     overflow-y: hidden;
+    width: 100%;
+    height: calc(100% - 4rem - 140px);
+    /*scroll-snap-type: x mandatory;
+    scroll-padding: 20px;*/
 }
 
-.chart {
-    position: relative;
-    left: 0px;
+.scrollwindow::-webkit-scrollbar {
+    display: none;
 }
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollwindow {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+/*
+.scrollwindow .chart {
+    scroll-snap-align: start;
+}*/

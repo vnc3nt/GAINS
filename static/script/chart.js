@@ -1,7 +1,10 @@
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
-
+window.onload = function() {
+  var container = document.querySelector('.scrollwindow');
+  container.scrollLeft = 1000;//dynamisch an datensatz anpassen
+};
 
 function drawChart() {
   var data = google.visualization.arrayToDataTable([
@@ -16,7 +19,7 @@ function drawChart() {
     curveType: 'function',
     legend: 'none',
     width: 1000, //dynamisch an datensatz anpassen
-    height: 500,
+    height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
     colors: ['rgb(20, 0, 150)', 'rgb(120, 120, 120)', 'rgb(115, 0, 0)' ],
     lineWidth: 2,
     backgroundColor: { fill:'transparent' },
@@ -28,4 +31,8 @@ function drawChart() {
   var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
   chart.draw(data, options);
+}
+
+function convertRemToPixels(rem) {    
+  return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 }
