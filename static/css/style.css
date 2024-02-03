@@ -55,11 +55,10 @@ button {
 .scrollwindow {
     overflow: scroll;
     overflow-y: hidden;
-    
     width: 100%;
     height: calc(100% - 4rem - 140px);
-    scroll-snap-type: x mandatory;
-    scroll-padding: 20px;
+    /*scroll-snap-type: x mandatory;
+    scroll-padding: 20px;*/
 }
 
 .scrollwindow::-webkit-scrollbar {
@@ -71,7 +70,7 @@ button {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
-
-.scrollwindow chart {
+/*
+.scrollwindow .chart {
     scroll-snap-align: start;
-}
+}*/
