@@ -55,7 +55,7 @@ button {
 .scrollwindow {
     overflow: scroll;
     overflow-y: hidden;
-    direction: rtl;
+    
     width: 100%;
     height: calc(100% - 4rem - 140px);
     scroll-snap-type: x mandatory;
