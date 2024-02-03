@@ -1,6 +1,8 @@
-from main import db
 from datetime import datetime, timezone
+from flask_sqlalchemy import SQLAlchemy
 
+
+db = SQLAlchemy()
 def current_date():
     time = datetime.now(timezone.utc)
     return datetime(day=time.day, month=time.month, year=time.year)
