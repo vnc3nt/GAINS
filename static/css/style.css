@@ -17,13 +17,17 @@ button {
     min-width: 30%;
     border: solid;
     padding: 10px;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    cursor: pointer;
 }
 
 .MainButtons {
     position: absolute;
     display: flex;
     justify-content: space-between;
-    bottom: 20px;
+    bottom: 30px;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
