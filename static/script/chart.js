@@ -15,12 +15,14 @@ function drawChart() {
   var options = {
     curveType: 'function',
     legend: 'none',
-    with: 100,
+    width: 1000, //dynamisch an datensatz anpassen
     height: 500,
     colors: ['rgb(20, 0, 150)', 'rgb(120, 120, 120)', 'rgb(115, 0, 0)' ],
     lineWidth: 2,
     backgroundColor: { fill:'transparent' },
-    chartArea: {'width': '90%', 'height': '90%'}
+    chartArea: {'width': '90%', 'height': '90%'},
+    hAxis: { viewWindow: { min: .5, max: 3.75 } }, // dynamisch an datensatz anpassen (4 Datensätze -> max: 3.5  5 -> max: 4.5  6 -> max: 5.5)
+    vAxis: { viewWindow: { min:0 , max: 100 } }
   };
 
   var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
