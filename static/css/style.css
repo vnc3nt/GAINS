@@ -20,10 +20,10 @@ button {
 }
 
 .MainButtons {
-    position: relative;
+    position: absolute;
     display: flex;
     justify-content: space-between;
-    
+    bottom: 50px;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -49,11 +49,25 @@ button {
 }
 
 .scrollwindow {
-    overflow: auto;
+    overflow: scroll;
     overflow-y: hidden;
+    direction: rtl;
+    width: 100%;
+    height: calc(100% - 4rem - 140px);
+    scroll-snap-type: x mandatory;
+    scroll-padding: 20px;
 }
 
-.chart {
-    position: relative;
-    left: 0px;
+.scrollwindow::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollwindow {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.scrollwindow chart {
+    scroll-snap-align: start;
 }
