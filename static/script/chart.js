@@ -1,7 +1,10 @@
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
-
+window.onload = function() {
+  var container = document.querySelector('.scrollwindow');
+  container.scrollLeft = 1000;//dynamisch an datensatz anpassen
+};
 
 function drawChart() {
   var data = google.visualization.arrayToDataTable([
