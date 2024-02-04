@@ -74,3 +74,12 @@ button {
 .scrollwindow .chart {
     scroll-snap-align: start;
 }*/
+
+.login {
+    text-align: center;
+}
+
+input {
+    padding: 5px;
+    margin: 10px;
+}
