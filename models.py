@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 
 
 db = SQLAlchemy()
@@ -13,7 +15,7 @@ class users(db.Model):
     password=db.Column(db.String(128), nullable=False)
 
 class data(db.Model):
-    userid=db.Column(db.BIGINT, foreign_key=users.id, nullable=False, primary_key=True)
+    userid=db.Column(db.BIGINT, ForeignKey("users.id"), nullable=False, primary_key=True)
     date=db.Column(db.DATE, nullable=False, primary_key=True, default=current_date)
     fat=db.Column(db.Numeric(3,1), nullable=True)
     weight=db.Column(db.Numeric(3,1), nullable=True)
