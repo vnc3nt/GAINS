@@ -25,8 +25,12 @@ db.init_app(app)
 @app.route('/',methods=["GET","POST"])
 def index():
     if request.method == "POST":
-        print(request.form.get("username"))
-        return redirect("/home")
+        username = request.form.get("username")
+        password = request.form.get("password")
+        if username is not None and password is not None:
+            if checkuser(username, password):
+                return redirect("/home")
+        
     return render_template('login.html')
 
 @app.route('/home')
