@@ -16,7 +16,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{}.lwanriaqqzgqslcendim:{}
     os.environ.get("port"),
     os.environ.get("scheme")
 )
-print(app.config["SQLALCHEMY_DATABASE_URI"])
+#print(app.config["SQLALCHEMY_DATABASE_URI"])
 db.init_app(app)
 @app.route('/')
 def index():
