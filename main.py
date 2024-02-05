@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, redirect, request
 from models import db, users, token, data
 import os
 from api import app as api_app
+from login import checkuser
 
 with open(".env", "r") as f:
     for line in f.readlines():
@@ -25,8 +26,12 @@ db.init_app(app)
 @app.route('/',methods=["GET","POST"])
 def index():
     if request.method == "POST":
-        print(request.form.get("username"))
-        return redirect("/home")
+        username = request.form.get("username_input")
+        password = request.form.get("password_input")
+        if username is not None and password is not None:
+            if checkuser(username, password):
+                return redirect("/home")
+        
     return render_template('login.html')
 
 @app.route('/home')
