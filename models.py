@@ -11,8 +11,7 @@ def current_date():
     time = datetime.now(timezone.utc)
     return datetime(day=time.day, month=time.month, year=time.year)
 def expire_time():
-    seconds = int(time()) + EXPIRE_TIME
-    return seconds
+    return int(time()) + EXPIRE_TIME #in seconds
 
 class users(db.Model):
     id=db.Column(db.BIGINT, primary_key=True, nullable=False)
