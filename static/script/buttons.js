@@ -19,7 +19,7 @@ async function leftClick(e) {
     console.log(userInput);
 
     if (e.target.id === "btn-fat"){
-        let data = await fetch("http://localhost:5000/api/data",  { //TODO not correct adress when online
+        let data = await fetch("/api/data",  { //TODO not correct adress when online
         method: "POST",
         body: JSON.stringify({
             fat: userInput,
@@ -35,7 +35,7 @@ async function leftClick(e) {
     }
 
     if (e.target.id === "btn-weight"){
-        let data = await fetch("http://localhost:5000/api/data",  { //TODO not correct adress when online
+        let data = await fetch("/api/data",  { //TODO not correct adress when online
         method: "POST",
         body: JSON.stringify({
             weight: userInput,
@@ -51,7 +51,7 @@ async function leftClick(e) {
     }
 
     if (e.target.id === "btn-muscle"){
-        let data = await fetch("http://localhost:5000/api/data",  { //TODO not correct adress when online
+        let data = await fetch("/api/data",  { //TODO not correct adress when online
         method: "POST",
         body: JSON.stringify({
             muscle: userInput,
