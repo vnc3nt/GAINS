@@ -4,8 +4,6 @@ import os
 from api import app as api_app
 from login import checkuser
 
-USERNAME = None
-
 with open(".env", "r") as f:
     for line in f.readlines():
         if line.strip() and not line.strip().startswith("#"):
@@ -25,14 +23,13 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{}.lwanriaqqzgqslcendim:{}
 app.register_blueprint(api_app)
 
 db.init_app(app)
-@app.route('/',methods=["GET","POST"])
+
+@app.route('/login',methods=["GET","POST"])
 def index():
     if request.method == "POST":
         username = request.form.get("username_input")
         password = request.form.get("password_input")
         if username is not None and password is not None:
-            global USERNAME
-            USERNAME = username
             if checkuser(username, password):
                 return redirect("/home")
         
