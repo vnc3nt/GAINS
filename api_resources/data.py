@@ -6,21 +6,21 @@ from login import getUsername
 post_arguments = RequestParser(bundle_errors=True)
 post_arguments.add_argument(
     name = "fat",
-    type = int, # 47,5% -> 4750
+    type = int, # 47,5% -> 475
     nullable = True,
     required = False
 )
 
 post_arguments.add_argument(
     name = "weight",
-    type = int, # 47,5kg -> 4750
+    type = int, # 47,5kg -> 475
     nullable = True,
     required = False
 )
 
 post_arguments.add_argument(
     name = "muscle",
-    type = int, # 47,5% -> 4750
+    type = int, # 47,5% -> 475
     nullable = True,
     required = False
 )
@@ -57,16 +57,16 @@ class Data(Resource):
             existingData = db.session.query(data).filter(data.userid == userID, data.date == current_date()).first()
             print(existingData)
             if existingData is None:
-                newData = data(userid = userID, date = current_date(), fat = givenData.fat, weight = givenData.weight, muscle = givenData.muscle)
+                newData = data(userid = userID, date = current_date(), fat = givenData.fat, weight = givenData.weight, muscle = givenData.muscle/100)
                 #print(newData)
                 db.session.add(newData)
             else:
                 if givenData.fat is not None:
-                    existingData.fat = givenData.fat
+                    existingData.fat = givenData.fat/10
                 if givenData.weight is not None:
-                    existingData.weight = givenData.weight
+                    existingData.weight = givenData.weight/10
                 if givenData.muscle is not None:
-                    existingData.muscle = givenData.muscle
+                    existingData.muscle = givenData.muscle/10
             db.session.commit()
             return {}, 200
         else:

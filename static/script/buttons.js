@@ -10,7 +10,7 @@ const buttonQuestion = {
 }*/
 
 async function leftClick(e) {
-    let userInput = window.prompt(buttonQuestion[e.target.id])
+    let userInput = window.prompt(buttonQuestion[e.target.id])*10
     if (!userInput) {
         console.debug("no userInput");
         return;
