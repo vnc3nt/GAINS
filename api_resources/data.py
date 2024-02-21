@@ -46,11 +46,11 @@ class Data(Resource):
         return {"info":"api is there"}, 200
     
     def post(self):
-        data = post_arguments.parse_args(strict = True)
-        print(data)
+        givenData = post_arguments.parse_args(strict = True)
+        print(givenData)
         userID = db.session.query(users).filter(users.username == USERNAME).first().id
-        userData = db.session.query(data).filter(data.userid == userID).first()
-        newData = db(userid=users.id, **data)
+        userData = db.session.query(db.data).filter(db.data.userid == userID).first()
+        newData = db.data(fat=givenData)
         db.session.add(newData)
         db.session.commit()
 
