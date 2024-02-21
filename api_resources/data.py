@@ -1,5 +1,7 @@
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
+from models import db,users
+from main import USERNAME
 
 post_arguments = RequestParser(bundle_errors=True)
 post_arguments.add_argument(
@@ -46,4 +48,10 @@ class Data(Resource):
     def post(self):
         data = post_arguments.parse_args(strict = True)
         print(data)
+        userID = db.session.query(users).filter(users.username == USERNAME).first().id
+        userData = db.session.query(data).filter(data.userid == userID).first()
+        newData = db(userid=users.id, **data)
+        db.session.add(newData)
+        db.session.commit()
+
         return {}, 200

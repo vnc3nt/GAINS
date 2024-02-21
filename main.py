@@ -4,6 +4,8 @@ import os
 from api import app as api_app
 from login import checkuser
 
+USERNAME = None
+
 with open(".env", "r") as f:
     for line in f.readlines():
         if line.strip() and not line.strip().startswith("#"):
@@ -29,6 +31,8 @@ def index():
         username = request.form.get("username_input")
         password = request.form.get("password_input")
         if username is not None and password is not None:
+            global USERNAME
+            USERNAME = username
             if checkuser(username, password):
                 return redirect("/home")
         
