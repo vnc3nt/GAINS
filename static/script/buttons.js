@@ -70,7 +70,12 @@ async function leftClick(e) {
     //alert("left clicked!");
 }
 
-function rightClick() { //edit old data
-    alert("right clicked!");
+async function rightClick() { //edit old data
+    //alert("right clicked!");
+    window.location.assign("/edit")
     return false; //verhindert das Kontextmenü
+
+    
+    
+    
 }

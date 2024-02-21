@@ -24,8 +24,12 @@ app.register_blueprint(api_app)
 
 db.init_app(app)
 
-@app.route('/login',methods=["GET","POST"])
+@app.route('/')
 def index():
+    return redirect("/login")
+
+@app.route('/login',methods=["GET","POST"])
+def login():
     if request.method == "POST":
         username = request.form.get("username_input")
         password = request.form.get("password_input")
@@ -38,6 +42,11 @@ def index():
 @app.route('/home')
 def home():
     return render_template('home.html')
+
+@app.route('/edit')
+def edit():
+    return render_template('edit.html')
+
 
 if __name__ == "__main__":
     with app.app_context():
