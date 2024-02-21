@@ -10,18 +10,19 @@ const buttonQuestion = {
 }*/
 
 async function leftClick(e) {
-    let userInput = window.prompt(buttonQuestion[e.target.id])
+    let userInput = window.prompt(buttonQuestion[e.target.id])*10
     if (!userInput) {
         console.debug("no userInput");
         return;
     }
-    console.debug(userInput);
-    let data = await fetch("http://localhost:5000/api/data",  { //TODO not correct adress when online
+    console.log(e.target.id);
+    console.log(userInput);
+
+    if (e.target.id === "btn-fat"){
+        let data = await fetch("/api/data",  { //TODO not correct adress when online
         method: "POST",
-        body: JSON .stringify({
-            fat: 4833,
-            weight: 4750,
-            muscle: 1400,
+        body: JSON.stringify({
+            fat: userInput,
             user: 1,
             // date: "abc"  // post has no date
         }),
@@ -31,12 +32,50 @@ async function leftClick(e) {
     })
     .then((response) => response.json())
     .catch((json) => console.log(json));
+    }
 
-    console.log(data);
+    if (e.target.id === "btn-weight"){
+        let data = await fetch("/api/data",  { //TODO not correct adress when online
+        method: "POST",
+        body: JSON.stringify({
+            weight: userInput,
+            user: 1,
+            // date: "abc"  // post has no date
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    .then((response) => response.json())
+    .catch((json) => console.log(json));
+    }
+
+    if (e.target.id === "btn-muscle"){
+        let data = await fetch("/api/data",  { //TODO not correct adress when online
+        method: "POST",
+        body: JSON.stringify({
+            muscle: userInput,
+            user: 1,
+            // date: "abc"  // post has no date
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    .then((response) => response.json())
+    .catch((json) => console.log(json));
+    }
+    
+
     //alert("left clicked!");
 }
 
-function rightClick() { //edit old data
-    alert("right clicked!");
+async function rightClick() { //edit old data
+    //alert("right clicked!");
+    window.location.assign("/edit")
     return false; //verhindert das Kontextmenü
+
+    
+    
+    
 }

@@ -115,3 +115,9 @@ button {
     height: 100%;
     background: rgba(255, 0, 0, 0.5);
 }
+
+.white-link {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 2rem;
+}
