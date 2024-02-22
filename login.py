@@ -9,7 +9,7 @@ def checkuser(username:str, password:str) -> bool:
         return False
     global USERNAME
     USERNAME = username
-    print(USERNAME)
+    print(f"login: {USERNAME}")
     userpw = user.password
     return userpw == hash_pw(password)
 

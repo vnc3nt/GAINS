@@ -1,3 +1,10 @@
+const weekMonthYear = {
+  "week": 7,
+  "month": 30,
+  "year": 365
+}
+
+
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
@@ -6,19 +13,34 @@ window.onload = function() {
   container.scrollLeft = 1000;//dynamisch an datensatz anpassen
 };
 
-function drawChart() {
+async function drawChart() {
+  let userData = await fetch('/api/data')
+  .then(response => response.json())
+  .then(data => data.count)
+  .catch((error) => {
+      console.error('Error:', error);
+  });
+
+  let userDataCount = await fetch('/count')
+  .then(response => response.json())
+  .then(data => data.count)
+  .catch((error) => {
+      console.error('Error:', error);
+  });
+
   let data = google.visualization.arrayToDataTable([
     ['Month', 'Körperfett', 'Gewicht', 'Muskelmasse'],
-    ['2004', 10, 57, 45],
-    ['2005', 11, 60, null],
     ['2006', 9, 58, 48.7],
     ['2007', 9.5, 62, 49]
   ]);
 
+  
+
+  console.debug(userDataCount)
   let options = {
     curveType: 'function',
     legend: 'none',
-    width: 1000, //dynamisch an datensatz anpassen
+    width:  userDataCount*50, //dynamisch an datensatz anpassen
     height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
     colors: ['rgb(20, 0, 150)', 'rgb(120, 120, 120)', 'rgb(115, 0, 0)' ],
     lineWidth: 2,

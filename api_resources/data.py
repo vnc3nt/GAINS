@@ -1,5 +1,6 @@
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
+from flask import json, jsonify
 from models import db, users, current_date, token, data
 from login import getUsername
 
@@ -42,8 +43,23 @@ patch_arguments.add_argument(
 )
 
 class Data(Resource):
-    def get(self):
-        return {"info":"api is there"}, 200
+    def get(self):  # sourcery skip: class-extract-method
+        USERNAME = getUsername()
+        print(USERNAME)
+        user = db.session.query(users).filter(users.username == USERNAME).first()
+        userID = 1
+        existingData = db.session.query(data).filter(data.userid == userID).all()
+        output = [
+            {
+                'userid': i.userid,
+                'date': i.date,
+                'fat': i.fat,
+                'weight': i.weight,
+                'muscle': i.muscle,
+            }
+            for i in existingData
+        ]
+        return json.dumps(output), 200
     
     def post(self):  # sourcery skip: extract-method
         givenData = post_arguments.parse_args(strict = True)
@@ -57,17 +73,17 @@ class Data(Resource):
             existingData = db.session.query(data).filter(data.userid == userID, data.date == current_date()).first()
             print(existingData)
             if existingData is None:
-                fat = givenData.fat/10 if givenData.fat is not None else None
-                weight = givenData.weight/10 if givenData.weight is not None else None
-                muscle = givenData.muscle/10 if givenData.muscle is not None else None
+                fat = givenData.fat/100 if givenData.fat is not None else None
+                weight = givenData.weight/100 if givenData.weight is not None else None
+                muscle = givenData.muscle/100 if givenData.muscle is not None else None
                 newData = data(userid = userID, date = current_date(), fat = fat, weight = weight, muscle = muscle)
                 #print(newData)
                 db.session.add(newData)
             else:
                 if givenData.fat is not None:
-                    existingData.fat = givenData.fat/10
+                    existingData.fat = givenData.fat/100
                 if givenData.weight is not None:
-                    existingData.weight = givenData.weight/10
+                    existingData.weight = givenData.weight/100
                 if givenData.muscle is not None:
                     existingData.muscle = givenData.muscle/10
             db.session.commit()
