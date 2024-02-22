@@ -11,9 +11,7 @@ def checkuser(username:str, password:str) -> bool:
     USERNAME = username
     print(USERNAME)
     userpw = user.password
-    if userpw == hash_pw(password):
-        return True
-    return False
+    return userpw == hash_pw(password)
 
 
 def hash_pw(password:str) -> str:

@@ -45,7 +45,7 @@ class Data(Resource):
     def get(self):
         return {"info":"api is there"}, 200
     
-    def post(self):
+    def post(self):  # sourcery skip: extract-method
         givenData = post_arguments.parse_args(strict = True)
         print(givenData)
         USERNAME = getUsername()
@@ -57,7 +57,10 @@ class Data(Resource):
             existingData = db.session.query(data).filter(data.userid == userID, data.date == current_date()).first()
             print(existingData)
             if existingData is None:
-                newData = data(userid = userID, date = current_date(), fat = givenData.fat, weight = givenData.weight, muscle = givenData.muscle/100)
+                fat = givenData.fat/10 if givenData.fat is not None else None
+                weight = givenData.weight/10 if givenData.weight is not None else None
+                muscle = givenData.muscle/10 if givenData.muscle is not None else None
+                newData = data(userid = userID, date = current_date(), fat = fat, weight = weight, muscle = muscle)
                 #print(newData)
                 db.session.add(newData)
             else:

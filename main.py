@@ -1,8 +1,8 @@
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, jsonify
 from models import db, users, token, data
 import os
 from api import app as api_app
-from login import checkuser
+from login import checkuser, getUsername
 
 with open(".env", "r") as f:
     for line in f.readlines():
@@ -33,19 +33,26 @@ def login():
     if request.method == "POST":
         username = request.form.get("username_input")
         password = request.form.get("password_input")
-        if username is not None and password is not None:
-            if checkuser(username, password):
-                return redirect("/home")
+        if username is not None and password is not None and checkuser(username, password):
+            return redirect("/home")
         
     return render_template('login.html')
 
 @app.route('/home')
 def home():
+    if getUsername() is None:
+        return redirect("/login")
     return render_template('home.html')
 
 @app.route('/edit')
 def edit():
+    if getUsername() is None:
+        return redirect("/login")
     return render_template('edit.html')
+
+@app.route('/getusername', methods=['GET'])
+def get_username():
+    return jsonify(username=getUsername())
 
 
 if __name__ == "__main__":

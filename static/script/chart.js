@@ -2,12 +2,12 @@ google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
 window.onload = function() {
-  var container = document.querySelector('.scrollwindow');
+  let container = document.querySelector('.scrollwindow');
   container.scrollLeft = 1000;//dynamisch an datensatz anpassen
 };
 
 function drawChart() {
-  var data = google.visualization.arrayToDataTable([
+  let data = google.visualization.arrayToDataTable([
     ['Month', 'Körperfett', 'Gewicht', 'Muskelmasse'],
     ['2004', 10, 57, 45],
     ['2005', 11, 60, null],
@@ -15,7 +15,7 @@ function drawChart() {
     ['2007', 9.5, 62, 49]
   ]);
 
-  var options = {
+  let options = {
     curveType: 'function',
     legend: 'none',
     width: 1000, //dynamisch an datensatz anpassen
@@ -28,7 +28,7 @@ function drawChart() {
     vAxis: { viewWindow: { min:0 , max: 100 } }
   };
 
-  var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+  let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
   chart.draw(data, options);
 }
