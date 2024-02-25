@@ -2,8 +2,8 @@ const weekMonthYear = {
   "week": 7,
   "month": 30,
   "year": 365
+  //TODO ansicht wechseln können
 }
-
 
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
@@ -118,7 +118,8 @@ async function drawChart() {
     width:  daysTillToday(firstDate) * 50, //dynamisch an datensatz anpassen
     height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
     colors: ['rgb(20, 0, 150)', 'rgb(120, 120, 120)', 'rgb(115, 0, 0)'],
-    lineWidth: 2,
+    lineWidth: 3,
+    pointSize: 7.5,
     backgroundColor: { fill:'transparent' },
     chartArea: {'width': '90%', 'height': '90%'},
     hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate)-0.25 } }, // dynamisch an datensatz anpassen (4 Datensätze -> max: 3.5  5 -> max: 4.5  6 -> max: 5.5)
