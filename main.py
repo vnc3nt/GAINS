@@ -50,9 +50,21 @@ def edit():
         return redirect("/login")
     return render_template('edit.html')
 
+#TODO AM BESTEN AUSLAGERN:
 @app.route('/getusername', methods=['GET'])
 def get_username():
     return jsonify(username=getUsername())
+
+@app.route('/count', methods=['GET'])
+def count_entries():  # sourcery skip: use-named-expression
+    user = db.session.query(users).filter(users.username == getUsername()).first()
+    if user:
+        count = db.session.query(data).filter(data.userid == user.id).count()
+        #print(count)
+        return jsonify(count=count)
+    else:
+        return jsonify(error="User not found"), 404
+
 
 
 if __name__ == "__main__":

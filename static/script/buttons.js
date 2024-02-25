@@ -10,7 +10,7 @@ const buttonQuestion = {
 }*/
 
 async function leftClick(e) {
-    let userInput = window.prompt(buttonQuestion[e.target.id])*10
+    let userInput = window.prompt(buttonQuestion[e.target.id])
     if (!userInput) {
         console.debug("no userInput");
         return;
@@ -23,7 +23,7 @@ async function leftClick(e) {
         method: "POST",
         body: JSON.stringify({
             fat: userInput,
-            user: 1,
+            user: 1, //TODO change to dynamic UserID
             // date: "abc"  // post has no date
         }),
         headers: {
@@ -39,7 +39,7 @@ async function leftClick(e) {
         method: "POST",
         body: JSON.stringify({
             weight: userInput,
-            user: 1,
+            user: 1, //TODO change to dynamic UserID
             // date: "abc"  // post has no date
         }),
         headers: {
@@ -55,7 +55,7 @@ async function leftClick(e) {
         method: "POST",
         body: JSON.stringify({
             muscle: userInput,
-            user: 1,
+            user: 1, //TODO change to dynamic UserID
             // date: "abc"  // post has no date
         }),
         headers: {
@@ -66,7 +66,7 @@ async function leftClick(e) {
     .catch((json) => console.log(json));
     }
     
-
+    await drawChart();
     //alert("left clicked!");
 }
 
