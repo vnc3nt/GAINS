@@ -1,12 +1,34 @@
 @charset "UTF-8";
 
+/*TODO variables not working*/
+@media (prefers-color-scheme: light) or (prefers-color-scheme: no-preference) {
+    html:not(.dark-mode) {
+      --text-color: black;
+      --website-background-color: #f1f1f1;
+      --color-scheme: light;
+      --button-color: #d9d9d9;
+      --selected-color: #ffffff;
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    html:not(.light-mode) {
+      --text-color: #f5f6fa;
+      --website-background-color: #121212;
+      --color-scheme: dark;
+      --button-color: #1e1e1e;
+      --selected-color: #3d3d3d;
+    }
+  }
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .title {
     font-size: 4rem;
-    position: relative;
+    position: absolute;
+    top: 5px;
+    left: 5px;
 }
 
 .MainButtons button {
@@ -52,6 +74,8 @@ body {
 }
 
 .scrollwindow {
+    position: relative;
+    top: calc(4rem + 20px);
     overflow: scroll;
     overflow-y: hidden;
     width: 100%;
@@ -120,4 +144,73 @@ button {
     text-decoration: none;
     color: #ffffff;
     font-size: 2rem;
+}
+
+
+
+.view {
+    position: absolute;
+    top: calc(4rem + 15px);
+    right: 10px;
+}
+
+.view-options {
+    display: flex;
+    position: relative;
+    background-color: var(--button-color);
+    padding: 0.75rem;
+    border-radius: 99px;
+}
+
+.view-options * {
+    z-index: 2;
+}
+
+input[type=radio] {
+    display: none;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 7.5px;
+    width: 45px;
+    font-size: .725rem;
+    font-weight: 500;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: color 0.15s ease-in;
+}
+
+input[type=radio]:checked+label {
+    color: var(--text-color);
+}
+
+input[id=days]:checked~.glider {
+    transform: translateX(0);
+}
+
+input[id=weeks]:checked~.glider {
+    transform: translateX(100%);
+}
+
+input[id=months]:checked~.glider {
+    transform: translateX(200%);
+}
+
+input[id=years]:checked~.glider {
+    transform: translateX(300%);
+}
+
+.glider {
+    position: absolute;
+    display: flex;
+    height: 25px;
+    width: 45px;
+    top: 4px;
+    background-color: var(--selected-color);
+    z-index: 1;
+    border-radius: 99px;
+    transition: 0.25s ease-out;
 }

@@ -1,16 +1,34 @@
-const weekMonthYear = {
-  "week": 7,
-  "month": 30,
-  "year": 365
-  //TODO ansicht wechseln können
-}
-
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
 window.onload = function() {
   let container = document.querySelector('.scrollwindow');
-  container.scrollLeft = 1000;//dynamisch an datensatz anpassen
+  container.scrollLeft = 1000;//TODO scroll dynamisch an datensatz anpassen
+/*
+  // Erhalten Sie alle Radiobuttons
+  let radioButtons = document.getElementsByName('view-options');
+  let interval = 1;
+  for(let i = 0; i < radioButtons.length; i++) {
+    radioButtons[i].addEventListener('change', function() {
+      // Überprüfen Sie, welcher Radiobutton ausgewählt ist
+      if(this.checked) {
+        // Laden Sie den neuen Graphen basierend auf der ausgewählten Option
+        switch(this.id) {
+          case 'days':
+            break;
+          case 'weeks':
+            interval = 7// Laden Sie den Graphen für Wochen
+            break;
+          case 'months':
+            interval = 30;// Laden Sie den Graphen für Monate
+            break;
+          case 'years':
+            interval = 365;// Laden Sie den Graphen für Jahre
+            break;
+        }
+      }
+    });
+  }*/
 };
 
 async function drawChart() {
@@ -104,11 +122,12 @@ async function drawChart() {
 
   // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
   ersetzeNullenMitInterpoliertenWerten(databaseData);
+  
+  //databaseData = filterData(databaseData, interval)
 
   let data = google.visualization.arrayToDataTable(databaseData);
 
-  //console.debug(databaseData);
-
+  console.debug(databaseData);
 
   maxValue = Math.max(...userData.maxValue);
 
@@ -149,4 +168,13 @@ function daysTillToday(datumString) {
     console.error('datumString ist kein String:', datumString);
     return 0;
   }
+}
+
+
+function filterData(databaseData, interval) {
+  let filteredData = [databaseData[0]]; // Behalten Sie die Überschriften bei
+  for(let i = databaseData.length - 1; i > 0; i -= interval) {
+      filteredData.unshift(databaseData[i]);
+  }
+  return filteredData;
 }
