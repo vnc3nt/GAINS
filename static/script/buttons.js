@@ -10,7 +10,7 @@ const buttonQuestion = {
 }*/
 
 async function leftClick(e) {
-    let userInput = window.prompt(buttonQuestion[e.target.id])*100
+    let userInput = window.prompt(buttonQuestion[e.target.id])
     if (!userInput) {
         console.debug("no userInput");
         return;
@@ -66,7 +66,7 @@ async function leftClick(e) {
     .catch((json) => console.log(json));
     }
     
-
+    await drawChart();
     //alert("left clicked!");
 }
 

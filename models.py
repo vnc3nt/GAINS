@@ -21,9 +21,9 @@ class users(db.Model):
 class data(db.Model):
     userid=db.Column(db.BIGINT, ForeignKey("users.id"), nullable=False, primary_key=True)
     date=db.Column(db.DATE, nullable=False, primary_key=True, default=current_date)
-    fat=db.Column(db.Numeric(3,2), nullable=True) #TODO 2 nachkommastellen statt nur 1
-    weight=db.Column(db.Numeric(4,2), nullable=True) #TODO man sollte auch über 100kg wiegen dürfen -> upload zu supabase
-    muscle=db.Column(db.Numeric(3,2), nullable=True)
+    fat=db.Column(db.Numeric(4,2), nullable=True) #TODO 2 nachkommastellen statt nur 1
+    weight=db.Column(db.Numeric(5,2), nullable=True) #TODO man sollte auch über 100kg wiegen dürfen -> upload zu supabase
+    muscle=db.Column(db.Numeric(4,2), nullable=True)
 
 class token(db.Model):
     userid=db.Column(db.BIGINT, ForeignKey("users.id"), nullable=False)
