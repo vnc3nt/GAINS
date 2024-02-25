@@ -7,6 +7,8 @@ from login import getUsername
 from datetime import datetime
 from decimal import Decimal
 
+#TODO export und import der Daten -> Backup
+
 post_arguments = RequestParser(bundle_errors=True)
 post_arguments.add_argument(
     name = "fat",
