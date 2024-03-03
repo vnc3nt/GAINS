@@ -9,6 +9,29 @@ const buttonQuestion = {
     "btn-muscle": 
 }*/
 
+let touchStart = null;
+const RIGHT_CLICK_TOUCH = 300;  // ms 
+
+window.addEventListener("touchstart", (e) => {
+    touchStart = e.timeStamp;    // timeStamp in ms
+    console.debug("Touch start:", touchStart);
+});
+
+window.addEventListener("touchend", (e) => {
+    console.log("touch end diff:", e.timeStamp - touchStart);
+    if (!touchStart) return;
+    let diff = e.timeStamp - touchStart;  // ms 
+    if (diff >= RIGHT_CLICK_TOUCH) {
+        e?.target.dispatchEvent(new Event("contextmenu"));  // event 
+    }
+    touchStart = null;
+});
+
+window.addEventListener("touchcancel", (e) => {
+    console.debug("touch cancel");
+    touchStart = null;
+});
+
 async function leftClick(e) {
     let userInput = window.prompt(buttonQuestion[e.target.id])
     if (!userInput) {
@@ -74,8 +97,4 @@ async function rightClick() { //edit old data
     //alert("right clicked!");
     window.location.assign("/edit")
     return false; //verhindert das Kontextmenü
-
-    
-    
-    
 }
