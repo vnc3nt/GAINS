@@ -1,8 +1,10 @@
-from flask import Flask, render_template, url_for, redirect, request, jsonify
+from flask import Flask, render_template, url_for, redirect, request, jsonify, session
 from models import db, users, token, data
 import os
 from api import app as api_app
-from login import checkuser, getUsername
+from login import checkuser, loginChecker, validTokenChecker
+import secrets
+from constants import USERID
 
 with open(".env", "r") as f:
     for line in f.readlines():
@@ -18,6 +20,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{}.lwanriaqqzgqslcendim:{}
     os.environ.get("port"),
     os.environ.get("scheme")
 )
+app.config.update(
+    BUNDLE_ERRORS = True,
+    SECRET_KEY = os.urandom(40),
+    SESSION_COOKIE_SECURE = False,
+    SESSION_COOKIE_SAMESITE = "Strict"
+)
 #print(app.config["SQLALCHEMY_DATABASE_URI"])
 
 app.register_blueprint(api_app)
@@ -29,35 +37,34 @@ def index():
     return redirect("/login")
 
 @app.route('/login',methods=["GET","POST"])
+@loginChecker
 def login():
     if request.method == "POST":
         username = request.form.get("username_input")
         password = request.form.get("password_input")
         if username is not None and password is not None and checkuser(username, password):
+            # successful logged in
+            session[USERID] = db.session.query(users).filter(users.username==username).first().id #save in session[] currentUserId
+            newToken = token(userid=session[USERID], token=secrets.token_urlsafe(96)) # 96 always produces a 128-long string, but idk why
+            db.session.add(newToken)
+            db.session.commit()
             return redirect("/home")
-        
     return render_template('login.html')
 
 @app.route('/home')
+@validTokenChecker
 def home():
-    if getUsername() is None:
-        return redirect("/login")
     return render_template('home.html')
 
 @app.route('/edit')
+@validTokenChecker
 def edit():
-    if getUsername() is None:
-        return redirect("/login")
     return render_template('edit.html')
 
-#TODO AM BESTEN AUSLAGERN:
-@app.route('/getusername', methods=['GET'])
-def get_username():
-    return jsonify(username=getUsername())
-
 @app.route('/count', methods=['GET'])
+@validTokenChecker
 def count_entries():  # sourcery skip: use-named-expression
-    user = db.session.query(users).filter(users.username == getUsername()).first()
+    user = db.session.query(users).filter(users.id == session.get(USERID)).first()
     if user:
         count = db.session.query(data).filter(data.userid == user.id).count()
         #print(count)
