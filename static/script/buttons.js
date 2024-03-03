@@ -144,7 +144,7 @@ window.addEventListener("touchcancel", (e) => {
 });
 
 async function leftClick(e) {
-    let userInput = window.prompt(buttonQuestion[e.target.id])
+    let userInput = parseFloat(window.prompt(buttonQuestion[e.target.id]))
     if (!userInput) {
         console.debug("no userInput");
         return;
