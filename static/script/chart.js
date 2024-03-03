@@ -1,71 +1,126 @@
-google.charts.load('current', {'packages':['corechart']});
+google.charts.load('current', { 'packages': ['corechart'] });
 google.charts.setOnLoadCallback(drawChart);
 
-window.onload = function() {
-  let container = document.querySelector('.scrollwindow');
-  container.scrollLeft = 1000;//TODO scroll dynamisch an datensatz anpassen
-/*
-  // Erhalten Sie alle Radiobuttons
-  let radioButtons = document.getElementsByName('view-options');
-  let interval = 1;
-  for(let i = 0; i < radioButtons.length; i++) {
-    radioButtons[i].addEventListener('change', function() {
-      // Überprüfen Sie, welcher Radiobutton ausgewählt ist
-      if(this.checked) {
-        // Laden Sie den neuen Graphen basierend auf der ausgewählten Option
-        switch(this.id) {
-          case 'days':
-            break;
-          case 'weeks':
-            interval = 7// Laden Sie den Graphen für Wochen
-            break;
-          case 'months':
-            interval = 30;// Laden Sie den Graphen für Monate
-            break;
-          case 'years':
-            interval = 365;// Laden Sie den Graphen für Jahre
-            break;
-        }
-      }
-    });
-  }*/
+
+window.onload = function () {
+    /*
+      // Erhalten Sie alle Radiobuttons
+      let radioButtons = document.getElementsByName('view-options');
+      let interval = 1;
+      for(let i = 0; i < radioButtons.length; i++) {
+        radioButtons[i].addEventListener('change', function() {
+          // Überprüfen Sie, welcher Radiobutton ausgewählt ist
+          if(this.checked) {
+            // Laden Sie den neuen Graphen basierend auf der ausgewählten Option
+            switch(this.id) {
+              case 'days':
+                break;
+              case 'weeks':
+                interval = 7// Laden Sie den Graphen für Wochen
+                break;
+              case 'months':
+                interval = 30;// Laden Sie den Graphen für Monate
+                break;
+              case 'years':
+                interval = 365;// Laden Sie den Graphen für Jahre
+                break;
+            }
+          }
+        });
+      }*/
 };
 
 async function drawChart() {
-  let userData = await fetch('/api/data')
-  .then(response => response.json())
-  .catch((error) => {
-      console.error('Error:', error);
-  });
+    let userData = await fetch('/api/data')
+        .then(response => response.json())
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 
-  let userDataCount = await fetch('/count')
-  .then(response => response.json())
-  .then(data => data.count)
-  .catch((error) => {
-      console.error('Error:', error);
-  });
+    let userDataCount = await fetch('/count')
+        .then(response => response.json())
+        .then(data => data.count)
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 
-  let databaseData = [['Datum', 'Körperfett', 'Gewicht', 'Muskelmasse']];
+    let databaseData = [['Datum', 'Körperfett', 'Gewicht', 'Muskelmasse']];
+    let firstDate = undefined;
+    let currentDate = undefined;
 
-  function dateToString(date) {
-      let tag = String(date.getDate()).padStart(2, '0');
-      let monat = String(date.getMonth() + 1).padStart(2, '0'); // Monate von 0-11
-      let jahr = date.getFullYear();
-      return `${tag}-${monat}-${jahr}`;
-  }
+    userData.data.forEach(element => {
+        if (firstDate === undefined && element.date) {
+            firstDate = element.date;
+            currentDate = stringToDate(firstDate);
+        }
 
-  function stringToDate(datumString) {
-      let teile = datumString.split("-");
-      return new Date(teile[2], teile[1] - 1, teile[0]);
-  }
+        let elementDate = stringToDate(element.date);
+        while (currentDate < elementDate) {
+            databaseData.push([dateToString(currentDate), 0, 0, 0]);
+            currentDate = addDays(currentDate, 1);
+        }
 
-  function addDays(date, days) {
-      var result = new Date(date);
-      result.setDate(result.getDate() + days);
-      return result;
-  }
+        databaseData.push([element.date, element.fat ?? 0, element.weight ?? 0, element.muscle ?? 0]);
+        currentDate = addDays(currentDate, 1);
+    });
 
-  function ersetzeNullenMitInterpoliertenWerten(databaseData) {
+    // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
+    ersetzeNullenMitInterpoliertenWerten(databaseData);
+
+    //databaseData = filterData(databaseData, interval)
+
+    let data = google.visualization.arrayToDataTable(databaseData);
+
+    console.debug(databaseData);
+
+    let maxValue = Math.max(...userData.maxValue);
+
+    let options = {
+        curveType: 'function',
+        legend: 'none',
+        width: daysTillToday(firstDate) * 50, //dynamisch an datensatz anpassen
+        height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
+        colors: ['rgb(20, 0, 150)', 'rgb(120, 120, 120)', 'rgb(115, 0, 0)'],
+        lineWidth: 3,
+        pointSize: 7.5,
+        backgroundColor: { fill: 'transparent' },
+        chartArea: { 'width': '99%', 'height': '90%' },
+        hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25 } }, // dynamisch an datensatz anpassen (4 Datensätze -> max: 3.5  5 -> max: 4.5  6 -> max: 5.5)
+        vAxis: { viewWindow: { min: 0, max: maxValue + 10 } }
+    };
+
+    let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+    chart.draw(data, options);
+
+    let container = document.querySelector('.scrollwindow');
+    console.log(container);
+    container.scrollLeft = options.width + 500;
+}
+
+function convertRemToPixels(rem) {
+    return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+}
+
+function dateToString(date) {
+    let tag = String(date.getDate()).padStart(2, '0');
+    let monat = String(date.getMonth() + 1).padStart(2, '0'); // Monate von 0-11
+    let jahr = date.getFullYear();
+    return `${tag}-${monat}-${jahr}`;
+}
+
+function stringToDate(datumString) {
+    let teile = datumString.split("-");
+    return new Date(teile[2], teile[1] - 1, teile[0]);
+}
+
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
+function ersetzeNullenMitInterpoliertenWerten(databaseData) {
     let vorherigeWerte = [0, 0, 0]; // Vorherige Werte für fat, weight und muscle
     let zukünftigeWerte = [0, 0, 0]; // Zukünftige Werte für fat, weight und muscle
     let nullStreckenStart = [0, 0, 0]; // Startindex der aufeinanderfolgenden Nullen für fat, weight und muscle
@@ -99,82 +154,28 @@ async function drawChart() {
             }
         }
     }
-  }
-
-  let firstDate = undefined;
-  let currentDate = undefined;
-
-  userData.data.forEach(element => {
-      if (firstDate === undefined && element.date) {
-          firstDate = element.date;
-          currentDate = stringToDate(firstDate);
-      }
-
-      let elementDate = stringToDate(element.date);
-      while (currentDate < elementDate) {
-          databaseData.push([dateToString(currentDate), 0, 0, 0]);
-          currentDate = addDays(currentDate, 1);
-      }
-
-      databaseData.push([element.date, element.fat ?? 0, element.weight ?? 0, element.muscle ?? 0]);
-      currentDate = addDays(currentDate, 1);
-  });
-
-  // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
-  ersetzeNullenMitInterpoliertenWerten(databaseData);
-  
-  //databaseData = filterData(databaseData, interval)
-
-  let data = google.visualization.arrayToDataTable(databaseData);
-
-  console.debug(databaseData);
-
-  maxValue = Math.max(...userData.maxValue);
-
-  let options = {
-    curveType: 'function',
-    legend: 'none',
-    width:  daysTillToday(firstDate) * 50, //dynamisch an datensatz anpassen
-    height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
-    colors: ['rgb(20, 0, 150)', 'rgb(120, 120, 120)', 'rgb(115, 0, 0)'],
-    lineWidth: 3,
-    pointSize: 7.5,
-    backgroundColor: { fill:'transparent' },
-    chartArea: {'width': '90%', 'height': '90%'},
-    hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate)-0.25 } }, // dynamisch an datensatz anpassen (4 Datensätze -> max: 3.5  5 -> max: 4.5  6 -> max: 5.5)
-    vAxis: { viewWindow: { min:0 , max: maxValue + 10 } }
-  };
-
-  let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-  chart.draw(data, options);
 }
-
-function convertRemToPixels(rem) {    
-  return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
-}
-
 
 function daysTillToday(datumString) {
-  if (typeof datumString === 'string') {
-    let teile = datumString.split("-");
-    let gegebenesDatum = new Date(teile[2], teile[1] - 1, teile[0]);
-    let heute = new Date();
-    let differenzInZeit = heute.getTime() - gegebenesDatum.getTime();
-    let differenzInTagen = Math.floor(differenzInZeit / (1000 * 3600 * 24));
-    return differenzInTagen + 1;
+    if (typeof datumString === 'string') {
+        let teile = datumString.split("-");
+        let gegebenesDatum = new Date(teile[2], teile[1] - 1, teile[0]);
+        let heute = new Date();
+        let differenzInZeit = heute.getTime() - gegebenesDatum.getTime();
+        let differenzInTagen = Math.floor(differenzInZeit / (1000 * 3600 * 24));
+        return differenzInTagen + 1;
     } else {
-    // Behandlung für den Fall, dass datumString kein String ist
-    console.error('datumString ist kein String:', datumString);
-    return 0;
-  }
+        // Behandlung für den Fall, dass datumString kein String ist
+        console.error('datumString ist kein String:', datumString);
+        return 0;
+    }
 }
 
 
 function filterData(databaseData, interval) {
-  let filteredData = [databaseData[0]]; // Behalten Sie die Überschriften bei
-  for(let i = databaseData.length - 1; i > 0; i -= interval) {
-      filteredData.unshift(databaseData[i]);
-  }
-  return filteredData;
+    let filteredData = [databaseData[0]]; // Behalten Sie die Überschriften bei
+    for (let i = databaseData.length - 1; i > 0; i -= interval) {
+        filteredData.unshift(databaseData[i]);
+    }
+    return filteredData;
 }
