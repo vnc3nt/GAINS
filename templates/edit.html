@@ -6,4 +6,27 @@
 {% block content %}
 <div class="title">GAINS</div>
 <a class="backbutton" href="{{ url_for('home') }}"> ❮ </a>
+<div class="datalist">
+    <ul>
+        <li>
+        <div class="swipe-container">
+            <div class="reveal-left">
+            <i class="fas fa-times"></i>
+            </div>
+            <div class="swipe-item">
+            <button type="button">
+                <i class="fas fa-times"></i>
+            </button>
+            <span>Swipe Item left or right</span>
+            <button type="button">
+                <i class="fas fa-check"></i>
+            </button>
+            </div>
+            <div class="reveal-right">
+            <i class="fas fa-check"></i>
+            </div>
+        </div>
+        </li>
+    </ul>
+</div>
 {% endblock content %}

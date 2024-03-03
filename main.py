@@ -57,12 +57,12 @@ def login():
 @app.route('/home')
 @validTokenChecker
 def home():
-    return render_template('home.html')
+    return render_template('home.html', user_id=session.get(USERID))
 
 @app.route('/edit')
 @validTokenChecker
 def edit():
-    return render_template('edit.html')
+    return render_template('edit.html', user_id=session.get(USERID))
 
 @app.route('/count', methods=['GET'])
 @validTokenChecker

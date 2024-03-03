@@ -132,14 +132,6 @@ button {
     border-color: rgba(120, 120, 120, .9);
 }
 
-.overlay {
-    display: none;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 0, 0, 0.5);
-}
-
 .backbutton {
     position: relative;
     text-decoration: none;
@@ -215,4 +207,99 @@ input[id=years]:checked~.glider {
     z-index: 1;
     border-radius: 99px;
     transition: 0.25s ease-out;
+}
+
+
+
+.datalist{
+    position: absolute;
+    width: 90%;
+    top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.datalist ul, .datalist li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.datalist ul {
+  padding: 8px;
+  border-radius: 8px;
+  background: #fff;
+}
+.datalist li {
+  border-bottom: 1px solid #aaa;
+  overflow: hidden;
+}
+.datalist li:last-child {
+  border-bottom: none;
+}
+
+.datalist button {
+  visibility: hidden;
+}
+.datalist button .fa-times {
+  color: red;
+}
+.datalist button .fa-check {
+  color: green;
+}
+
+/* SWIPE */
+.datalist .swipe-container {
+  position: relative;
+  background-color: #eee;
+}
+.datalist .reveal-left, .datalist .reveal-right {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 8px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.datalist .reveal-left {
+  background-color: var(--color-error);
+  text-align: left;
+  left: 0;
+}
+.datalist .reveal-right {
+  background-color: var(--color-success);
+  right: 0;
+  text-align: right;
+  flex-direction: row-reverse;
+}
+
+.datalist .swipe-item {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 16px 0;
+  background-color: white;
+  z-index: 2;
+  user-select: none;
+}
+.datalist .swipe-item > button,
+.datalist .swipe-item > span {
+  padding: 8px;
+  font-size: inherit;
+}
+.datalist .swipe-item > button {
+  margin: 0 8px;
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+.datalist .swipe-item > span {
+  flex: 1;
 }

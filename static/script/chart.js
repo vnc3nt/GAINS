@@ -1,33 +1,18 @@
+const viewoption = {
+    "days": 1,
+    "weeks": 7,
+    "months": 30,
+    "years": 365
+}
+
 google.charts.load('current', { 'packages': ['corechart'] });
 google.charts.setOnLoadCallback(drawChart);
 
 
-window.onload = function () {
-    /*
-      // Erhalten Sie alle Radiobuttons
-      let radioButtons = document.getElementsByName('view-options');
-      let interval = 1;
-      for(let i = 0; i < radioButtons.length; i++) {
-        radioButtons[i].addEventListener('change', function() {
-          // Überprüfen Sie, welcher Radiobutton ausgewählt ist
-          if(this.checked) {
-            // Laden Sie den neuen Graphen basierend auf der ausgewählten Option
-            switch(this.id) {
-              case 'days':
-                break;
-              case 'weeks':
-                interval = 7// Laden Sie den Graphen für Wochen
-                break;
-              case 'months':
-                interval = 30;// Laden Sie den Graphen für Monate
-                break;
-              case 'years':
-                interval = 365;// Laden Sie den Graphen für Jahre
-                break;
-            }
-          }
-        });
-      }*/
+window.onload = function (e) {
+      document.querySelectorAll("input[name='view-options']").forEach(radiobutton=>{
+        radiobutton.addEventListener("change", e=>drawChart());
+      });
 };
 
 async function drawChart() {
@@ -75,10 +60,16 @@ async function drawChart() {
 
     let maxValue = Math.max(...userData.maxValue);
 
+    // Erhalten Sie alle Radiobuttons
+    let selectedValue = document.querySelector("input[type=radio][name='view-options']:checked").value
+    console.debug(viewoption[selectedValue]);
+    
+    
+
     let options = {
         curveType: 'function',
         legend: 'none',
-        width: daysTillToday(firstDate) * 50, //dynamisch an datensatz anpassen
+        width: daysTillToday(firstDate) * 50 / viewoption[selectedValue],
         height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
         colors: ['rgb(20, 0, 150)', 'rgb(120, 120, 120)', 'rgb(115, 0, 0)'],
         lineWidth: 3,
