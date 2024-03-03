@@ -1,11 +1,11 @@
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
-from flask import json, jsonify
+from flask import json, jsonify, session
 from sqlalchemy import text
 from models import db, users, current_date, token, data
-from login import getUsername
 from datetime import datetime
 from decimal import Decimal
+from constants import USERID
 
 #TODO export und import der Daten -> Backup
 
@@ -48,12 +48,8 @@ patch_arguments.add_argument(
 )
 
 class Data(Resource):
-    def get(self):  # sourcery skip: class-extract-method
-        loggedin_uname = getUsername()
-        print(loggedin_uname)
-        user = db.session.query(users).filter(users.username == loggedin_uname).first()
-        userID = 1
-        existingData = db.session.query(data).filter(data.userid == userID).order_by(data.date).all()
+    def get(self):
+        existingData = db.session.query(data).filter(data.userid == session.get(USERID)).order_by(data.date).all()
         output = [
             {
                 'userid': i.userid,
@@ -67,17 +63,15 @@ class Data(Resource):
         return {
             "maxValue": list(map(
                 lambda v : float(v) if isinstance(v, Decimal) and v is not None else v,
-                db.session.execute(text("select max(muscle), max(weight), max(fat) from data inner join users on users.id=data.userid where users.username='%s'" % loggedin_uname)).first()
+                db.session.execute(text("select max(muscle), max(weight), max(fat) from data inner join users on users.id=data.userid where users.id=%s" % session.get(USERID))).first()
             )),
             "data": output
         }, 200
     
-    def post(self):  # sourcery skip: extract-method
+    def post(self):
         givenData = post_arguments.parse_args(strict = True)
         print(givenData)
-        USERNAME = getUsername() #TODO api unabhängig von anderen machen -> requests
-        print(USERNAME)
-        user = db.session.query(users).filter(users.username == USERNAME).first()
+        user = db.session.query(users).filter(users.id == session.get(USERID)).first()
         print(user)
         if user:
             userID = user.id

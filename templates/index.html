@@ -27,6 +27,7 @@
         {% endblock title %}
     </head>
     <body>
+        <input type="hidden" value="{{ user_id }}" />
         <div id="content">
             <main id="home-content">
                 {% block content required %}
