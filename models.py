@@ -10,7 +10,7 @@ db = SQLAlchemy()
 def current_date():
     time = datetime.now(timezone.utc)
     return datetime(day=time.day, month=time.month, year=time.year)
-def expire_time():
+def update_expire_time():
     return int(time()) + EXPIRE_TIME #in seconds
 
 class users(db.Model):
@@ -28,4 +28,4 @@ class data(db.Model):
 class token(db.Model):
     userid=db.Column(db.BIGINT, ForeignKey("users.id"), nullable=False)
     token=db.Column(db.String(128), nullable=False, primary_key=True)
-    expireTime=db.Column(db.BIGINT, nullable=False, default=expire_time)
+    expireTime=db.Column(db.BIGINT, nullable=False, default=update_expire_time)

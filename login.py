@@ -1,4 +1,4 @@
-from models import db,users,token
+from models import db,users,token,update_expire_time
 import hashlib
 from flask import session, redirect
 from constants import USERID
@@ -18,7 +18,10 @@ def hash_pw(password:str) -> str:
 def loginChecker(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if db.session.query(token).filter(token.userid == session.get(USERID)).first():
+        existingToken = db.session.query(token).filter(token.userid == session.get(USERID)).first()
+        if existingToken:
+            existingToken.expireTime = update_expire_time()
+            db.session.commit()
             return redirect("/home")
         else:
             return func(*args, **kwargs)
@@ -27,7 +30,10 @@ def loginChecker(func):
 def validTokenChecker(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if db.session.query(token).filter(token.userid == session.get(USERID)).first():
+        existingToken = db.session.query(token).filter(token.userid == session.get(USERID)).first()
+        if existingToken:
+            existingToken.expireTime = update_expire_time()
+            db.session.commit()
             return func(*args, **kwargs)
         else:
             return redirect("/login")

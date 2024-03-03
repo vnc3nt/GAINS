@@ -5,6 +5,7 @@ from api import app as api_app
 from login import checkuser, loginChecker, validTokenChecker
 import secrets
 from constants import USERID
+from time import time
 
 with open(".env", "r") as f:
     for line in f.readlines():
@@ -44,6 +45,8 @@ def login():
         password = request.form.get("password_input")
         if username is not None and password is not None and checkuser(username, password):
             # successful logged in
+            for everySession in db.session.query(token).filter(token.expireTime < time()):
+                db.session.delete(everySession)
             session[USERID] = db.session.query(users).filter(users.username==username).first().id #save in session[] currentUserId
             newToken = token(userid=session[USERID], token=secrets.token_urlsafe(96)) # 96 always produces a 128-long string, but idk why
             db.session.add(newToken)
