@@ -1,8 +1,7 @@
 const viewoption = {
-    "days": 1,
-    "weeks": 7,
-    "months": 30,
-    "years": 365
+    "week": 1,
+    "month": 4.5,
+    "year": 55
 }
 
 google.charts.load('current', { 'packages': ['corechart'] });
@@ -69,11 +68,11 @@ async function drawChart() {
     let options = {
         curveType: 'function',
         legend: 'none',
-        width: daysTillToday(firstDate) * 50 / viewoption[selectedValue],
+        width: window.innerWidth/7 * daysTillToday(firstDate) / viewoption[selectedValue],
         height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
         colors: ['rgb(20, 0, 150)', 'rgb(120, 120, 120)', 'rgb(115, 0, 0)'],
         lineWidth: 3,
-        pointSize: 7.5,
+        pointSize: 5/viewoption[selectedValue],
         backgroundColor: { fill: 'transparent' },
         chartArea: { 'width': '99%', 'height': '90%' },
         hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25 } }, // dynamisch an datensatz anpassen (4 Datensätze -> max: 3.5  5 -> max: 4.5  6 -> max: 5.5)

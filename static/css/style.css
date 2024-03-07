@@ -181,20 +181,16 @@ input[type=radio]:checked+label {
     color: var(--text-color);
 }
 
-input[id=days]:checked~.glider {
-    transform: translateX(0);
+input[id=week]:checked~.glider {
+    transform: translateX(0%);
 }
 
-input[id=weeks]:checked~.glider {
+input[id=month]:checked~.glider {
     transform: translateX(100%);
 }
 
-input[id=months]:checked~.glider {
+input[id=year]:checked~.glider {
     transform: translateX(200%);
-}
-
-input[id=years]:checked~.glider {
-    transform: translateX(300%);
 }
 
 .glider {
