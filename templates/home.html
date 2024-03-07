@@ -7,22 +7,20 @@
 <div class="title">GAINS</div>
 <div class="view">
     <div class="view-options">
-        <input type="radio" id="days" value="days" name="view-options" checked/>
-        <label class="tab" for="days">Tage</label>
-        <input type="radio" id="weeks" value="weeks" name="view-options" />
-        <label class="tab" for="weeks">Wochen</label>
-        <input type="radio" id="months" value="months" name="view-options" />
-        <label class="tab" for="months">Monate</label>
-        <input type="radio" id="years" value="years" name="view-options" />
-        <label class="tab" for="years">Jahre</label>
+        <input type="radio" id="week" value="week" name="view-options" checked/>
+        <label class="tab" for="week">Woche</label>
+        <input type="radio" id="month" value="month" name="view-options" />
+        <label class="tab" for="month">Monat</label>
+        <input type="radio" id="year" value="year" name="view-options" />
+        <label class="tab" for="year">Jahr</label>
         <span class="glider"></span>
     </div>
 </div>
 {% include "snippets/data.html" %}
 <br>
 <div class="MainButtons">
-    <button class="fat" id="btn-fat" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Körper&shy;fett </button>
     <button class="weight" id="btn-weight" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Gewicht </button>
+    <button class="fat" id="btn-fat" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Körper&shy;fett </button>
     <button class="muscle" id="btn-muscle" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Muskel&shy;masse </button>
 </div>
 {% endblock content %}
