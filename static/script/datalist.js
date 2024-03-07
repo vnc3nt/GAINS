@@ -1,74 +1,77 @@
-import TinyGesture from "https://unpkg.com/tinygesture@1.1.4/TinyGesture.js";
-// Documentation: https://www.npmjs.com/package/tinygesture
-
-function initSlider(target) {
-  let swiped = false;
-  let startOffset = 0;
-  const decelerationOnOverflow = 4;
-  const revealWidth = 50;
-  const snapWidth = revealWidth / 1.5;
-
-  const gesture = new TinyGesture(target);
-
-  // swipe gestures
-  gesture.on("panmove", (event) => {
-    if (gesture.animationFrame) {
-      return;
-    }
-    event.preventDefault();
-    gesture.animationFrame = window.requestAnimationFrame(() => {
-      let getX = (x) => {
-        if (x < revealWidth && x > -revealWidth) {
-          return x;
-        }
-        if (x < -revealWidth) {
-          return (x + revealWidth) / decelerationOnOverflow - revealWidth;
-        }
-        if (x > revealWidth) {
-          return (x - revealWidth) / decelerationOnOverflow + revealWidth;
-        }
-      };
-      const newX = getX(startOffset + gesture.touchMoveX);
-      target.style.transform = "translateX(" + newX + "px)";
-      if (newX >= snapWidth || newX <= -snapWidth) {
-        swiped = newX < 0 ? -revealWidth : revealWidth;
-      } else {
-        swiped = false;
-      }
-      window.requestAnimationFrame(() => {
-        target.style.transition = null;
-      });
-      gesture.animationFrame = null;
-    });
-  });
-
-  gesture.on("panend", () => {
-    window.cancelAnimationFrame(gesture.animationFrame);
-    gesture.animationFrame = null;
-    window.requestAnimationFrame(() => {
-      target.style.transition = "transform .2s ease-in";
-      if (!swiped) {
-        startOffset = 0;
-        target.style.transform = null;
-      } else {
-        startOffset = swiped;
-        target.style.transform = "translateX(" + swiped + "px)";
-      }
-    });
-  });
-
-  // reset on tap
-  gesture.on("doubletap", (event) => {
-    // we could also use 'doubletap' here
-    window.requestAnimationFrame(() => {
-      target.style.transition = "transform .2s ease-in";
-      swiped = false;
-      startOffset = 0;
-      target.style.transform = null;
-    });
-  });
+function handleSwipe() {
+  // define the minimum distance to trigger the action
+  const minDistance = 30;
+  const container = document.querySelector('.swipe-container');
+  const output = document.querySelector('.output');
+  // get the distance the user swiped
+  const swipeDistance = container.scrollLeft - container.clientWidth;
+  if (swipeDistance < minDistance * -1) {
+    output.innerHTML = 'swiped left';
+  } else if (swipeDistance > minDistance) {
+    output.innerHTML = 'swiped right';
+  } else {
+    output.innerHTML = `did not swipe ${minDistance}px`;
+  }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".swipe-item").forEach(initSlider);
-});
+
+async function leftClick(e) {
+  let userInput = parseFloat(window.prompt(buttonQuestion[e.target.id]).replace(',', '.'));
+  if (!userInput) {
+      console.debug("no userInput");
+      return;
+  }
+  console.log(e.target.id);
+  console.log(userInput);
+
+  if (e.target.id === "btn-fat"){ //TODO von Button verhalten zu Daten bearbeiten -> Datum von Event abgreifen statt Button.id
+      let data = await fetch("/api/data",  {
+      method: "POST",
+      body: JSON.stringify({
+          fat: userInput,
+          user: getUserId(),
+          // date: "abc"  // post has no date
+      }),
+      headers: {
+          "Content-type": "application/json; charset=UTF-8"
+      }
+  })
+  .then((response) => response.json())
+  .catch((json) => console.log(json));
+  }
+
+  if (e.target.id === "btn-weight"){
+      let data = await fetch("/api/data",  {
+      method: "POST",
+      body: JSON.stringify({
+          weight: userInput,
+          user: getUserId(),
+          // date: "abc"  // post has no date
+      }),
+      headers: {
+          "Content-type": "application/json; charset=UTF-8"
+      }
+  })
+  .then((response) => response.json())
+  .catch((json) => console.log(json));
+  }
+
+  if (e.target.id === "btn-muscle"){
+      let data = await fetch("/api/data",  {
+      method: "POST",
+      body: JSON.stringify({
+          muscle: userInput,
+          user: getUserId(),
+          // date: "abc"  // post has no date
+      }),
+      headers: {
+          "Content-type": "application/json; charset=UTF-8"
+      }
+  })
+  .then((response) => response.json())
+  .catch((json) => console.log(json));
+  }
+  
+  await drawChart();
+  //alert("left clicked!");
+}

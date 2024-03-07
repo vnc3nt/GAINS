@@ -206,96 +206,52 @@ input[id=year]:checked~.glider {
 }
 
 
-
-.datalist{
-    position: absolute;
-    width: 90%;
-    top: 100px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.datalist ul, .datalist li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.datalist {
+  position: relative;
+  top: 70px;
+  padding: 10px;
   width: 100%;
 }
-.datalist ul {
-  padding: 8px;
-  border-radius: 8px;
-  background: #fff;
-}
-.datalist li {
-  border-bottom: 1px solid #aaa;
-  overflow: hidden;
-}
-.datalist li:last-child {
-  border-bottom: none;
-}
 
-.datalist button {
-  visibility: hidden;
+/* scroll snap takes care of restoring scroll position */
+.swipe-container {
+  display: flex;
+  overflow: auto;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
 }
-.datalist button .fa-times {
-  color: red;
+/* scrollbar should be hidden */
+.swipe-container::-webkit-scrollbar {
+  display: none;
 }
-.datalist button .fa-check {
-  color: green;
+/* main element should always snap into view */
+.swipe-element {
+  scroll-snap-align: start;
+  font-family: sans-serif;
+  padding: 16px;
+  background-color: var(--button-color);
 }
-
-/* SWIPE */
-.datalist .swipe-container {
-  position: relative;
-  background-color: #eee;
+/* actions and element should be 100% wide */
+.action,
+.swipe-element {
+  min-width: 100%;
 }
-.datalist .reveal-left, .datalist .reveal-right {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 50px;
-  z-index: 1;
+.action {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: white;
-  padding: 8px;
-  font-weight: 500;
-  text-transform: uppercase;
 }
-.datalist .reveal-left {
-  background-color: var(--color-error);
-  text-align: left;
-  left: 0;
+/* icon should remain sticky */
+i {
+  color: var(--text-color);
+  position: sticky;
+  left: 16px;
+  right: 16px;
 }
-.datalist .reveal-right {
-  background-color: var(--color-success);
-  right: 0;
-  text-align: right;
-  flex-direction: row-reverse;
+/* action background colors */
+.left {
+  background-color: rgb(0, 27, 163);
 }
-
-.datalist .swipe-item {
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-wrap: nowrap;
-  padding: 16px 0;
-  background-color: white;
-  z-index: 2;
-  user-select: none;
-}
-.datalist .swipe-item > button,
-.datalist .swipe-item > span {
-  padding: 8px;
-  font-size: inherit;
-}
-.datalist .swipe-item > button {
-  margin: 0 8px;
-  background: transparent;
-  border: 0;
-  outline: none;
-}
-.datalist .swipe-item > span {
-  flex: 1;
+.right {
+  justify-content: flex-end;
+  background-color: rgb(199, 0, 0);
 }
