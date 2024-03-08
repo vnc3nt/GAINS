@@ -1,0 +1,12 @@
+{
+    "name": "GAINS",
+    "icons": [
+        {
+            "src": "../img/appicons/512x512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "../../templates/home.html",
+    "display": "standalone"
+}

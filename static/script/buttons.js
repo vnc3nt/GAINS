@@ -28,7 +28,7 @@ const RIGHT_CLICK_TOUCH = 300;  // ms
 const DRAG_DISTANCE = 25;  // px²
 
 window.addEventListener("touchstart", (e) => {
-    if (e.touches[0] && e.touches[0].clientX !== undefined && e.touches[0].clientY !== undefined) {
+    if (e.touches[0] && e.touches[0].clientX !== undefined && e.touches[0].clientY !== undefined) { //TODO zu viele Fehlermeldungen bei den Touchevents + durch if abfragen ob target null ist funkt webkit rechtsklick nicht mehr
         touchX = e.touches[0].clientX;
         touchY = e.touches[0].clientY;
         let actualTarget = document.elementFromPoint(touchX, touchY);
