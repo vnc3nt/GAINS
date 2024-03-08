@@ -22,6 +22,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    touch-action: none;
 }
 
 .title {
@@ -32,6 +33,7 @@ body {
 }
 
 .MainButtons button {
+    touch-action: auto;
     border-width: 3px;
     border-radius: 10px;
     height: 90px;
@@ -74,6 +76,7 @@ body {
 }
 
 .scrollwindow {
+    touch-action: auto;
     position: relative;
     top: calc(4rem + 20px);
     overflow: scroll;
@@ -82,21 +85,13 @@ body {
     height: calc(100% - 4rem - 140px);
     /*scroll-snap-type: x mandatory;
     scroll-padding: 20px;*/
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 .scrollwindow::-webkit-scrollbar {
     display: none;
 }
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.scrollwindow {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-/*
-.scrollwindow .chart {
-    scroll-snap-align: start;
-}*/
 
 .login {
     padding-top: 100px;
@@ -116,6 +111,7 @@ body {
 }
 
 button {
+    touch-action: auto;
     padding: 5px;
     margin: 10px;
     color: white;
