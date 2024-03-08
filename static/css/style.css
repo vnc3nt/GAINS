@@ -76,7 +76,6 @@ body {
 }
 
 .scrollwindow {
-    touch-action: auto;
     position: relative;
     top: calc(4rem + 20px);
     overflow: scroll;
