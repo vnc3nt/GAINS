@@ -7,6 +7,6 @@
             "sizes": "512x512"
         }
     ],
-    "start_url": "../../templates/home.html",
+    "start_url": "https://my-gains.onrender.com/home",
     "display": "standalone"
 }
