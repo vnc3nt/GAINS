@@ -1,1 +1,2 @@
 USERID = "currentUserId"
+TOKEN = "currentToken"

@@ -5,6 +5,14 @@
 
 {% block content %}
 <div class="title">GAINS</div>
+<div class="profile">
+    <details id="profile-menu-btn">
+        <summary>
+            <img class="profile-pic" src="{{url_for('static', filename='img/icons/64x64profile.png')}}" alt="Profile">
+        </summary>
+            {% include "snippets/profile_menu.html" %}
+    </details>
+</div>
 <div class="view">
     <div class="view-options">
         <input type="radio" id="week" value="week" name="view-options" checked/>

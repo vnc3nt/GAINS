@@ -21,12 +21,6 @@ async function drawChart() {
             console.error('Error:', error);
         });
 
-    let userDataCount = await fetch('/count')
-        .then(response => response.json())
-        .then(data => data.count)
-        .catch((error) => {
-            console.error('Error:', error);
-        });
 
     let databaseData = [['Datum', 'Körperfett', 'Gewicht', 'Muskelmasse']];
     let firstDate = undefined;

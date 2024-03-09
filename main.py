@@ -2,9 +2,9 @@ from flask import Flask, render_template, url_for, redirect, request, jsonify, s
 from models import db, users, token, data
 import os
 from api import app as api_app
-from login import checkuser, loginChecker, validTokenChecker
+from login import checkuser, loginChecker, validTokenChecker, logoutUser
 import secrets
-from constants import USERID
+from constants import USERID, TOKEN
 from time import time
 
 with open(".env", "r") as f:
@@ -45,10 +45,12 @@ def login():
         password = request.form.get("password_input")
         if username is not None and password is not None and checkuser(username, password):
             # successful logged in
+            # token cleanup
             for everySession in db.session.query(token).filter(token.expireTime < time()):
                 db.session.delete(everySession)
             session[USERID] = db.session.query(users).filter(users.username==username).first().id #save in session[] currentUserId
             newToken = token(userid=session[USERID], token=secrets.token_urlsafe(96)) # 96 always produces a 128-long string, but idk why
+            session[TOKEN] = newToken.token
             db.session.add(newToken)
             db.session.commit()
             return redirect("/home")
@@ -64,6 +66,13 @@ def home():
 def edit():
     return render_template('edit.html', user_id=session.get(USERID))
 
+@app.route("/logout")
+def logout():
+    token = session.get(TOKEN)
+    logoutUser(token)
+
+    return redirect("/login")
+
 @app.route('/count', methods=['GET'])
 @validTokenChecker
 def count_entries():  # sourcery skip: use-named-expression
@@ -75,6 +84,9 @@ def count_entries():  # sourcery skip: use-named-expression
     else:
         return jsonify(error="User not found"), 404
 
+def get_username() -> str:
+    user = db.session.query(users).filter(users.id == session.get(USERID)).first()
+    return user.username if user else ""
 
 
 if __name__ == "__main__":

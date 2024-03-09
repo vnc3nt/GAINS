@@ -1,8 +1,9 @@
 from models import db,users,token,update_expire_time
 import hashlib
 from flask import session, redirect
-from constants import USERID
+from constants import USERID, TOKEN
 from functools import wraps
+from time import time
 
 def checkuser(username:str, password:str) -> bool:
     user = db.session.query(users).filter(users.username == username).first()
@@ -18,7 +19,7 @@ def hash_pw(password:str) -> str:
 def loginChecker(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        existingToken = db.session.query(token).filter(token.userid == session.get(USERID)).first()
+        existingToken = db.session.query(token).filter(token.userid == session.get(USERID)).first() # TODO sure about that? not out of session the user?
         if existingToken:
             existingToken.expireTime = update_expire_time()
             db.session.commit()
@@ -38,3 +39,24 @@ def validTokenChecker(func):
         else:
             return redirect("/login")
     return wrapper
+
+
+def logoutUser(currentToken):
+    # token cleanup
+    for everySession in db.session.query(token).filter(token.expireTime < time()):
+        db.session.delete(everySession)
+
+    if currentToken is None:
+        db.session.commit()
+        return
+
+    delToken = db.session.query(token).filter(token.token==currentToken).first()
+    print(delToken)
+    print(currentToken)
+    print(session)
+    db.session.delete(delToken)
+    db.session.commit()
+    session.pop(TOKEN)
+    session.pop(USERID)
+    print(session)
+    return redirect("/login")
