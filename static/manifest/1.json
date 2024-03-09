@@ -8,5 +8,6 @@
         }
     ],
     "start_url": "https://my-gains.onrender.com/home",
-    "display": "standalone"
+    "display": "standalone",
+    "background_color": "#121212"
 }

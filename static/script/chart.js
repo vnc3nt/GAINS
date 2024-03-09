@@ -76,7 +76,8 @@ async function drawChart() {
         backgroundColor: { fill: 'transparent' },
         chartArea: { 'width': '99%', 'height': '90%' },
         hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25 } }, // dynamisch an datensatz anpassen (4 Datensätze -> max: 3.5  5 -> max: 4.5  6 -> max: 5.5)
-        vAxis: { viewWindow: { min: 0, max: maxValue + 10 } }
+        vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
+        tooltip: { isHtml: true }
     };
 
     let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
