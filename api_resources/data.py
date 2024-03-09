@@ -50,6 +50,7 @@ patch_arguments.add_argument(
 class Data(Resource):
     def get(self):
         existingData = db.session.query(data).filter(data.userid == session.get(USERID)).order_by(data.date).all()
+        username = db.session.query(users).filter(users.id == session.get(USERID)).first().username
         output = [
             {
                 'userid': i.userid,
@@ -65,7 +66,8 @@ class Data(Resource):
                 lambda v : float(v) if isinstance(v, Decimal) and v is not None else v,
                 db.session.execute(text("select max(muscle), max(weight), max(fat) from data inner join users on users.id=data.userid where users.id=%s" % session.get(USERID))).first()
             )),
-            "data": output
+            "data": output,
+            "username": username
         }, 200
     
     def post(self):

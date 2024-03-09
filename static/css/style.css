@@ -76,6 +76,7 @@ body {
 }
 
 .google-visualization-tooltip {
+  border: solid 1px !important;
   background-color: var(--button-color) !important;
   border-radius: 10px !important;
   border-color: var(--selected-color)!important;
@@ -123,7 +124,6 @@ body {
 
 button {
     touch-action: auto;
-    padding: 5px;
     margin: 10px;
     color: var(--text-color);
     border: solid;
@@ -159,6 +159,8 @@ button {
 }
 
 .view-options {
+    border: solid 1px;
+    border-color: var(--selected-color);
     display: flex;
     position: relative;
     background-color: var(--button-color);
@@ -214,7 +216,7 @@ input[id=year]:checked~.glider {
     display: flex;
     height: 25px;
     width: 45px;
-    top: 4px;
+    top: 3px;
     background-color: var(--selected-color);
     z-index: 1;
     border-radius: 99px;
@@ -270,4 +272,92 @@ i {
 .right {
   justify-content: flex-end;
   background-color: rgb(199, 0, 0);
+}
+
+
+
+.profile {
+  float: right;
+  position: relative;
+  top: 5px;
+  right: 5px;
+}
+
+.profile summary::marker {
+  content: none;
+}
+
+.profile .profile-pic {
+  cursor: pointer;
+}
+
+#profile-menu {
+  right: 26px;
+  min-width: 200px;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.profile-pic {
+  border: solid 1px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  border-color: var(--selected-color);
+  background-color: var(--button-color);
+  filter: var(--menu-icon-invert);
+}
+.profile-pic:active {
+  transform: scale(95%);
+}
+
+.logout {
+  color: red;
+}
+#profile-menu {
+  margin: 0px;
+  position: fixed;
+  overflow: auto;
+  z-index: 4;
+  top: 50px;
+  right: 10px;
+  background-color: var(--button-color);
+  padding: 0px;
+  border-radius: 10px;
+  border: solid 1px;
+  border-color: var(--selected-color)
+}
+#profile-menu a {
+  text-decoration: none;
+}
+
+#profile-menu ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+#profile-menu ul li {
+  border-radius: 5px;
+  padding: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+#profile-menu ul li .submenu {
+  flex: 3;
+}
+#profile-menu ul li:first-child, #profile-menu ul li:last-child {
+  border-radius: 5px;
+}
+#profile-menu ul li:hover {
+  background-color: var(--selected-color);
+}
+
+a {
+  cursor: pointer;
 }
