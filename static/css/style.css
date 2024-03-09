@@ -114,7 +114,7 @@ body {
     margin: 10px;
     width: 50%;
     max-width: 200px;
-    color: white;
+    color: var(--text-color);
     border: solid;
     border-width: 1px;
     border-radius: 10px;
@@ -125,7 +125,7 @@ button {
     touch-action: auto;
     padding: 5px;
     margin: 10px;
-    color: white;
+    color: var(--text-color);
     border: solid;
     padding: 10px;
     -webkit-user-select: none; /* Safari */
@@ -142,7 +142,7 @@ button {
 .backbutton {
     position: relative;
     text-decoration: none;
-    color: #ffffff;
+    color: var(--text-color);
     font-size: 2rem;
     top: 60px;
     -webkit-user-select: none; /* Safari */
