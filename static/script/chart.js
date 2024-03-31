@@ -41,12 +41,12 @@ async function drawChart() {
         databaseData.push([element.date, element.fat ?? 0,'point { fill-color: #ffffff; }', element.weight ?? 0,'point { fill-color: #ffffff; }', element.muscle ?? 0, 'point { fill-color: #ffffff; }']);
         currentDate = addDays(currentDate, 1);
     });
-    console.debug("DATAAA: " + databaseData);
+
     // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
     ersetzeNullenMitInterpoliertenWerten(databaseData);
 
     //databaseData = filterData(databaseData, interval)
-    console.debug("DATAAA: " + databaseData);
+
 
     let data = google.visualization.arrayToDataTable(databaseData);
 

@@ -42,9 +42,9 @@ window.addEventListener("touchstart", (e) => {
         touchStartY = e.touches[0].clientY;
         console.debug("Touch start:", touchStartTime);
     }
-    if (actualTarget.className !== "profile") {
-        checkToHideProfile(e);
-    }
+
+    //Funktion zum anmieren desprofilemenus
+    checkToHideProfile(e);
 });
 
 
@@ -90,9 +90,10 @@ window.addEventListener("touchmove", (e) => {
 });
 
 window.addEventListener("touchend", (e) => {
-    touchX = e.touches[0].clientX;
-    touchY = e.touches[0].clientY;
+    touchX = e.changedTouches[0].clientX;
+    touchY = e.changedTouches[0].clientY;
     let actualTarget = document.elementFromPoint(touchX, touchY);
+    console.debug(actualTarget.className);
     if (actualTarget.className === "muscle" || actualTarget.className === "fat" || actualTarget.className === "weight"){
         console.log("touch end diff:", e.timeStamp - touchStartTime);
         if (!touchStartTime || e.touches.length >= 2) {
@@ -102,37 +103,13 @@ window.addEventListener("touchend", (e) => {
 
         let diff = e.timeStamp - touchStartTime;  // ms 
         console.debug("end touch target", e.target);
-        if (touchSimulation === TOUCH_DRAG) {
-            e.preventDefault();
-            let actualTarget = document.elementFromPoint(touchX, touchY);
-            console.debug("Maybe drop", actualTarget);
-            if (draggedTouchNode !== undefined) {
-                draggedTouchNode.classList.remove("mobile-drag-element");
-                draggedTouchNode.style.removeProperty("left");
-                draggedTouchNode.style.removeProperty("top");
-                draggedTouchNode = undefined;
-            }
-            actualTarget.dispatchEvent(new DragEvent("dragleave", {bubbles: true, dataTransfer: globalDatatransfer}));
-            actualTarget.dispatchEvent(new DragEvent("dragend", {bubbles: true, dataTransfer: globalDatatransfer}));
-
-            if (allowDrop) { 
-                actualTarget.dispatchEvent(new DragEvent("drop", {bubbles: true, dataTransfer: globalDatatransfer}));
-            }
-            console.log("drop events");
-            touchSimulation = TOUCH_NORMAL;
-            globalDatatransfer = null;
-        }
-        else if (moveDistance < DRAG_DISTANCE) { // block clicks when it has been swiped
-            // left click/right click simulation
-            console.debug("Normal click")
+        
+        touchSimulation = TOUCH_NORMAL;
+        if (moveDistance < DRAG_DISTANCE) { // block clicks when it has been swiped
             if (diff >= RIGHT_CLICK_TOUCH && touchSimulation === TOUCH_NORMAL) {
-                e.preventDefault();
-                e?.target.dispatchEvent(new Event("contextmenu", {bubbles: true}));  // event 
+                e.preventDefault(); 
+                rightClick(e);
             }
-            // else {  // don't handle left click because the defaults are probably optimized
-            //     console.log("Left click");
-            //     e?.target.dispatchEvent(new PointerEvent("click", {bubbles: true}));
-            // }
         }
         touchStartTime = null;
     }
