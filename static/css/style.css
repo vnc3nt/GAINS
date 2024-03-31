@@ -94,7 +94,7 @@ body {
     overflow-x: scroll;
     overflow-y: hidden;
     touch-action: pan-x; /*no gummy-scrolleffect on mobile when scrolling up and down*/
-    width: 100%;
+    width: 95%;
     height: calc(100% - 4rem - 90px - 90px);
     /*scroll-snap-type: x mandatory;
     scroll-padding: 20px;*/
@@ -109,23 +109,30 @@ body {
 .scale {
   position: absolute;
   top: calc(4rem + 50px);
-  right: 0px;
+  right: 15px;
   height: calc(100% - 4rem - 90px - 90px);
   width: 30px;
-  background-color: var(--website-background-color);
   color: var(--text-color);
 }
 
 .max {
   position: fixed;
   top: calc(4rem + 80px);
-  padding: 5px;
+  padding: 10px;
+  background-color: var(--button-color);
+  border-radius: 5px;
+  border: solid 1px;
+  border-color: var(--selected-color);
 }
 
 .min {
   position: absolute;
   bottom: 10px;
-  padding: 5px;
+  padding: 10px;
+  background-color: var(--button-color);
+  border-radius: 5px;
+  border: solid 1px;
+  border-color: var(--selected-color);
 }
 
 .login {
@@ -142,7 +149,7 @@ body {
     border: solid;
     border-width: 1px;
     border-radius: 10px;
-    border-color: rgba(120, 120, 120, .9);
+    border-color: var(--selected-color);
 }
 
 button {
