@@ -6,11 +6,13 @@ function handleSwipe() {
   // get the distance the user swiped
   const swipeDistance = container.scrollLeft - container.clientWidth;
   if (swipeDistance < minDistance * -1) {
-    output.innerHTML = 'swiped left';
+    console.debug('swiped left');
+    alert("ask");
   } else if (swipeDistance > minDistance) {
-    output.innerHTML = 'swiped right';
+    console.debug('swiped right');
+    alert("ask");
   } else {
-    output.innerHTML = `did not swipe ${minDistance}px`;
+    console.debug(`did not swipe ${minDistance}px instead: ${swipeDistance}px`);
   }
 }
 

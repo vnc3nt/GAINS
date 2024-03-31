@@ -5,11 +5,11 @@
 
 {% block content %}
 <div class="title">GAINS</div>
-<a class="backbutton" href="{{ url_for('home') }}"> ❮ Fettanteil/Körpermasse/Muskelmasse</a>
+<a class="backbutton" href="{{ url_for('home') }}"> ❮ Bearbeiten</a>
 <div class="datalist">
     <div class="swipe-container" ontouchend="handleSwipe()" onclick="updateData(event)">
-        <div class="swipe-element">
-            25-5-2024 | 24,52%
+        <div class="element">
+            25-5-2024<div class="fat">24,52%</div><div class="weight">123kg</div><div class="muscle">12%</div>
         </div>
         <div class="action right">
             Löschen
