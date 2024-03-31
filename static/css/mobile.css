@@ -1,0 +1,26 @@
+#profile-menu {
+    right: -15px;
+    top: 65px;
+    width: 100vw;
+    height: calc(100vh - 45px);
+    border-radius: 10px 10px 0 0;
+    margin: 0px;
+    position: absolute;
+    overflow: auto;
+    z-index: 0;
+    background-color: var(--button-color);
+    padding: 0px;
+    border: solid 1px;
+    border-color: var(--selected-color);
+    animation: profile-menu 1s linear;
+}
+
+@keyframes profile-menu {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100%{
+        transform: translateY(0%);
+    }
+}

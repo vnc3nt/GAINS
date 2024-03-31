@@ -64,13 +64,13 @@ body {
 }
 
 .weight {
-    border-color: rgba(120, 120, 120, .9) !important;
+    border-color: rgba(120, 120, 120, 0.902) !important;
     background-color: rgba(120, 120, 120, .5);
     font-size: 1.2rem;
 }
 
 .muscle {
-    border-color: rgba(115, 0, 0, .9) !important;
+    border-color: rgba(115, 0, 0, 0.902) !important;
     background-color: rgba(115, 0, 0, .5);
     font-size: 1.2rem;
 }
@@ -89,12 +89,13 @@ body {
 }
 
 .scrollwindow {
-    position: relative;
-    top: calc(4rem + 20px);
-    overflow: scroll;
+    position: absolute;
+    top: calc(4rem + 50px);
+    overflow-x: scroll;
     overflow-y: hidden;
-    width: 100%;
-    height: calc(100% - 4rem - 140px);
+    touch-action: pan-x; /*no gummy-scrolleffect on mobile when scrolling up and down*/
+    width: 95%;
+    height: calc(100% - 4rem - 90px - 90px);
     /*scroll-snap-type: x mandatory;
     scroll-padding: 20px;*/
     -ms-overflow-style: none;  /* IE and Edge */
@@ -103,6 +104,35 @@ body {
 
 .scrollwindow::-webkit-scrollbar {
     display: none;
+}
+
+.scale {
+  position: absolute;
+  top: calc(4rem + 50px);
+  right: 15px;
+  height: calc(100% - 4rem - 90px - 90px);
+  width: 30px;
+  color: var(--text-color);
+}
+
+.max {
+  position: fixed;
+  top: calc(4rem + 80px);
+  padding: 10px;
+  background-color: var(--button-color);
+  border-radius: 5px;
+  border: solid 1px;
+  border-color: var(--selected-color);
+}
+
+.min {
+  position: absolute;
+  bottom: 10px;
+  padding: 10px;
+  background-color: var(--button-color);
+  border-radius: 5px;
+  border: solid 1px;
+  border-color: var(--selected-color);
 }
 
 .login {
@@ -119,7 +149,7 @@ body {
     border: solid;
     border-width: 1px;
     border-radius: 10px;
-    border-color: rgba(120, 120, 120, .9);
+    border-color: var(--selected-color);
 }
 
 button {
@@ -281,6 +311,7 @@ i {
   position: relative;
   top: 5px;
   right: 5px;
+  z-index: 4
 }
 
 .profile summary::marker {
@@ -307,8 +338,8 @@ details summary::-webkit-details-marker {
 .profile-pic {
   border: solid 1px;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 3rem;
+  height: 3rem;
   border-color: var(--selected-color);
   background-color: var(--button-color);
   filter: var(--menu-icon-invert);
@@ -320,19 +351,7 @@ details summary::-webkit-details-marker {
 .logout {
   color: red;
 }
-#profile-menu {
-  margin: 0px;
-  position: fixed;
-  overflow: auto;
-  z-index: 4;
-  top: 50px;
-  right: 10px;
-  background-color: var(--button-color);
-  padding: 0px;
-  border-radius: 10px;
-  border: solid 1px;
-  border-color: var(--selected-color)
-}
+
 #profile-menu a {
   text-decoration: none;
 }

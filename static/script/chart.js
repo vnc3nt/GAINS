@@ -22,7 +22,7 @@ async function drawChart() {
         });
 
 
-    let databaseData = [['Datum', 'Körperfett', 'Gewicht', 'Muskelmasse']];
+    let databaseData = [['Datum', 'Körperfett', {type:'string', role:'style'}, 'Gewicht',{type:'string', role:'style'}, 'Muskelmasse', {type:'string', role:'style'}]];
     let firstDate = undefined;
     let currentDate = undefined;
 
@@ -34,29 +34,31 @@ async function drawChart() {
 
         let elementDate = stringToDate(element.date);
         while (currentDate < elementDate) {
-            databaseData.push([dateToString(currentDate), 0, 0, 0]);
+            databaseData.push([dateToString(currentDate), 0,'point { fill-color: #1700ad; }', 0,'point { fill-color: #949292; }', 0, 'point { fill-color: #890000; }']);
             currentDate = addDays(currentDate, 1);
         }
-
-        databaseData.push([element.date, element.fat ?? 0, element.weight ?? 0, element.muscle ?? 0]);
+//nicht interpolierte Werte
+        databaseData.push([element.date, element.fat ?? 0,'point { fill-color: #ffffff; }', element.weight ?? 0,'point { fill-color: #ffffff; }', element.muscle ?? 0, 'point { fill-color: #ffffff; }']);
         currentDate = addDays(currentDate, 1);
     });
-
+    console.debug("DATAAA: " + databaseData);
     // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
     ersetzeNullenMitInterpoliertenWerten(databaseData);
 
     //databaseData = filterData(databaseData, interval)
+    console.debug("DATAAA: " + databaseData);
 
     let data = google.visualization.arrayToDataTable(databaseData);
 
-    console.debug(databaseData);
 
     let maxValue = Math.max(...userData.maxValue);
+
+    document.querySelector(".max").textContent = Math.round((maxValue + 10) / 10) * 10; //auf skalierung auf 10er gerundet schreiben
+
 
     // Erhalten Sie alle Radiobuttons
     let selectedValue = document.querySelector("input[type=radio][name='view-options']:checked").value
     console.debug(viewoption[selectedValue]);
-    
     
 
     let options = {
@@ -106,36 +108,38 @@ function addDays(date, days) {
 }
 
 function ersetzeNullenMitInterpoliertenWerten(databaseData) {
-    let vorherigeWerte = [0, 0, 0]; // Vorherige Werte für fat, weight und muscle
-    let zukünftigeWerte = [0, 0, 0]; // Zukünftige Werte für fat, weight und muscle
-    let nullStreckenStart = [0, 0, 0]; // Startindex der aufeinanderfolgenden Nullen für fat, weight und muscle
+    let spaltenAnzahl = databaseData[0].length; // Anzahl der Spalten dynamisch festlegen
+
+    let vorherigeWerte = new Array(spaltenAnzahl).fill(0);
+    let zukünftigeWerte = new Array(spaltenAnzahl).fill(0);
+    let nullStreckenStart = new Array(spaltenAnzahl).fill(0);
 
     for (let i = 1; i < databaseData.length; i++) {
-        for (let j = 1; j <= 3; j++) {
+        for (let j = 1; j < spaltenAnzahl; j++) {
             if (databaseData[i][j] === 0) {
-                if (nullStreckenStart[j - 1] === 0) {
-                    vorherigeWerte[j - 1] = Number(databaseData[i - 1][j]);
-                    nullStreckenStart[j - 1] = i;
+                if (nullStreckenStart[j] === 0) {
+                    vorherigeWerte[j] = Number(databaseData[i - 1][j]);
+                    nullStreckenStart[j] = i;
                 }
             } else {
-                if (nullStreckenStart[j - 1] > 0) {
-                    zukünftigeWerte[j - 1] = Number(databaseData[i][j]);
-                    let schrittweite = (zukünftigeWerte[j - 1] - vorherigeWerte[j - 1]) / (i - nullStreckenStart[j - 1] + 1);
-                    for (let k = nullStreckenStart[j - 1]; k < i; k++) {
-                        databaseData[k][j] = Number((vorherigeWerte[j - 1] + schrittweite * (k - nullStreckenStart[j - 1] + 1)).toFixed(2));
+                if (nullStreckenStart[j] > 0) {
+                    zukünftigeWerte[j] = Number(databaseData[i][j]);
+                    let schrittweite = (zukünftigeWerte[j] - vorherigeWerte[j]) / (i - nullStreckenStart[j] + 1);
+                    for (let k = nullStreckenStart[j]; k < i; k++) {
+                        databaseData[k][j] = Number((vorherigeWerte[j] + schrittweite * (k - nullStreckenStart[j] + 1)).toFixed(2));
                     }
-                    nullStreckenStart[j - 1] = 0;
+                    nullStreckenStart[j] = 0;
                 }
-                vorherigeWerte[j - 1] = Number(databaseData[i][j]);
+                vorherigeWerte[j] = Number(databaseData[i][j]);
             }
         }
     }
 
     // Behandlung für den Fall, dass das Array mit Nullen endet
-    for (let j = 1; j <= 3; j++) {
-        if (nullStreckenStart[j - 1] > 0) {
-            for (let k = nullStreckenStart[j - 1]; k < databaseData.length; k++) {
-                databaseData[k][j] = Number(vorherigeWerte[j - 1].toFixed(2)); // Verwenden Sie den letzten Nicht-Null-Wert
+    for (let j = 1; j < spaltenAnzahl; j++) {
+        if (nullStreckenStart[j] > 0) {
+            for (let k = nullStreckenStart[j]; k < databaseData.length; k++) {
+                databaseData[k][j] = Number(vorherigeWerte[j].toFixed(2)); // Verwenden Sie den letzten Nicht-Null-Wert
             }
         }
     }

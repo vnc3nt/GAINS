@@ -1,3 +1,13 @@
-input {
-    
-}
+#profile-menu {
+    margin: 0px;
+    position: absolute;
+    overflow: auto;
+    z-index: 0;
+    top: 55px;
+    right: 5px;
+    background-color: var(--button-color);
+    padding: 0px;
+    border-radius: 10px;
+    border: solid 1px;
+    border-color: var(--selected-color)
+  }

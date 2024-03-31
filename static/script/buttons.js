@@ -42,6 +42,9 @@ window.addEventListener("touchstart", (e) => {
         touchStartY = e.touches[0].clientY;
         console.debug("Touch start:", touchStartTime);
     }
+    if (actualTarget.className !== "profile") {
+        hideProfile(e);
+    }
 });
 
 
@@ -210,4 +213,15 @@ async function rightClick(e) { //edit old data
     //alert("right clicked!");
     e.preventDefault(); //kein kontextmenü
     window.location.assign("/edit");
+}
+
+function hideProfile(e) {
+    console.log(e.target.id);
+    if (e.target.id !== "profile-menu-btn"){
+        var elem = document.querySelector("details#profile-menu-btn");
+        if(elem.open){
+            console.log(elem.open);
+            elem.open = false;
+        }
+    }
 }
