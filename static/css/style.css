@@ -116,8 +116,8 @@ body {
 }
 
 .max {
-  position: fixed;
-  top: calc(4rem + 80px);
+  position: absolute;
+  top: calc(4rem - 40px);
   padding: 10px;
   background-color: var(--button-color);
   border-radius: 5px;
@@ -179,8 +179,6 @@ button {
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
 }
-
-
 
 .view {
     position: absolute;

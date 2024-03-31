@@ -43,7 +43,7 @@ window.addEventListener("touchstart", (e) => {
         console.debug("Touch start:", touchStartTime);
     }
     if (actualTarget.className !== "profile") {
-        hideProfile(e);
+        checkToHideProfile(e);
     }
 });
 
@@ -215,13 +215,45 @@ async function rightClick(e) { //edit old data
     window.location.assign("/edit");
 }
 
-function hideProfile(e) {
-    console.log(e.target.id);
-    if (e.target.id !== "profile-menu-btn"){
-        var elem = document.querySelector("details#profile-menu-btn");
-        if(elem.open){
-            console.log(elem.open);
-            elem.open = false;
+function checkToHideProfile(e) {
+    const profileMenu = document.querySelector("#profile-menu");
+    const profileMenuButton = document.querySelector("details#profile-menu-btn");
+    let startY = e.touches[0].clientY;
+    let originalY = 0;
+
+    profileMenu.addEventListener("touchstart", (event) => {
+        startY = event.touches[0].clientY;
+        originalY = profileMenu.getBoundingClientRect().top;
+    });
+
+    profileMenu.addEventListener("touchmove", (event) => {
+        const deltaY = event.touches[0].clientY - startY;
+        if(deltaY > 0){
+            profileMenu.style.transform = `translateY(${deltaY}px)`;
         }
-    }
+        else {
+            profileMenu.style.transform = `translateY(${deltaY/10}px)`;
+        }
+    });
+
+    profileMenu.addEventListener("touchend", () => {
+        // Prüfe, ob der Bereich überschritten wurde
+        const threshold = 200; // Beispielwert
+        if (Math.abs(profileMenu.getBoundingClientRect().top - originalY) > threshold) {
+            // Führe die Animation aus
+            profileMenu.style.transform = "translateY(100%)"; // Beispiel: nach unten fliegen
+            // Führe den Code aus
+            if (profileMenuButton.open) {
+                
+                profileMenuButton.open = false;
+            }
+            profileMenu.style.transform = "translateY(0%)";
+        } else {
+            // Springe zurück zur Ausgangsposition
+            profileMenu.style.transition = "transform 0.1s ease"; // Animationseffekt hinzufügen
+            profileMenu.style.transform = `translateY(${originalY}px)`;
+        }
+    });
 }
+
+
