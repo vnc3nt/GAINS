@@ -34,11 +34,11 @@ async function drawChart() {
 
         let elementDate = stringToDate(element.date);
         while (currentDate < elementDate) {
-            databaseData.push([dateToString(currentDate), 0,'point { size: 3; fill-color: #1700ad; }', 0,'point { size: 3; fill-color: #949292; }', 0, 'point { size: 3; fill-color: #890000; }']);
+            databaseData.push([dateToString(currentDate), 0,'point { fill-color: #1700ad; }', 0,'point { fill-color: #949292; }', 0, 'point { fill-color: #890000; }']);
             currentDate = addDays(currentDate, 1);
         }
 //nicht interpolierte Werte
-        databaseData.push([element.date, element.fat ?? 0,'point { size: 4; fill-color: #ffffff; }', element.weight ?? 0,'point { size: 4; fill-color: #ffffff; }', element.muscle ?? 0, 'point { size: 4; fill-color: #ffffff; }']);
+        databaseData.push([element.date, element.fat ?? 0,'point { fill-color: #ffffff; }', element.weight ?? 0,'point { fill-color: #ffffff; }', element.muscle ?? 0, 'point { fill-color: #ffffff; }']);
         currentDate = addDays(currentDate, 1);
     });
     console.debug("DATAAA: " + databaseData);
@@ -52,6 +52,9 @@ async function drawChart() {
 
 
     let maxValue = Math.max(...userData.maxValue);
+
+    document.querySelector(".max").textContent = Math.round((maxValue + 10) / 10) * 10; //auf skalierung auf 10er gerundet schreiben
+
 
     // Erhalten Sie alle Radiobuttons
     let selectedValue = document.querySelector("input[type=radio][name='view-options']:checked").value

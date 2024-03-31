@@ -106,6 +106,26 @@ body {
     display: none;
 }
 
+.scale {
+  position: absolute;
+  top: calc(4rem + 100px);
+  right: 0px;
+  height: calc(100% - 4rem - 140px - 70px);
+  width: 30px;
+  background-color: var(--website-background-color);
+  color: var(--text-color);
+}
+
+.max {
+  position: absolute;
+  top: 10px;
+}
+
+.min {
+  position: absolute;
+  bottom: 10px;
+}
+
 .login {
     padding-top: 100px;
     text-align: center;
