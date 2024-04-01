@@ -94,7 +94,8 @@ body {
     overflow-x: scroll;
     overflow-y: hidden;
     touch-action: pan-x; /*no gummy-scrolleffect on mobile when scrolling up and down*/
-    width: 95%;
+    width: 100%;
+    left: 0px;
     height: calc(100% - 4rem - 90px - 90px);
     /*scroll-snap-type: x mandatory;
     scroll-padding: 20px;*/
@@ -123,6 +124,7 @@ body {
   border-radius: 5px;
   border: solid 1px;
   border-color: var(--selected-color);
+  z-index: 1;
 }
 
 .min {
