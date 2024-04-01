@@ -210,6 +210,7 @@ function checkToHideProfile(e) {
         const deltaY = event.touches[0].clientY - startY;
         if(deltaY > 0){
             profileMenu.style.transform = `translateY(${deltaY}px)`;
+            profileMenu.style.transform += `scale(.97)`;
         }
         else {
             profileMenu.style.transform = `translateY(${deltaY/10}px)`;
