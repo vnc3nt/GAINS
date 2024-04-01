@@ -215,7 +215,7 @@ function checkToHideProfile(e) {
 
     profileMenu.addEventListener("touchend", () => {
         // Prüfe, ob der Bereich überschritten wurde
-        const threshold = 100; // Beispielwert
+        const threshold = 200; // Beispielwert
         if (profileMenu.getBoundingClientRect().top - originalY > threshold) {
             // Führe die Animation aus
             profileMenu.style.transform = "translateY(100%)"; // Beispiel: nach unten fliegen
