@@ -53,7 +53,7 @@ async function drawChart() {
 
     let maxValue = Math.max(...userData.maxValue);
 
-    document.querySelector(".max").textContent = Math.round((maxValue + 10) / 10) * 10; //auf skalierung auf 10er gerundet schreiben
+    document.querySelector(".max").textContent = Math.round((maxValue + 5) / 5) * 5; //auf skalierung auf 10er gerundet schreiben
 
 
     // Erhalten Sie alle Radiobuttons
