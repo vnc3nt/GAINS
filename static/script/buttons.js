@@ -219,19 +219,18 @@ function checkToHideProfile(e) {
 
     profileMenu.addEventListener("touchend", () => {
         // Prüfe, ob der Bereich überschritten wurde
-        const threshold = 200; // Beispielwert
+        const threshold = 200;
         if (profileMenu.getBoundingClientRect().top - originalY > threshold) {
-            // Führe die Animation aus
-            profileMenu.style.transform = "translateY(100%)"; // Beispiel: nach unten fliegen
-            // Führe den Code aus
+
+            profileMenu.style.transform = "translateY(100%)"; //nach unten fliegen
+
             if (profileMenuButton.open) {
-                
                 profileMenuButton.open = false;
             }
             profileMenu.style.transform = "translateY(0%)";
         } else {
             // Springe zurück zur Ausgangsposition
-            profileMenu.style.transition = "transform 0.1s ease"; // Animationseffekt hinzufügen
+            profileMenu.style.transition = "transform 0.1s ease";
             profileMenu.style.transform = `translateY(${originalY}px)`;
         }
     });
