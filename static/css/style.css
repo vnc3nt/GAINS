@@ -94,7 +94,8 @@ body {
     overflow-x: scroll;
     overflow-y: hidden;
     touch-action: pan-x; /*no gummy-scrolleffect on mobile when scrolling up and down*/
-    width: 95%;
+    width: 100%;
+    left: 0px;
     height: calc(100% - 4rem - 90px - 90px);
     /*scroll-snap-type: x mandatory;
     scroll-padding: 20px;*/
@@ -123,6 +124,7 @@ body {
   border-radius: 5px;
   border: solid 1px;
   border-color: var(--selected-color);
+  z-index: 1;
 }
 
 .min {
@@ -261,6 +263,7 @@ input[id=year]:checked~.glider {
 
 /* scroll snap takes care of restoring scroll position */
 .swipe-container {
+  width: 80%;
   display: flex;
   overflow: auto;
   overflow-x: scroll;
@@ -271,7 +274,7 @@ input[id=year]:checked~.glider {
   display: none;
 }
 /* main element should always snap into view */
-.swipe-element {
+.element {
   scroll-snap-align: start;
   font-family: sans-serif;
   padding: 16px;
@@ -279,7 +282,7 @@ input[id=year]:checked~.glider {
 }
 /* actions and element should be 100% wide */
 .action,
-.swipe-element {
+.element {
   min-width: 100%;
 }
 .action {
@@ -381,4 +384,62 @@ details summary::-webkit-details-marker {
 
 a {
   cursor: pointer;
+}
+
+.element {
+  touch-action: auto;
+  height: 60px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: 0.7rem;
+}
+.element .fat {
+  position: relative;
+  border: solid 3px;
+  border-radius: 10px;
+  height: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  top: 10px;
+  border-color: rgba(20, 0, 150, .9) !important;
+  background-color: rgba(20, 0, 150, .5);
+  font-size: 1rem;
+}
+.element .weight {
+  position: relative;
+  border: solid 3px;
+  border-radius: 10px;
+  height: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  top: 10px;
+  border-color: rgba(120, 120, 120, 0.902) !important;
+  background-color: rgba(120, 120, 120, .5);
+  font-size: 1rem;
+}
+.element .muscle {
+  position: relative;
+  border: solid 3px;
+  border-radius: 10px;
+  height: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  top: 10px;
+  border-color: rgba(115, 0, 0, 0.902) !important;
+  background-color: rgba(115, 0, 0, .5);
+  font-size: 1rem;
 }

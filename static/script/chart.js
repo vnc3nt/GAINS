@@ -41,19 +41,19 @@ async function drawChart() {
         databaseData.push([element.date, element.fat ?? 0,'point { fill-color: #ffffff; }', element.weight ?? 0,'point { fill-color: #ffffff; }', element.muscle ?? 0, 'point { fill-color: #ffffff; }']);
         currentDate = addDays(currentDate, 1);
     });
-    console.debug("DATAAA: " + databaseData);
+
     // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
     ersetzeNullenMitInterpoliertenWerten(databaseData);
 
     //databaseData = filterData(databaseData, interval)
-    console.debug("DATAAA: " + databaseData);
+
 
     let data = google.visualization.arrayToDataTable(databaseData);
 
 
     let maxValue = Math.max(...userData.maxValue);
 
-    document.querySelector(".max").textContent = Math.round((maxValue + 10) / 10) * 10; //auf skalierung auf 10er gerundet schreiben
+    document.querySelector(".max").textContent = Math.round((maxValue + 5) / 5) * 5; //auf skalierung auf 10er gerundet schreiben
 
 
     // Erhalten Sie alle Radiobuttons
