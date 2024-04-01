@@ -28,7 +28,6 @@ const RIGHT_CLICK_TOUCH = 300;  // ms
 const DRAG_DISTANCE = 25;  // px²
 
 window.addEventListener("touchstart", (e) => {
-     //TODO zu viele Fehlermeldungen bei den Touchevents + durch if abfragen ob target null ist funkt webkit rechtsklick nicht mehr
     touchX = e.touches[0].clientX;
     touchY = e.touches[0].clientY;
     let actualTarget = document.elementFromPoint(touchX, touchY);
@@ -40,10 +39,10 @@ window.addEventListener("touchstart", (e) => {
         touchStartTime = e.timeStamp;    // timeStamp in ms
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
-        console.debug("Touch start:", touchStartTime);
+        //console.debug("Touch start:", touchStartTime);
     }
 
-    //Funktion zum anmieren desprofilemenus
+    //Funktion zum anmieren des profilemenus
     checkToHideProfile(e);
 });
 
@@ -51,39 +50,41 @@ window.addEventListener("touchstart", (e) => {
 window.addEventListener("touchmove", (e) => {
     touchX = e.touches[0].clientX;
     touchY = e.touches[0].clientY;
-    if (actualTarget.className === "muscle" || actualTarget.className === "fat" || actualTarget.className === "weight"){
-        if (e.touches.length >= 2) { 
-            touchSimulation = TOUCH_NORMAL;
-            return;
-        }
-        console.log("actual target", actualTarget);
-        if (touchSimulation === TOUCH_NORMAL) {
-            let moveX = touchStartX - e.touches[0].clientX;
-            let moveY = touchStartY - e.touches[0].clientY;
-            moveDistance = moveX * moveX + moveY * moveY;
-            if (moveDistance >= DRAG_DISTANCE) {
-                let draggedTouchNode = findNextDraggable(e.target);
-                if (draggedTouchNode) {
-                    globalDatatransfer = new DataTransfer();
-                    globalDatatransfer.dropEffect = "move";
-                    globalDatatransfer.effectAllowed = "move";
+    if (e.target != null) {
+        if (e.target.className === "muscle" || e.target.className === "fat" || e.target.className === "weight"){
+            if (e.touches.length >= 2) { 
+                touchSimulation = TOUCH_NORMAL;
+                return;
+            }
+            console.log("target", target);
+            if (touchSimulation === TOUCH_NORMAL) {
+                let moveX = touchStartX - e.touches[0].clientX;
+                let moveY = touchStartY - e.touches[0].clientY;
+                moveDistance = moveX * moveX + moveY * moveY;
+                if (moveDistance >= DRAG_DISTANCE) {
+                    let draggedTouchNode = findNextDraggable(e.target);
+                    if (draggedTouchNode) {
+                        globalDatatransfer = new DataTransfer();
+                        globalDatatransfer.dropEffect = "move";
+                        globalDatatransfer.effectAllowed = "move";
 
-                    console.log(globalDatatransfer);
-                    draggedTouchNode.dispatchEvent(new DragEvent("dragstart", {bubble: true, dataTransfer: globalDatatransfer}));
-                    touchSimulation = TOUCH_DRAG;
-                    lastTarget = actualTarget;
-                    lastTarget.dispatchEvent(new DragEvent("dragenter", {bubbles: true, dataTransfer: globalDatatransfer}));
+                        console.log(globalDatatransfer);
+                        draggedTouchNode.dispatchEvent(new DragEvent("dragstart", {bubble: true, dataTransfer: globalDatatransfer}));
+                        touchSimulation = TOUCH_DRAG;
+                        lastTarget = actualTarget;
+                        lastTarget.dispatchEvent(new DragEvent("dragenter", {bubbles: true, dataTransfer: globalDatatransfer}));
+                    }
                 }
             }
-        }
-        else if (touchSimulation === TOUCH_DRAG) {
-            // TODO dragenter/-leave
-            let prevDOver = actualTarget.dispatchEvent(new DragEvent("dragover", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
-            allowDrop = !prevDOver;
-            if (actualTarget != lastTarget) {
-                lastTarget.dispatchEvent(new DragEvent("dragleave", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
-                lastTarget = actualTarget;
-                actualTarget.dispatchEvent(new DragEvent("dragenter", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
+            else if (touchSimulation === TOUCH_DRAG) {
+                // TODO dragenter/-leave
+                let prevDOver = actualTarget.dispatchEvent(new DragEvent("dragover", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
+                allowDrop = !prevDOver;
+                if (actualTarget != lastTarget) {
+                    lastTarget.dispatchEvent(new DragEvent("dragleave", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
+                    lastTarget = actualTarget;
+                    actualTarget.dispatchEvent(new DragEvent("dragenter", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
+                }
             }
         }
     }
@@ -93,25 +94,27 @@ window.addEventListener("touchend", (e) => {
     touchX = e.changedTouches[0].clientX;
     touchY = e.changedTouches[0].clientY;
     let actualTarget = document.elementFromPoint(touchX, touchY);
-    console.debug(actualTarget.className);
-    if (actualTarget.className === "muscle" || actualTarget.className === "fat" || actualTarget.className === "weight"){
-        console.log("touch end diff:", e.timeStamp - touchStartTime);
-        if (!touchStartTime || e.touches.length >= 2) {
-            touchStartTime = null;
-            return;
-        }
-
-        let diff = e.timeStamp - touchStartTime;  // ms 
-        console.debug("end touch target", e.target);
-        
-        touchSimulation = TOUCH_NORMAL;
-        if (moveDistance < DRAG_DISTANCE) { // block clicks when it has been swiped
-            if (diff >= RIGHT_CLICK_TOUCH && touchSimulation === TOUCH_NORMAL) {
-                e.preventDefault(); 
-                rightClick(e);
+    //console.debug(actualTarget.className);
+    if (e.target != null) {
+        if (e.target.className === "muscle" || e.target.className === "fat" || e.target.className === "weight"){
+            console.log("touch end diff:", e.timeStamp - touchStartTime);
+            if (!touchStartTime || e.touches.length >= 2) {
+                touchStartTime = null;
+                return;
             }
+
+            let diff = e.timeStamp - touchStartTime;  // ms 
+            //console.debug("end touch target", e.target);
+            
+            touchSimulation = TOUCH_NORMAL;
+            if (moveDistance < DRAG_DISTANCE) { // block clicks when it has been swiped
+                if (diff >= RIGHT_CLICK_TOUCH && touchSimulation === TOUCH_NORMAL) {
+                    e.preventDefault(); 
+                    rightClick(e);
+                }
+            }
+            touchStartTime = null;
         }
-        touchStartTime = null;
     }
 });
 
