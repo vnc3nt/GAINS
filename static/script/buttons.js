@@ -28,7 +28,6 @@ const RIGHT_CLICK_TOUCH = 300;  // ms
 const DRAG_DISTANCE = 25;  // px²
 
 window.addEventListener("touchstart", (e) => {
-     //TODO zu viele Fehlermeldungen bei den Touchevents + durch if abfragen ob target null ist funkt webkit rechtsklick nicht mehr
     touchX = e.touches[0].clientX;
     touchY = e.touches[0].clientY;
     let actualTarget = document.elementFromPoint(touchX, touchY);
@@ -40,101 +39,82 @@ window.addEventListener("touchstart", (e) => {
         touchStartTime = e.timeStamp;    // timeStamp in ms
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
-        console.debug("Touch start:", touchStartTime);
+        //console.debug("Touch start:", touchStartTime);
     }
-    if (actualTarget.className !== "profile") {
-        hideProfile(e);
-    }
+
+    //Funktion zum anmieren des profilemenus
+    checkToHideProfile(e);
 });
 
 
 window.addEventListener("touchmove", (e) => {
     touchX = e.touches[0].clientX;
     touchY = e.touches[0].clientY;
-    if (actualTarget.className === "muscle" || actualTarget.className === "fat" || actualTarget.className === "weight"){
-        if (e.touches.length >= 2) { 
-            touchSimulation = TOUCH_NORMAL;
-            return;
-        }
-        console.log("actual target", actualTarget);
-        if (touchSimulation === TOUCH_NORMAL) {
-            let moveX = touchStartX - e.touches[0].clientX;
-            let moveY = touchStartY - e.touches[0].clientY;
-            moveDistance = moveX * moveX + moveY * moveY;
-            if (moveDistance >= DRAG_DISTANCE) {
-                let draggedTouchNode = findNextDraggable(e.target);
-                if (draggedTouchNode) {
-                    globalDatatransfer = new DataTransfer();
-                    globalDatatransfer.dropEffect = "move";
-                    globalDatatransfer.effectAllowed = "move";
+    if (e.target != null) {
+        if (e.target.className === "muscle" || e.target.className === "fat" || e.target.className === "weight"){
+            if (e.touches.length >= 2) { 
+                touchSimulation = TOUCH_NORMAL;
+                return;
+            }
+            console.log("target", target);
+            if (touchSimulation === TOUCH_NORMAL) {
+                let moveX = touchStartX - e.touches[0].clientX;
+                let moveY = touchStartY - e.touches[0].clientY;
+                moveDistance = moveX * moveX + moveY * moveY;
+                if (moveDistance >= DRAG_DISTANCE) {
+                    let draggedTouchNode = findNextDraggable(e.target);
+                    if (draggedTouchNode) {
+                        globalDatatransfer = new DataTransfer();
+                        globalDatatransfer.dropEffect = "move";
+                        globalDatatransfer.effectAllowed = "move";
 
-                    console.log(globalDatatransfer);
-                    draggedTouchNode.dispatchEvent(new DragEvent("dragstart", {bubble: true, dataTransfer: globalDatatransfer}));
-                    touchSimulation = TOUCH_DRAG;
-                    lastTarget = actualTarget;
-                    lastTarget.dispatchEvent(new DragEvent("dragenter", {bubbles: true, dataTransfer: globalDatatransfer}));
+                        console.log(globalDatatransfer);
+                        draggedTouchNode.dispatchEvent(new DragEvent("dragstart", {bubble: true, dataTransfer: globalDatatransfer}));
+                        touchSimulation = TOUCH_DRAG;
+                        lastTarget = actualTarget;
+                        lastTarget.dispatchEvent(new DragEvent("dragenter", {bubbles: true, dataTransfer: globalDatatransfer}));
+                    }
                 }
             }
-        }
-        else if (touchSimulation === TOUCH_DRAG) {
-            // TODO dragenter/-leave
-            let prevDOver = actualTarget.dispatchEvent(new DragEvent("dragover", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
-            allowDrop = !prevDOver;
-            if (actualTarget != lastTarget) {
-                lastTarget.dispatchEvent(new DragEvent("dragleave", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
-                lastTarget = actualTarget;
-                actualTarget.dispatchEvent(new DragEvent("dragenter", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
+            else if (touchSimulation === TOUCH_DRAG) {
+                // TODO dragenter/-leave
+                let prevDOver = actualTarget.dispatchEvent(new DragEvent("dragover", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
+                allowDrop = !prevDOver;
+                if (actualTarget != lastTarget) {
+                    lastTarget.dispatchEvent(new DragEvent("dragleave", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
+                    lastTarget = actualTarget;
+                    actualTarget.dispatchEvent(new DragEvent("dragenter", {bubbles: true, dataTransfer: globalDatatransfer, cancelable: true}));
+                }
             }
         }
     }
 });
 
 window.addEventListener("touchend", (e) => {
-    touchX = e.touches[0].clientX;
-    touchY = e.touches[0].clientY;
+    touchX = e.changedTouches[0].clientX;
+    touchY = e.changedTouches[0].clientY;
     let actualTarget = document.elementFromPoint(touchX, touchY);
-    if (actualTarget.className === "muscle" || actualTarget.className === "fat" || actualTarget.className === "weight"){
-        console.log("touch end diff:", e.timeStamp - touchStartTime);
-        if (!touchStartTime || e.touches.length >= 2) {
-            touchStartTime = null;
-            return;
-        }
-
-        let diff = e.timeStamp - touchStartTime;  // ms 
-        console.debug("end touch target", e.target);
-        if (touchSimulation === TOUCH_DRAG) {
-            e.preventDefault();
-            let actualTarget = document.elementFromPoint(touchX, touchY);
-            console.debug("Maybe drop", actualTarget);
-            if (draggedTouchNode !== undefined) {
-                draggedTouchNode.classList.remove("mobile-drag-element");
-                draggedTouchNode.style.removeProperty("left");
-                draggedTouchNode.style.removeProperty("top");
-                draggedTouchNode = undefined;
+    //console.debug(actualTarget.className);
+    if (e.target != null) {
+        if (e.target.className === "muscle" || e.target.className === "fat" || e.target.className === "weight"){
+            console.log("touch end diff:", e.timeStamp - touchStartTime);
+            if (!touchStartTime || e.touches.length >= 2) {
+                touchStartTime = null;
+                return;
             }
-            actualTarget.dispatchEvent(new DragEvent("dragleave", {bubbles: true, dataTransfer: globalDatatransfer}));
-            actualTarget.dispatchEvent(new DragEvent("dragend", {bubbles: true, dataTransfer: globalDatatransfer}));
 
-            if (allowDrop) { 
-                actualTarget.dispatchEvent(new DragEvent("drop", {bubbles: true, dataTransfer: globalDatatransfer}));
-            }
-            console.log("drop events");
+            let diff = e.timeStamp - touchStartTime;  // ms 
+            //console.debug("end touch target", e.target);
+            
             touchSimulation = TOUCH_NORMAL;
-            globalDatatransfer = null;
-        }
-        else if (moveDistance < DRAG_DISTANCE) { // block clicks when it has been swiped
-            // left click/right click simulation
-            console.debug("Normal click")
-            if (diff >= RIGHT_CLICK_TOUCH && touchSimulation === TOUCH_NORMAL) {
-                e.preventDefault();
-                e?.target.dispatchEvent(new Event("contextmenu", {bubbles: true}));  // event 
+            if (moveDistance < DRAG_DISTANCE) { // block clicks when it has been swiped
+                if (diff >= RIGHT_CLICK_TOUCH && touchSimulation === TOUCH_NORMAL) {
+                    e.preventDefault(); 
+                    rightClick(e);
+                }
             }
-            // else {  // don't handle left click because the defaults are probably optimized
-            //     console.log("Left click");
-            //     e?.target.dispatchEvent(new PointerEvent("click", {bubbles: true}));
-            // }
+            touchStartTime = null;
         }
-        touchStartTime = null;
     }
 });
 
@@ -215,13 +195,45 @@ async function rightClick(e) { //edit old data
     window.location.assign("/edit");
 }
 
-function hideProfile(e) {
-    console.log(e.target.id);
-    if (e.target.id !== "profile-menu-btn"){
-        var elem = document.querySelector("details#profile-menu-btn");
-        if(elem.open){
-            console.log(elem.open);
-            elem.open = false;
+function checkToHideProfile(e) {
+    const profileMenu = document.querySelector("#profile-menu");
+    const profileMenuButton = document.querySelector("details#profile-menu-btn");
+    let startY = e.touches[0].clientY;
+    let originalY = 0;
+
+    profileMenu.addEventListener("touchstart", (event) => {
+        startY = event.touches[0].clientY;
+        originalY = profileMenu.getBoundingClientRect().top;
+    });
+
+    profileMenu.addEventListener("touchmove", (event) => {
+        const deltaY = event.touches[0].clientY - startY;
+        if(deltaY > 0){
+            profileMenu.style.transform = `translateY(${deltaY}px)`;
+            profileMenu.style.transform += `scale(.97)`;
         }
-    }
+        else {
+            profileMenu.style.transform = `translateY(${deltaY/10}px)`;
+        }
+    });
+
+    profileMenu.addEventListener("touchend", () => {
+        // Prüfe, ob der Bereich überschritten wurde
+        const threshold = 200;
+        if (profileMenu.getBoundingClientRect().top - originalY > threshold) {
+
+            profileMenu.style.transform = "translateY(100%)"; //nach unten fliegen
+
+            if (profileMenuButton.open) {
+                profileMenuButton.open = false;
+            }
+            profileMenu.style.transform = "translateY(0%)";
+        } else {
+            // Springe zurück zur Ausgangsposition
+            profileMenu.style.transition = "transform 0.1s ease";
+            profileMenu.style.transform = `translateY(${originalY}px)`;
+        }
+    });
 }
+
+
