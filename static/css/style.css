@@ -89,21 +89,15 @@ body {
 }
 
 .scrollwindow {
-    position: relative;
-    top: calc(4rem + 20px);
+    position: absolute;
+    top: calc(4rem + 50px);
     overflow-x: scroll;
     overflow-y: hidden;
     touch-action: pan-x; /*no gummy-scrolleffect on mobile when scrolling up and down*/
-    width: 100%;
+    width: 92.5%;
     height: calc(100% - 4rem - 140px);
     /*scroll-snap-type: x mandatory;
     scroll-padding: 20px;*/
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-.scrollwindow::-webkit-scrollbar {
-    display: none;
 }
 
 .login {
@@ -155,7 +149,7 @@ button {
 
 .view {
     position: absolute;
-    top: calc(4rem + 15px);
+    top: calc(4rem + 40px);
     right: 10px;
 }
 
