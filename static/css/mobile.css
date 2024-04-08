@@ -1,9 +1,19 @@
+.scrollwindow {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.scrollwindow::-webkit-scrollbar {
+    display: none;
+}
+
+
 #profile-menu {
     position: absolute;
     right: -14px;
     top: 65px;
     width: 100vw;
-    height: calc(100vh - 45px);
+    height: calc(110vh - 45px + 20px);
     border-radius: 10px 10px 0 0;
     margin: 0px;
     overflow: hidden;

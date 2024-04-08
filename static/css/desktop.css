@@ -11,3 +11,11 @@
     border: solid 1px;
     border-color: var(--selected-color)
   }
+
+
+.scrollwindow::-webkit-scrollbar {
+    width: 100px;
+    height: 10px;
+    position: absolute;
+    left: 0;
+}
