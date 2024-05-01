@@ -186,7 +186,7 @@ button {
 
 .view {
     position: absolute;
-    top: calc(4rem + 40px);
+    top: calc(4rem + 20px);
     right: 10px;
 }
 
@@ -201,6 +201,7 @@ button {
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
+    width: 130px;
 }
 
 .view-options * {
@@ -214,7 +215,7 @@ input[type=radio] {
 .tab {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     height: 7.5px;
     width: 45px;
     font-size: .725rem;
@@ -227,27 +228,39 @@ input[type=radio] {
     user-select: none; /* Standard syntax */
 }
 
+.tab[for="week"] {
+  transform: translateX(-5px);
+}
+
+.tab[for="month"] {
+  transform: translateX(+3px);
+}
+
+.tab[for="year"] {
+  transform: translateX(+5px);
+}
+
 input[type=radio]:checked+label {
     color: var(--text-color);
 }
 
 input[id=week]:checked~.glider {
-    transform: translateX(0%);
+    transform: translateX(-18%) scaleX(95%);
 }
 
 input[id=month]:checked~.glider {
-    transform: translateX(100%);
+    transform: translateX(72%) scaleX(90%);
 }
 
 input[id=year]:checked~.glider {
-    transform: translateX(200%);
+    transform: translateX(158%) scaleX(85%);
 }
 
 .glider {
     position: absolute;
     display: flex;
     height: 25px;
-    width: 45px;
+    width: 55px;
     top: 3px;
     background-color: var(--selected-color);
     z-index: 1;
