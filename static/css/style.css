@@ -350,6 +350,7 @@ details summary::-webkit-details-marker {
 #profile-menu {
   right: 26px;
   min-width: 200px;
+  
 }
 
 .username {
@@ -391,6 +392,7 @@ details summary::-webkit-details-marker {
   user-select: none;
   display: flex;
   align-items: center;
+  
 }
 #profile-menu ul li .submenu {
   flex: 3;
