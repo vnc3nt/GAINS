@@ -25,11 +25,17 @@ body {
     touch-action: none;
 }
 
-.title {
-    font-size: 4rem;
-    position: absolute;
-    top: 5px;
-    left: 5px;
+.logo-pic {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 150px;
+}
+.logo-pic-centered {
+  position: absolute;
+  top: -10px;
+  left: calc(50% - 75px);
+  width: 150px;
 }
 
 .MainButtons button {
@@ -138,7 +144,7 @@ body {
 }
 
 .login {
-    padding-top: 100px;
+    padding-top: 120px;
     text-align: center;
 }
 
