@@ -10,7 +10,7 @@
 
 #profile-menu {
     position: absolute;
-    right: -14px;
+    right: -13px;
     top: 65px;
     width: 100vw;
     height: calc(110vh - 45px + 20px);
@@ -18,19 +18,29 @@
     margin: 0px;
     overflow: hidden;
     z-index: 0;
-    background-color: var(--button-color);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
     padding: 0px;
     border: solid 1px;
     border-color: var(--selected-color);
-    animation: profile-menu .1s ease;
+    animation: profile-menu .2s ease;
+    user-select: none;
 }
+
+#profile-menu ul li:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 
 @keyframes profile-menu {
     0% {
         transform: translateY(100%);
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
     }
 
     100%{
         transform: translateY(0%);
+        backdrop-filter: blur(7px);
+        -webkit-backdrop-filter: blur(7px);
     }
 }
