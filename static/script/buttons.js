@@ -44,6 +44,8 @@ window.addEventListener("touchstart", (e) => {
 
     //Funktion zum anmieren des profilemenus
     checkToHideProfile(e);
+
+    buttonSwipeUp(e)
 });
 
 
@@ -56,7 +58,6 @@ window.addEventListener("touchmove", (e) => {
                 touchSimulation = TOUCH_NORMAL;
                 return;
             }
-            console.log("target", target);
             if (touchSimulation === TOUCH_NORMAL) {
                 let moveX = touchStartX - e.touches[0].clientX;
                 let moveY = touchStartY - e.touches[0].clientY;
@@ -237,3 +238,43 @@ function checkToHideProfile(e) {
 }
 
 
+function buttonSwipeUp(e) {
+    const buttonMenu = document.getElementsByClassName("button-menu");
+    let startY = e.touches[0].clientY;
+    let originalY = 0;
+    console.log(buttonMenu);
+
+    buttonMenu.addEventListener("touchstart", (event) => {
+        startY = event.touches[0].clientY;
+        originalY = buttonMenu.getBoundingClientRect().top;
+    });
+
+    buttonMenu.addEventListener("touchmove", (event) => {
+        const deltaY = event.touches[0].clientY - startY;
+        if(deltaY > 0) {
+            buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
+        }
+        else {
+            if (Math.abs(deltaY) < 100){
+                buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
+            }
+            else{
+                buttonMenu.style.transform = `translateY(${deltaY}px)`;
+            }
+        }
+    });
+
+    buttonMenu.addEventListener("touchend", () => {
+        // Prüfe, ob der Bereich überschritten wurde
+        const threshold = 200;
+        if (buttonMenu.getBoundingClientRect().top - originalY > threshold) {
+
+            buttonMenu.style.transform = "translateY(100%)"; //nach unten fliegen
+
+        } else {
+            // Springe zurück zur Ausgangsposition
+            buttonMenu.style.transition = "transform 0.1s ease";
+            buttonMenu.style.transform = `translateY(${originalY}px)`;
+        }
+    });
+}

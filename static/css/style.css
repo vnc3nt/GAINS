@@ -53,11 +53,12 @@ body {
 }
 
 .MainButtons {
+  touch-action: auto;
     position: absolute;
     display: flex;
     justify-content: space-between;
     bottom: 30px;
-    width: 90%;
+    width: 93%;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
