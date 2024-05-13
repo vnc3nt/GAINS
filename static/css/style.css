@@ -47,7 +47,7 @@ body {
   right: 0px;
   top: calc(100vh - 150px);
   width: 100vw;
-  height: 70vh;
+  height: 75vh;
   border-radius: 10px 10px 0 0;
   border: solid 1px;
   border-color: var(--selected-color);
@@ -151,7 +151,9 @@ body {
   top: calc(4rem - 40px);
   right: 0px;
   padding: 10px;
-  background-color: var(--button-color);
+  background-color: rgba(var(--button-color),50);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
   border-radius: 5px;
   border: solid 1px;
   border-color: var(--selected-color);
@@ -164,6 +166,8 @@ body {
   right: 0px;
   padding: 10px;
   background-color: var(--button-color);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
   border-radius: 5px;
   border: solid 1px;
   border-color: var(--selected-color);
