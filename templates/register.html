@@ -1,15 +1,16 @@
 {% extends "index.html" %}
 {% block title %}
-<title>Login</title>
+<title>register</title>
 {% endblock title %}
 {% block content %}
 <img class="logo-pic-centered" src="{{url_for('static', filename='img/logo/logo-white.png')}}" alt="GAINS">
 <div class="login">
     <form action="" method="post">
         <input type="text" name="username_input" placeholder="username"><br>
-        <input type="password" name="password_input" placeholder="password"><br>
-        <button name="login_btn">einloggen</button>
+        <!--TODO add email-->
+        <input type="password" name="password_input_1" placeholder="password"><br>
+        <input type="password" name="password_input_2" placeholder="password"><br>
+        <button name="register_btn">registrieren</button>
     </form>
-    <a href="{{ url_for('register') }}" class="register">neu registrieren</a>
 </div>
 {% endblock content %}

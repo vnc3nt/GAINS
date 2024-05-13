@@ -12,6 +12,22 @@ def checkuser(username:str, password:str) -> bool:
     userpw = user.password
     return userpw == hash_pw(password)
 
+def checkRegistration(username:str, password_1:str, password_2:str) -> bool:
+    user = db.session.query(users).filter(users.username == username).first()
+    if user is None:
+        if password_1 == password_2:
+            
+            if len(password_1) >= 8:
+                
+                return True
+            else:
+                print("less than 8 characters")
+        else:
+            print("two different passwords")
+    else:
+        print("noUsername")
+
+    return False
 
 def hash_pw(password:str) -> str:
     return hashlib.sha512(bytes(password, encoding = "utf-8")).hexdigest()

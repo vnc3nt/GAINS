@@ -2,10 +2,11 @@ from flask import Flask, render_template, url_for, redirect, request, jsonify, s
 from models import db, users, token, data
 import os
 from api import app as api_app
-from login import checkuser, loginChecker, validTokenChecker, logoutUser
+from login import checkuser, loginChecker, validTokenChecker, logoutUser, checkRegistration, hash_pw
 import secrets
 from constants import USERID, TOKEN
 from time import time
+from sqlalchemy import func
 
 with open(".env", "r") as f:
     for line in f.readlines():
@@ -55,6 +56,23 @@ def login():
             db.session.commit()
             return redirect("/home")
     return render_template('login.html')
+
+@app.route('/register',methods=["GET","POST"])
+def register():
+    if request.method == "POST":
+        username_input = request.form.get("username_input")
+        password_1 = request.form.get("password_input_1")
+        password_2 = request.form.get("password_input_2")
+        if username_input is not None and password_1 is not None and password_2 is not None and checkRegistration(username_input, password_1, password_2):
+            # successful logged in
+            # token cleanup
+            
+            newUserId = db.session.query(func.max(users.id)).scalar() + 1
+            newUser = users(id=newUserId, username=username_input, password=hash_pw(password_1))
+            db.session.add(newUser)
+            db.session.commit()
+            return redirect("/login")
+    return render_template('register.html')
 
 @app.route('/home')
 @validTokenChecker
