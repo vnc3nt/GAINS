@@ -77,7 +77,7 @@ def register():
 @app.route('/home')
 @validTokenChecker
 def home():
-    return render_template('home.html', user_id=session.get(USERID))
+    return render_template('home.html', user_id=session.get(USERID), get_username=get_username)
 
 @app.route('/edit')
 @validTokenChecker
@@ -101,6 +101,8 @@ def count_entries():  # sourcery skip: use-named-expression
         return jsonify(count=count)
     else:
         return jsonify(error="User not found"), 404
+    
+
 
 def get_username() -> str:
     user = db.session.query(users).filter(users.id == session.get(USERID)).first()

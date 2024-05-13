@@ -1,7 +1,7 @@
 <menu id="profile-menu">
     <ul>
         <li>
-            <div class="username"> vnc3nt </div> <!--TODO get_username() from main.py-->
+            <div class="username"> {{ get_username() }} </div>
         </li>
         <a href="{{ url_for('logout') }}">
             <li>
