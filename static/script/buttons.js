@@ -242,6 +242,7 @@ function buttonSwipeUp(e) {
     const buttonMenu = document.getElementsByClassName("button-menu")[0];
     let startY = e.touches[0].clientY;
     let originalY = buttonMenu.getBoundingClientRect().top;
+    
 
     buttonMenu.addEventListener("touchstart", (event) => {
         startY = event.touches[0].clientY;
@@ -250,24 +251,27 @@ function buttonSwipeUp(e) {
     });
 
     buttonMenu.addEventListener("touchmove", (event) => {
+        let translateY = buttonMenu.style.transform.split('(')[1].split(')')[0].split(',')[0];
         const deltaY = event.touches[0].clientY - startY;
         let saved = 0;
-        if(deltaY > 0) {
-            buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
+
+        if (translateY == "-50vh") {
+
         }
-        
-        else {
-            if (Math.abs(deltaY) < 300){
-                saved = 0;
-                buttonMenu.style.transform = `translateY(${deltaY}px)`;
+        else{
+                
+            if(deltaY > 0) {
+                buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
             }
-            else{
-                
-                if (saved == 0) {
-                    saved = deltaY;
-                } 
-                buttonMenu.style.transform = `translateY(${saved + deltaY/10}px)`;
-                
+            
+            else {
+                if (Math.abs(deltaY) < 300){
+                    buttonMenu.style.transform = `translateY(${deltaY}px)`;
+                }
+                else{
+                    buttonMenu.style.transform = `translateY(${saved + deltaY/10}px)`;
+                    
+                }
             }
         }
     });
