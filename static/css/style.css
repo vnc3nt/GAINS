@@ -49,15 +49,17 @@ body {
   width: 100vw;
   height: 70vh;
   border-radius: 10px 10px 0 0;
+  border: solid 1px;
+  border-color: var(--selected-color);
   margin: 0px;
   overflow: hidden;
   z-index: 0;
-
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
   padding: 0px;
   animation: profile-menu .2s ease;
   user-select: auto;
+  z-index: 3;
 }
 
 

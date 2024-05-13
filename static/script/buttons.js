@@ -242,6 +242,7 @@ function buttonSwipeUp(e) {
     const buttonMenu = document.getElementsByClassName("button-menu")[0];
     let startY = e.touches[0].clientY;
     let originalY = buttonMenu.getBoundingClientRect().top;
+    console.debug("adshd " + startY)
     
 
     buttonMenu.addEventListener("touchstart", (event) => {
@@ -251,47 +252,56 @@ function buttonSwipeUp(e) {
     });
 
     buttonMenu.addEventListener("touchmove", (event) => {
-        let translateY = buttonMenu.style.transform.split('(')[1].split(')')[0].split(',')[0];
         const deltaY = event.touches[0].clientY - startY;
-        let saved = 0;
 
-        if (translateY == "-50vh") {
-
-        }
-        else{
-                
+        console.debug("adsdasasadssad " + startY);
+            
+        if (startY > 500){
             if(deltaY > 0) {
                 buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
             }
             
             else {
-                if (Math.abs(deltaY) < 300){
+                if (Math.abs(deltaY) < 400){
                     buttonMenu.style.transform = `translateY(${deltaY}px)`;
                 }
                 else{
-                    buttonMenu.style.transform = `translateY(${saved + deltaY/10}px)`;
+                    buttonMenu.style.transform = `translateY(${-380 + deltaY/20}px)`;
                     
                 }
             }
         }
+        if (startY <= 500) {
+            if(deltaY < 0) {
+                buttonMenu.style.transform = `translateY(${-400 +deltaY/10}px)`;
+            }
+            
+            else {
+                if (Math.abs(deltaY) < 400){
+                    buttonMenu.style.transform = `translateY(${-400 +deltaY}px)`;
+                }
+                else{
+                    buttonMenu.style.transform = `translateY(${-380 +deltaY/20}px)`;
+                    
+                }
+            }
+        }
+        
     });
 
     buttonMenu.addEventListener("touchend", () => {
         // Prüfe, ob der Bereich überschritten wurde
         const threshold = 0;
-        let translateY = buttonMenu.style.transform.split('(')[1].split(')')[0].split(',')[0];
-        console.debug("translateY: " + translateY)
     
-        if (translateY == "-50vh") {
-            console.debug("inside")
+        if (startY <= 500) {
             if (buttonMenu.getBoundingClientRect().top - originalY < threshold) {
                 // nach unten schließen
                 buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(0vh)";
+                buttonMenu.style.transform = "translateY(-50vh)";
             } else {
                 // zurück zur Ausgangsposition
                 buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(-50vh)";
+                buttonMenu.style.transform = "translateY(0vh)";
             }
         } else {
             if (originalY - buttonMenu.getBoundingClientRect().top > threshold) {
