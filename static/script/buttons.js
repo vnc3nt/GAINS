@@ -44,6 +44,8 @@ window.addEventListener("touchstart", (e) => {
 
     //Funktion zum anmieren des profilemenus
     checkToHideProfile(e);
+
+    buttonSwipeUp(e)
 });
 
 
@@ -56,7 +58,6 @@ window.addEventListener("touchmove", (e) => {
                 touchSimulation = TOUCH_NORMAL;
                 return;
             }
-            console.log("target", target);
             if (touchSimulation === TOUCH_NORMAL) {
                 let moveX = touchStartX - e.touches[0].clientX;
                 let moveY = touchStartY - e.touches[0].clientY;
@@ -219,7 +220,7 @@ function checkToHideProfile(e) {
 
     profileMenu.addEventListener("touchend", () => {
         // Prüfe, ob der Bereich überschritten wurde
-        const threshold = 200;
+        const threshold = 100;
         if (profileMenu.getBoundingClientRect().top - originalY > threshold) {
 
             profileMenu.style.transform = "translateY(100%)"; //nach unten fliegen
@@ -237,3 +238,97 @@ function checkToHideProfile(e) {
 }
 
 
+function buttonSwipeUp(e) {
+    const buttonMenu = document.getElementsByClassName("button-menu")[0];
+    let startY = e.touches[0].clientY;
+    let originalY = buttonMenu.getBoundingClientRect().top;
+    
+
+    buttonMenu.addEventListener("touchstart", (event) => {
+        startY = event.touches[0].clientY;
+        originalY = buttonMenu.getBoundingClientRect().top;
+        console.debug("devvv" + originalY);
+    });
+
+    buttonMenu.addEventListener("touchmove", (event) => {
+        const deltaY = event.touches[0].clientY - startY;
+
+        console.debug("adsdasasadssad " + startY);
+            
+        if (startY > 500){
+            if(deltaY > 0) {
+                buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
+            }
+            
+            else {
+                if (Math.abs(deltaY) < 400){
+                    buttonMenu.style.transform = `translateY(${deltaY}px)`;
+                }
+                else{
+                    buttonMenu.style.transform = `translateY(${-380 + deltaY/20}px)`;
+                    
+                }
+            }
+        }
+        if (startY <= 500) {
+            if(deltaY < 0) {
+                buttonMenu.style.transform = `translateY(${-400 +deltaY/10}px)`;
+            }
+            
+            else {
+                if (Math.abs(deltaY) < 400){
+                    buttonMenu.style.transform = `translateY(${-400 +deltaY}px)`;
+                }
+                else{
+                    buttonMenu.style.transform = `translateY(${-380 +deltaY/20}px)`;
+                    
+                }
+            }
+        }
+        
+    });
+
+    buttonMenu.addEventListener("touchend", () => {
+        // Prüfe, ob der Bereich überschritten wurde
+        const threshold = 0;
+    
+        if (startY <= 500) {
+            if (buttonMenu.getBoundingClientRect().top - originalY < threshold) {
+                // nach unten schließen
+                buttonMenu.style.transition = "transform 0.1s ease";
+                buttonMenu.style.transform = "translateY(-50vh)";
+            } else {
+                // zurück zur Ausgangsposition
+                buttonMenu.style.transition = "transform 0.1s ease";
+                buttonMenu.style.transform = "translateY(0vh)";
+            }
+        } else {
+            if (originalY - buttonMenu.getBoundingClientRect().top > threshold) {
+                // nach oben expanden
+                buttonMenu.style.transition = "transform 0.1s ease";
+                buttonMenu.style.transform = "translateY(-50vh)"; //zurück zur Ausgangsposition            
+            } else {
+                // zurück zur Ausgangsposition
+                buttonMenu.style.transition = "transform 0.1s ease";
+                buttonMenu.style.transform = "translateY(0vh)";
+            }
+        }
+    });
+    
+}
+
+function expandButtonsDesktop(e) {
+    const buttonMenu = document.getElementsByClassName("button-menu")[0];
+    let startY =  buttonMenu.getBoundingClientRect().top;
+
+    console.debug("algoo: " + startY);
+
+    if (startY > 500) {
+        buttonMenu.style.transform = 'translateY(-50%)';
+        e.target.style.transform = 'rotate(-45deg)';
+    }
+    else {
+        buttonMenu.style.transform = 'translateY(0%)';
+        e.target.style.transform = 'rotate(0deg)';
+    }
+}

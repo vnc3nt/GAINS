@@ -3,6 +3,7 @@
 <title>Home</title>
 {% endblock title %}
 
+<!--TODO alle buttons unten auf eine neue ebene packen die man wie das profilmenü nach oben ziehen kann um statt 3 6 buttons angezeigt zu bekommen und dort ist auch ein button mit einem + um neue Kacheln einzufügen die dann einen neuen Graphen erzeugen den man selbst benennen kann und die farbe bestimmen kann-->
 {% block content %}
 <img class="logo-pic" src="{{url_for('static', filename='img/logo/logo-white.png')}}" alt="GAINS">
 <div class="profile">
@@ -26,9 +27,13 @@
 </div>
 {% include "snippets/data.html" %}
 <br>
-<div class="MainButtons">
-    <button class="weight" id="btn-weight" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Gewicht </button>
-    <button class="fat" id="btn-fat" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Körper&shy;fett </button>
-    <button class="muscle" id="btn-muscle" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Muskel&shy;masse </button>
+<div class="button-menu">
+    <div class="bar"></div>
+    <div class="MainButtons">
+        <button class="weight" id="btn-weight" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Gewicht </button>
+        <button class="fat" id="btn-fat" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Körper&shy;fett </button>
+        <button class="muscle" id="btn-muscle" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Muskel&shy;masse </button>
+    </div>
+    <button class="more-menu-btn" id="more-menu-btn" onclick="expandButtonsDesktop(event)"> + </button>
 </div>
 {% endblock content %}
