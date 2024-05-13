@@ -242,7 +242,6 @@ function buttonSwipeUp(e) {
     const buttonMenu = document.getElementsByClassName("button-menu")[0];
     let startY = e.touches[0].clientY;
     let originalY = buttonMenu.getBoundingClientRect().top;
-    console.debug("adshd " + startY)
     
 
     buttonMenu.addEventListener("touchstart", (event) => {
@@ -316,4 +315,20 @@ function buttonSwipeUp(e) {
         }
     });
     
+}
+
+function expandButtonsDesktop(e) {
+    const buttonMenu = document.getElementsByClassName("button-menu")[0];
+    let startY =  buttonMenu.getBoundingClientRect().top;
+
+    console.debug("algoo: " + startY);
+
+    if (startY > 500) {
+        buttonMenu.style.transform = 'translateY(-50%)';
+        e.target.style.transform = 'rotate(-45deg)';
+    }
+    else {
+        buttonMenu.style.transform = 'translateY(0%)';
+        e.target.style.transform = 'rotate(0deg)';
+    }
 }
