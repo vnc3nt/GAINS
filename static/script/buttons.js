@@ -255,7 +255,7 @@ function buttonSwipeUp(e) {
 
         console.debug("adsdasasadssad " + startY);
             
-        if (startY > 500){
+        if (startY > 590){
             if(deltaY > 0) {
                 buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
             }
@@ -270,7 +270,7 @@ function buttonSwipeUp(e) {
                 }
             }
         }
-        if (startY <= 500) {
+        if (startY <= 590) {
             if(deltaY < 0) {
                 buttonMenu.style.transform = `translateY(${-400 +deltaY/10}px)`;
             }
