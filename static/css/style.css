@@ -47,7 +47,7 @@ body {
   right: 0px;
   top: calc(100vh - 150px);
   width: 100vw;
-  height: 75vh;
+  height: 80vh;
   border-radius: 10px 10px 0 0;
   border: solid 1px;
   border-color: var(--selected-color);
