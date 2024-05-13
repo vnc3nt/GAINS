@@ -19,3 +19,41 @@
     position: absolute;
     left: 0;
 }
+
+
+/* Wenn das details-Menü geschlossen ist */
+#more-menu-btn:not([open]) .button-menu {
+  background-color: rgba(0,0,0,0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+
+/* Wenn das details-Menü geöffnet ist */
+#more-menu-btn[open] .button-menu {
+  background-color: red;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+.bar {
+  display: none;
+}
+
+.more-menu-btn {
+  position: absolute;
+  border-width: 3px;
+  border-radius: 10px;
+  width: 3%;
+  border: solid;
+  padding: 10px;
+  border-width: 3px;
+  border-radius: 10px;
+  height: 45px;
+  top: 25px;
+  right: 10px;
+  margin: auto;
+  text-align: center;
+  font-size: 2rem;
+  cursor: pointer;
+  user-select: none;
+}

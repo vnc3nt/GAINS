@@ -42,6 +42,25 @@ body {
   width: 150px;
 }
 
+.button-menu {
+  position: fixed;
+  right: 0px;
+  top: calc(100vh - 150px);
+  width: 100vw;
+  height: 70vh;
+  border-radius: 10px 10px 0 0;
+  margin: 0px;
+  overflow: hidden;
+  z-index: 0;
+
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  padding: 0px;
+  animation: profile-menu .2s ease;
+  user-select: auto;
+}
+
+
 .MainButtons button {
     touch-action: auto;
     border-width: 3px;
@@ -52,20 +71,18 @@ body {
     padding: 10px;
     border-width: 3px;
     border-radius: 10px;
-    height: 90px;
-    min-width: 30%;
 }
 
 .MainButtons {
   touch-action: auto;
-    position: absolute;
-    display: flex;
-    justify-content: space-between;
-    bottom: 30px;
-    width: 93%;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  top: 10px;
+  width: 93%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .fat {
@@ -123,6 +140,8 @@ body {
   height: calc(100% - 4rem - 90px - 90px);
   width: 30px;
   color: var(--text-color);
+  cursor: none;
+  user-select: none;
 }
 
 .max {
@@ -348,6 +367,10 @@ details summary::-webkit-details-marker {
   display:none;
 }
 
+details> summary {
+    list-style-type: none;
+}
+
 .profile .profile-pic {
   cursor: pointer;
 }
@@ -386,15 +409,14 @@ details summary::-webkit-details-marker {
 #profile-menu ul {
   margin: 0;
   padding: 0;
-  list-style: none;
   text-align: left;
 }
 #profile-menu ul li {
   border-radius: 5px;
   padding: 10px;
+  user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
-  user-select: none;
   display: flex;
   align-items: center;
   
