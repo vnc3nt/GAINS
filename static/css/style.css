@@ -23,6 +23,10 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     touch-action: none;
+    overflow-y: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }
 
 .logo-pic {
@@ -115,7 +119,7 @@ body {
 .scale {
   position: absolute;
   top: calc(4rem + 50px);
-  right: 15px;
+  right: 20px;
   height: calc(100% - 4rem - 90px - 90px);
   width: 30px;
   color: var(--text-color);
@@ -194,7 +198,7 @@ button {
 .view {
     position: absolute;
     top: calc(4rem + 20px);
-    right: 10px;
+    right: 20px;
 }
 
 .view-options {
@@ -332,7 +336,7 @@ i {
   float: right;
   position: relative;
   top: 5px;
-  right: 5px;
+  right: 20px;
   z-index: 4
 }
 

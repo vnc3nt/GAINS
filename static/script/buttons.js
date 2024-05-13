@@ -239,42 +239,67 @@ function checkToHideProfile(e) {
 
 
 function buttonSwipeUp(e) {
-    const buttonMenu = document.getElementsByClassName("button-menu");
+    const buttonMenu = document.getElementsByClassName("button-menu")[0];
     let startY = e.touches[0].clientY;
-    let originalY = 0;
-    console.log(buttonMenu);
+    let originalY = buttonMenu.getBoundingClientRect().top;
 
     buttonMenu.addEventListener("touchstart", (event) => {
         startY = event.touches[0].clientY;
         originalY = buttonMenu.getBoundingClientRect().top;
+        console.debug("devvv" + originalY);
     });
 
     buttonMenu.addEventListener("touchmove", (event) => {
         const deltaY = event.touches[0].clientY - startY;
+        let saved = 0;
         if(deltaY > 0) {
             buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
         }
+        
         else {
-            if (Math.abs(deltaY) < 100){
-                buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
+            if (Math.abs(deltaY) < 300){
+                saved = 0;
+                buttonMenu.style.transform = `translateY(${deltaY}px)`;
             }
             else{
-                buttonMenu.style.transform = `translateY(${deltaY}px)`;
+                
+                if (saved == 0) {
+                    saved = deltaY;
+                } 
+                buttonMenu.style.transform = `translateY(${saved + deltaY/10}px)`;
+                
             }
         }
     });
 
     buttonMenu.addEventListener("touchend", () => {
         // Prüfe, ob der Bereich überschritten wurde
-        const threshold = 200;
-        if (buttonMenu.getBoundingClientRect().top - originalY > threshold) {
-
-            buttonMenu.style.transform = "translateY(100%)"; //nach unten fliegen
-
+        const threshold = 0;
+        let translateY = buttonMenu.style.transform.split('(')[1].split(')')[0].split(',')[0];
+        console.debug("translateY: " + translateY)
+    
+        if (translateY == "-50vh") {
+            console.debug("inside")
+            if (buttonMenu.getBoundingClientRect().top - originalY < threshold) {
+                // nach unten schließen
+                buttonMenu.style.transition = "transform 0.1s ease";
+                buttonMenu.style.transform = "translateY(0vh)";
+            } else {
+                // zurück zur Ausgangsposition
+                buttonMenu.style.transition = "transform 0.1s ease";
+                buttonMenu.style.transform = "translateY(-50vh)";
+            }
         } else {
-            // Springe zurück zur Ausgangsposition
-            buttonMenu.style.transition = "transform 0.1s ease";
-            buttonMenu.style.transform = `translateY(${originalY}px)`;
+            if (originalY - buttonMenu.getBoundingClientRect().top > threshold) {
+                // nach oben expanden
+                buttonMenu.style.transition = "transform 0.1s ease";
+                buttonMenu.style.transform = "translateY(-50vh)"; //zurück zur Ausgangsposition            
+            } else {
+                // zurück zur Ausgangsposition
+                buttonMenu.style.transition = "transform 0.1s ease";
+                buttonMenu.style.transform = "translateY(0vh)";
+            }
         }
     });
+    
 }

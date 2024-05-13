@@ -47,12 +47,11 @@
 
 
 .button-menu {
-    position: absolute;
+    position: fixed;
     right: 0px;
     top: calc(100vh - 150px);
     width: 100vw;
-    scale: 95%;
-    height: calc(150px);
+    height: 70vh;
     border-radius: 10px 10px 0 0;
     margin: 0px;
     overflow: hidden;
@@ -62,7 +61,7 @@
     -webkit-backdrop-filter: blur(7px);
     padding: 0px;
     animation: profile-menu .2s ease;
-    user-select: none;
+    user-select: auto;
 }
 
 .bar {
