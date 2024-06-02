@@ -25,6 +25,19 @@ class data(db.Model):
     weight=db.Column(db.Numeric(5,2), nullable=True)
     muscle=db.Column(db.Numeric(4,2), nullable=True)
 
+class newdata(db.Model):
+    userid=db.Column(db.BIGINT, ForeignKey("users.id"), nullable=False, primary_key=True)
+    date=db.Column(db.DATE, nullable=False, primary_key=True, default=current_date)
+    categoryId=db.Column(db.BIGINT,ForeignKey("catergory.id"), nullable=False, primary_key=True)
+    data=db.Column(db.Numeric(5,2), nullable=True)
+
+class category(db.Model):
+    id=db.Column(db.BIGINT, primary_key=True, nullable=False)
+    userId=db.Column(db.BIGINT, ForeignKey("users.id"), nullable=False, primary_key=True)
+    name=db.Column(db.String(30), nullable=False)
+    color=db.Column(db.String(7), nullable=False)
+    unit=db.Column(db.String(3), nullable=True)
+
 class token(db.Model):
     userid=db.Column(db.BIGINT, ForeignKey("users.id"), nullable=False)
     token=db.Column(db.String(128), nullable=False, primary_key=True)

@@ -1,12 +1,12 @@
 from flask import Flask, render_template, url_for, redirect, request, jsonify, session
-from models import db, users, token, data
+from models import db, users, token, newdata, category
 import os
 from api import app as api_app
 from login import checkuser, loginChecker, validTokenChecker, logoutUser, checkRegistration, hash_pw
 import secrets
 from constants import USERID, TOKEN
 from time import time
-from sqlalchemy import func
+from sqlalchemy import func, distinct
 
 with open(".env", "r") as f:
     for line in f.readlines():
@@ -96,7 +96,7 @@ def logout():
 def count_entries():  # sourcery skip: use-named-expression
     user = db.session.query(users).filter(users.id == session.get(USERID)).first()
     if user:
-        count = db.session.query(data).filter(data.userid == user.id).count()
+        count = db.session.query(func.count(distinct(newdata.date))).filter(newdata.userid == user.id).scalar()
         #print(count)
         return jsonify(count=count)
     else:
@@ -112,4 +112,4 @@ def get_username() -> str:
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(host="0.0.0.0", port=5000, debug=os.environ.get("debug", False) == "True")
+    app.run(host="0.0.0.0", port=8080, debug=os.environ.get("debug", False) == "True")

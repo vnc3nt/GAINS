@@ -251,9 +251,10 @@ input[type=radio] {
 .tab {
     display: flex;
     align-items: center;
+    box-sizing: border-box;
     justify-content: space-around;
     height: 7.5px;
-    width: 45px;
+    width: 5rem;
     font-size: .725rem;
     font-weight: 500;
     border-radius: 99px;
@@ -295,8 +296,9 @@ input[id=year]:checked~.glider {
 .glider {
     position: absolute;
     display: flex;
-    height: 25px;
-    width: 55px;
+    box-sizing: border-box;
+    height: 1.6rem;
+    width: 36%;
     top: 3px;
     background-color: var(--selected-color);
     z-index: 1;

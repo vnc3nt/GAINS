@@ -66,7 +66,7 @@ async function drawChart() {
         legend: 'none',
         width: window.innerWidth/7 * daysTillToday(firstDate) / viewoption[selectedValue],
         height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
-        colors: ['rgb(20, 0, 150)', 'rgb(120, 120, 120)', 'rgb(115, 0, 0)'],
+        colors: ['#1700ad', '#949292', '#890000'],
         lineWidth: 3,
         pointSize: 5/viewoption[selectedValue],
         backgroundColor: { fill: 'transparent' },

@@ -2,7 +2,8 @@ from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 from flask import json, jsonify, session
 from sqlalchemy import text
-from models import db, users, current_date, token, data
+from models import db, users, current_date, token, data, newdata, category #newdata und category statt data implementieren
+
 from datetime import datetime
 from decimal import Decimal
 from constants import USERID
@@ -57,7 +58,7 @@ class Data(Resource):
                 'date': datetime.strftime(i.date, "%d-%m-%Y"),
                 'fat': float(i.fat) if i.fat is not None else None,
                 'weight': float(i.weight) if i.weight is not None else None,
-                'muscle': float(i.muscle) if i.muscle is not None else None,
+                'muscle': float(i.muscle) if i.muscle is not None else None
             }
             for i in existingData
         ]
