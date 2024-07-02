@@ -48,7 +48,6 @@ async function loadCategories() {
 
 document.addEventListener('DOMContentLoaded', loadCategories);
 
-document.addEventListener('DOMContentLoaded', loadCategories);
 
 let touchStartTime = null;
 let touchStartX = null;
@@ -172,6 +171,7 @@ window.addEventListener("touchcancel", (e) => {
 
 async function leftClick(e) {
     let buttonId = e.target.id;  // ID des Buttons, z.B. "btn-fat"
+    console.debug("BBB: " + buttonId);
     let category = categories.find(categ => categ.name === buttonId);
     if (!category) {
         console.error('Kategorie nicht gefunden für Button ID:', buttonId);
@@ -337,7 +337,7 @@ function expandButtonsDesktop(e) {
 
     if (startY > 500) {
         buttonMenu.style.transform = 'translateY(-50%)';
-        e.target.style.transform = 'rotate(-45deg)';
+        e.target.style.transform = 'rotate(-180deg)';
     }
     else {
         buttonMenu.style.transform = 'translateY(0%)';

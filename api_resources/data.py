@@ -71,12 +71,11 @@ class Data(Resource):
             max_value = db.session.query(func.max(newdata.data)).filter(newdata.userid == user_id, newdata.categoryId == categ_id).scalar()
             max_values[categ_name] = float(max_value) if max_value is not None else None
         
-        return {
+        return jsonify({
             "maxValue": max_values,
             "data": output,
             "username": username
-        }, 200
-    
+        })
 
     def post(self):
         given_data = post_arguments.parse_args(strict=True)
@@ -114,7 +113,6 @@ class Data(Resource):
         else:
             print("Benutzer nicht gefunden")
             return {"message": "Benutzer nicht gefunden"}, 404
-
 
 class Categories(Resource):
     def get(self):

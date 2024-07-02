@@ -10,7 +10,7 @@ google.charts.setOnLoadCallback(drawChart);
 
 window.onload = function (e) {
       document.querySelectorAll("input[name='view-options']").forEach(radiobutton=>{
-        radiobutton.addEventListener("change", e=>drawChart());
+        radiobutton.addEventListener("change", drawChart());
       });
       drawChart();
 };
@@ -49,7 +49,7 @@ async function drawChart() {
                 currentDate = stringToDate(firstDate);
             }
 
-            let rowData = [dateToString(stringToDate(element.date))];
+            let rowData = [element.date];
 
             categories.forEach(category => {
                 rowData.push(element[category.name] ?? 0);
@@ -59,14 +59,16 @@ async function drawChart() {
             currentDate = addDays(currentDate, 1);
         });
 
+        //TODO nicht interpolierte Punkte weiß einfärben
+
         // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
         ersetzeNullenMitInterpoliertenWerten(databaseData);
 
         let data = google.visualization.arrayToDataTable(databaseData);
 
-        let maxValue = Math.max(...userData.maxValue);
-        document.querySelector(".max").textContent = Math.round((maxValue + 5) / 5) * 5;
-
+         // Höchsten Wert für die Y-Achse berechnen
+         let maxValue = Math.max(...Object.values(userData.maxValue));
+         document.querySelector(".max").textContent = Math.round((maxValue + 5) / 5) * 5;
         let selectedValue = document.querySelector("input[type=radio][name='view-options']:checked").value;
 
         let options = {
@@ -83,8 +85,12 @@ async function drawChart() {
             vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
             tooltip: { isHtml: true }
         };
+        
 
         let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        
+
         chart.draw(data, options);
 
         let container = document.querySelector('.scrollwindow');

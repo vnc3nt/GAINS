@@ -52,7 +52,7 @@ body {
   border: solid 1px;
   border-color: var(--selected-color);
   margin: 0px;
-  overflow: hidden;
+  overflow-y: scroll; /*TODO scroll nur wenn bereits expaniert*/
   z-index: 0;
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
@@ -61,14 +61,16 @@ body {
   user-select: auto;
   z-index: 3;
 }
-
+.button-menu::-webkit-scrollbar {
+  display: none;
+}
 
 .MainButtons button {
     touch-action: auto;
     border-width: 3px;
     border-radius: 10px;
     height: 90px;
-    min-width: 30%;
+    min-width: 10%;
     border: solid;
     padding: 10px;
     border-width: 3px;
@@ -79,9 +81,10 @@ body {
   touch-action: auto;
   position: absolute;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   top: 10px;
-  width: 93%;
+  width: 95%;
   margin-left: auto;
   margin-right: auto;
   text-align: center;

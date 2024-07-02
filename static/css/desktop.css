@@ -26,16 +26,11 @@
 
 .more-menu-btn {
   position: absolute;
-  border-width: 3px;
-  border-radius: 10px;
   width: 1.5rem;
   height: 1.5rem;
-  border: solid;
-  border-width: 2px;
-  border-radius: 5px;
   top: 0px;
   right: 0px;
-  font-size: 1.5rem;
+  font-size: 1rem;
   cursor: pointer;
   user-select: none;
   display: flex;
@@ -43,5 +38,13 @@
   justify-content: center;
   text-align: center;
   box-sizing: border-box;
+  padding: 10px;
+  background-color: rgba(var(--button-color),50);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  border-radius: 5px;
+  border: solid 1px;
+  border-color: var(--selected-color);
+  z-index: 1;
 }
 
