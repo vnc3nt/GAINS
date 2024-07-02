@@ -12,77 +12,86 @@ window.onload = function (e) {
       document.querySelectorAll("input[name='view-options']").forEach(radiobutton=>{
         radiobutton.addEventListener("change", e=>drawChart());
       });
+      drawChart();
 };
 
 async function drawChart() {
-    let userData = await fetch('/api/data')
-        .then(response => response.json())
-        .catch((error) => {
-            console.error('Error:', error);
+    try {
+        let userData = await fetch('/api/data')
+            .then(response => response.json())
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        let databaseData = [['Datum']];
+        let firstDate = undefined;
+        let currentDate = undefined;
+        let categoryStyles = {}; // Objekt zur Speicherung von Farben und Stilen je nach Kategorie
+
+        // Sammeln aller Kategorien und deren Farben
+        let response = await fetch('/api/categories');
+        let categories = await response.json();
+
+
+        console.debug('UserData:', userData); // Prüfe die gesamten zurückgegebenen Daten
+        console.debug('UserData Data:', userData.data); // Prüfe spezifisch userData.data
+
+
+        categories.sort((a, b) => a.id - b.id); // Sortieren der Kategorien nach ID
+
+        categories.forEach(category => {
+            databaseData[0].push(category.name); // Hinzufügen der Kategorienamen als Überschriften
+            categoryStyles[category.name] = { color: category.color }; // Speichern der Farben für jede Kategorie
         });
 
+        userData.data.forEach(element => {
+            if (firstDate === undefined && element.date) {
+                firstDate = element.date;
+                currentDate = stringToDate(firstDate);
+            }
 
-    let databaseData = [['Datum', 'Körperfett', {type:'string', role:'style'}, 'Gewicht',{type:'string', role:'style'}, 'Muskelmasse', {type:'string', role:'style'}]];
-    let firstDate = undefined;
-    let currentDate = undefined;
+            let rowData = [dateToString(stringToDate(element.date))];
 
-    userData.data.forEach(element => {
-        if (firstDate === undefined && element.date) {
-            firstDate = element.date;
-            currentDate = stringToDate(firstDate);
-        }
+            categories.forEach(category => {
+                rowData.push(element[category.name] ?? 0);
+            });
 
-        let elementDate = stringToDate(element.date);
-        while (currentDate < elementDate) {
-            databaseData.push([dateToString(currentDate), 0,'point { fill-color: #1700ad; }', 0,'point { fill-color: #949292; }', 0, 'point { fill-color: #890000; }']);
+            databaseData.push(rowData);
             currentDate = addDays(currentDate, 1);
-        }
-//nicht interpolierte Werte
-        databaseData.push([element.date, element.fat ?? 0,'point { fill-color: #ffffff; }', element.weight ?? 0,'point { fill-color: #ffffff; }', element.muscle ?? 0, 'point { fill-color: #ffffff; }']);
-        currentDate = addDays(currentDate, 1);
-    });
+        });
 
-    // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
-    ersetzeNullenMitInterpoliertenWerten(databaseData);
+        // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
+        ersetzeNullenMitInterpoliertenWerten(databaseData);
 
-    //databaseData = filterData(databaseData, interval)
+        let data = google.visualization.arrayToDataTable(databaseData);
 
+        let maxValue = Math.max(...userData.maxValue);
+        document.querySelector(".max").textContent = Math.round((maxValue + 5) / 5) * 5;
 
-    let data = google.visualization.arrayToDataTable(databaseData);
+        let selectedValue = document.querySelector("input[type=radio][name='view-options']:checked").value;
 
+        let options = {
+            curveType: 'function',
+            legend: 'none',
+            width: window.innerWidth / 7 * daysTillToday(firstDate) / viewoption[selectedValue],
+            height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
+            colors: Object.values(categoryStyles).map(style => style.color),
+            lineWidth: 3,
+            pointSize: 5 / viewoption[selectedValue],
+            backgroundColor: { fill: 'transparent' },
+            chartArea: { 'width': '99%', 'height': '90%' },
+            hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25 } },
+            vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
+            tooltip: { isHtml: true }
+        };
 
-    let maxValue = Math.max(...userData.maxValue);
+        let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        chart.draw(data, options);
 
-    document.querySelector(".max").textContent = Math.round((maxValue + 5) / 5) * 5; //auf skalierung auf 10er gerundet schreiben
-
-
-    // Erhalten Sie alle Radiobuttons
-    let selectedValue = document.querySelector("input[type=radio][name='view-options']:checked").value
-    console.debug(viewoption[selectedValue]);
-    
-
-    let options = {
-        curveType: 'function',
-        legend: 'none',
-        width: window.innerWidth/7 * daysTillToday(firstDate) / viewoption[selectedValue],
-        height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
-        colors: ['#1700ad', '#949292', '#890000'],
-        lineWidth: 3,
-        pointSize: 5/viewoption[selectedValue],
-        backgroundColor: { fill: 'transparent' },
-        chartArea: { 'width': '99%', 'height': '90%' },
-        hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25 } }, // dynamisch an datensatz anpassen (4 Datensätze -> max: 3.5  5 -> max: 4.5  6 -> max: 5.5)
-        vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
-        tooltip: { isHtml: true }
-    };
-
-    let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-    chart.draw(data, options);
-
-    let container = document.querySelector('.scrollwindow');
-    console.log(container);
-    container.scrollLeft = options.width + 500;
+        let container = document.querySelector('.scrollwindow');
+        container.scrollLeft = options.width + 500;
+    } catch (error) {
+        console.error('Fehler beim Zeichnen des Charts:', error);
+    }
 }
 
 function convertRemToPixels(rem) {

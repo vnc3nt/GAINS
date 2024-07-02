@@ -29,11 +29,14 @@
 <br>
 <div class="button-menu">
     <div class="bar"></div>
-    <div class="MainButtons">
-        <button class="weight" id="btn-weight" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Gewicht </button>
-        <button class="fat" id="btn-fat" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Körper&shy;fett </button>
-        <button class="muscle" id="btn-muscle" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Muskel&shy;masse </button>
+    <div class="MainButtons" id="main-buttons">
+        <!-- Hier werden die dynamisch generierten Buttons eingefügt -->
     </div>
-    <button class="more-menu-btn" id="more-menu-btn" onclick="expandButtonsDesktop(event)"> + </button>
+    <button class="more-menu-btn" id="more-menu-btn" onclick="expandButtonsDesktop(event)"> + </button> <!--TODO durch ein expand icon austauschen da nicht intuitives symbol-->
 </div>
+
+<script>
+    // JavaScript Code wird hier eingefügt
+</script>
+
 {% endblock content %}

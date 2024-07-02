@@ -9,6 +9,47 @@ const buttonQuestion = {
     "btn-muscle": 
 }*/
 
+let categories = {};
+
+// Kategorien und Einheiten dynamisch laden
+// Kategorien und Einheiten dynamisch laden
+async function loadCategories() {
+    try {
+        let response = await fetch('/api/categories');
+        let categories = await response.json();
+
+        // Sortieren der Kategorien nach ID
+        categories.sort((a, b) => a.id - b.id);
+
+        let mainButtons = document.getElementById('main-buttons');
+        mainButtons.innerHTML = ''; // Leeren des Inhalts
+
+        categories.forEach(category => {
+            let button = document.createElement('button');
+            button.classList.add('category-button'); // Allgemeine CSS-Klasse für Kategorie-Buttons
+            button.classList.add(category.name.toLowerCase()); // CSS-Klasse basierend auf dem Kategorienamen
+            button.innerText = category.name;
+
+            // Stil für Hintergrundfarbe aus der Datenbank
+            button.style.backgroundColor = lightenColor(category.color, -40);
+            button.style.borderColor = lightenColor(category.color, 0);
+
+            button.id = `btn-${category.name.toLowerCase()}`; // ID basierend auf dem Kategorienamen
+            button.addEventListener('click', leftClick);
+            button.addEventListener('contextmenu', rightClick);
+            mainButtons.appendChild(button);
+        });
+
+        console.debug('Dynamisch generierte Buttons:', categories);
+    } catch (error) {
+        console.error('Fehler beim Laden der Kategorien:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadCategories);
+
+document.addEventListener('DOMContentLoaded', loadCategories);
+
 let touchStartTime = null;
 let touchStartX = null;
 let touchStartY = null;
@@ -130,64 +171,35 @@ window.addEventListener("touchcancel", (e) => {
 });
 
 async function leftClick(e) {
-    let userInput = parseFloat(window.prompt(buttonQuestion[e.target.id]).replace(',', '.'));
-    if (!userInput) {
-        console.debug("no userInput");
+    let buttonId = e.target.id;  // ID des Buttons, z.B. "btn-fat"
+    let category = categories.find(categ => categ.name === buttonId);
+    if (!category) {
+        console.error('Kategorie nicht gefunden für Button ID:', buttonId);
         return;
     }
-    console.log(e.target.id);
-    console.log(userInput);
 
-    if (e.target.id === "btn-fat"){
-        let data = await fetch("/api/data",  {
+    let unit = category.unit;
+    let userInput = parseFloat(window.prompt(`Dein ${buttonQuestion[buttonId]} in ${unit}:`).replace(',', '.'));
+    if (!userInput) {
+        console.debug("Keine Benutzereingabe");
+        return;
+    }
+
+    let data = await fetch("/api/data",  {
         method: "POST",
         body: JSON.stringify({
-            fat: userInput,
+            category: buttonId,  // Button ID wird als Kategorie verwendet
+            data: userInput,
             user: getUserId(),
-            // date: "abc"  // post has no date
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
     })
     .then((response) => response.json())
-    .catch((json) => console.log(json));
-    }
-
-    if (e.target.id === "btn-weight"){
-        let data = await fetch("/api/data",  {
-        method: "POST",
-        body: JSON.stringify({
-            weight: userInput,
-            user: getUserId(),
-            // date: "abc"  // post has no date
-        }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
-    .then((response) => response.json())
-    .catch((json) => console.log(json));
-    }
-
-    if (e.target.id === "btn-muscle"){
-        let data = await fetch("/api/data",  {
-        method: "POST",
-        body: JSON.stringify({
-            muscle: userInput,
-            user: getUserId(),
-            // date: "abc"  // post has no date
-        }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
-    .then((response) => response.json())
-    .catch((json) => console.log(json));
-    }
+    .catch((error) => console.error('Fehler beim Speichern der Daten:', error));
     
     await drawChart();
-    //alert("left clicked!");
 }
 
 async function rightClick(e) { //edit old data
@@ -331,4 +343,26 @@ function expandButtonsDesktop(e) {
         buttonMenu.style.transform = 'translateY(0%)';
         e.target.style.transform = 'rotate(0deg)';
     }
+}
+
+
+function lightenColor(color, percent) {
+    // Farbe in RGB-Werte aufteilen
+    let r = parseInt(color.substring(1, 3), 16);
+    let g = parseInt(color.substring(3, 5), 16);
+    let b = parseInt(color.substring(5, 7), 16);
+
+    // Helligkeit erhöhen
+    r = Math.floor(r * (1 + percent / 100));
+    g = Math.floor(g * (1 + percent / 100));
+    b = Math.floor(b * (1 + percent / 100));
+
+    // Grenzwerte sicherstellen (0 bis 255)
+    r = Math.min(r, 255);
+    g = Math.min(g, 255);
+    b = Math.min(b, 255);
+
+    // RGB-Werte zu HEX umwandeln
+    let hex = `#${(r).toString(16).padStart(2, '0')}${(g).toString(16).padStart(2, '0')}${(b).toString(16).padStart(2, '0')}`;
+    return hex;
 }

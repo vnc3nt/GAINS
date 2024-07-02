@@ -87,23 +87,15 @@ body {
   text-align: center;
 }
 
-.fat {
-    border-color: rgba(20, 0, 150, .9) !important;
-    background-color: rgba(20, 0, 150, .5);
-    font-size: 1.2rem;
+.category-button {
+  border-width: 1px;
+  border-style: solid;
+  font-size: 1.2rem;
+  white-space: nowrap; /* Verhindert Umbruch des Textes */
+  overflow: hidden; /* Versteckt den überlaufenden Text */
+  text-overflow: ellipsis; /* Setzt "..." am Ende des abgeschnittenen Textes */
 }
 
-.weight {
-    border-color: rgba(120, 120, 120, .9) !important;
-    background-color: rgba(120, 120, 120, .5);
-    font-size: 1.2rem;
-}
-
-.muscle {
-    border-color: rgba(115, 0, 0, .9) !important;
-    background-color: rgba(115, 0, 0, .5);
-    font-size: 1.2rem;
-}
 
 .google-visualization-tooltip {
   border: solid 1px !important;
