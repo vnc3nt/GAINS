@@ -242,60 +242,60 @@ function checkToHideProfile(e) {
 }
 
 
-function buttonSwipeUp(e) { //TODO only swipe up and down on "Balken" otherwise scroll down/up
+function buttonSwipeUp(e) {
     const buttonMenu = document.getElementsByClassName("button-menu")[0];
     let startY = e.touches[0].clientY;
     let originalY = buttonMenu.getBoundingClientRect().top;
-    
+    let isSwipeValid = false;
 
     buttonMenu.addEventListener("touchstart", (event) => {
         startY = event.touches[0].clientY;
         originalY = buttonMenu.getBoundingClientRect().top;
-        console.debug("devvv" + originalY);
+
+        // Prüfen, ob das Touch-Event innerhalb der obersten 20px des Menüs beginnt
+        if (startY <= originalY + 20) {
+            isSwipeValid = true;
+            // Standard-Scrollverhalten des Containers verhindern
+            event.preventDefault();
+        } else {
+            isSwipeValid = false;
+        }
     });
 
     buttonMenu.addEventListener("touchmove", (event) => {
+        if (!isSwipeValid) return;
+
         const deltaY = event.touches[0].clientY - startY;
 
-        console.debug("adsdasasadssad " + startY);
-            
-        if (startY > 590){
-            if(deltaY > 0) {
-                buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
-            }
-            
-            else {
-                if (Math.abs(deltaY) < 400){
+        if (startY > 590) {
+            if (deltaY > 0) {
+                buttonMenu.style.transform = `translateY(${deltaY / 10}px)`;
+            } else {
+                if (Math.abs(deltaY) < 400) {
                     buttonMenu.style.transform = `translateY(${deltaY}px)`;
-                }
-                else{
-                    buttonMenu.style.transform = `translateY(${-380 + deltaY/20}px)`;
-                    
+                } else {
+                    buttonMenu.style.transform = `translateY(${-380 + deltaY / 20}px)`;
                 }
             }
         }
         if (startY <= 590) {
-            if(deltaY < 0) {
-                buttonMenu.style.transform = `translateY(${-400 +deltaY/10}px)`;
-            }
-            
-            else {
-                if (Math.abs(deltaY) < 400){
-                    buttonMenu.style.transform = `translateY(${-400 +deltaY}px)`;
-                }
-                else{
-                    buttonMenu.style.transform = `translateY(${-380 +deltaY/20}px)`;
-                    
+            if (deltaY < 0) {
+                buttonMenu.style.transform = `translateY(${-400 + deltaY / 10}px)`;
+            } else {
+                if (Math.abs(deltaY) < 400) {
+                    buttonMenu.style.transform = `translateY(${-400 + deltaY}px)`;
+                } else {
+                    buttonMenu.style.transform = `translateY(${-380 + deltaY / 20}px)`;
                 }
             }
         }
-        
     });
 
     buttonMenu.addEventListener("touchend", () => {
-        // Prüfe, ob der Bereich überschritten wurde
+        if (!isSwipeValid) return;
+
         const threshold = 0;
-    
+
         if (startY <= 500) {
             if (buttonMenu.getBoundingClientRect().top - originalY < threshold) {
                 // nach unten schließen
@@ -310,7 +310,7 @@ function buttonSwipeUp(e) { //TODO only swipe up and down on "Balken" otherwise 
             if (originalY - buttonMenu.getBoundingClientRect().top > threshold) {
                 // nach oben expanden
                 buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(-50vh)"; //zurück zur Ausgangsposition            
+                buttonMenu.style.transform = "translateY(-50vh)";
             } else {
                 // zurück zur Ausgangsposition
                 buttonMenu.style.transition = "transform 0.1s ease";
@@ -318,8 +318,8 @@ function buttonSwipeUp(e) { //TODO only swipe up and down on "Balken" otherwise 
             }
         }
     });
-    
 }
+
 
 function expandButtonsDesktop(e) {
     const buttonMenu = document.getElementsByClassName("button-menu")[0];
