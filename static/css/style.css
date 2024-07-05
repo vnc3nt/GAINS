@@ -6,7 +6,7 @@
       --text-color: black;
       --website-background-color: #f1f1f1;
       --color-scheme: light;
-      --button-color: #d9d9d9;
+      --button-color: #d9d9d94a;
       --selected-color: #ffffff;
     }
   }
@@ -15,8 +15,8 @@
       --text-color: #f5f6fa;
       --website-background-color: #121212;
       --color-scheme: dark;
-      --button-color: #1e1e1e;
-      --selected-color: #3d3d3d;
+      --button-color: #1e1e1e4a;
+      --selected-color: #3d3d3d4a;
     }
   }
 
@@ -67,10 +67,8 @@ body {
 
 .MainButtons button {
     touch-action: auto;
-    border-width: 3px;
-    border-radius: 10px;
     height: 90px;
-    min-width: 10%;
+    width: 27%;
     border: solid;
     padding: 10px;
     border-width: 3px;
@@ -84,7 +82,7 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
   top: 10px;
-  width: 95%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -106,6 +104,8 @@ body {
   border-radius: 10px !important;
   border-color: var(--selected-color)!important;
   box-shadow: none !important;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
 }
 
 .google-visualization-tooltip > ul > li > span {
@@ -146,7 +146,7 @@ body {
   top: calc(4rem - 40px);
   right: 0px;
   padding: 10px;
-  background-color: rgba(var(--button-color),50);
+  background-color: var(--button-color);
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
   border-radius: 5px;

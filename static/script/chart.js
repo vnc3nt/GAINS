@@ -3,16 +3,15 @@ const viewoption = {
     "month": 4.5,
     "year": 55
 }
-
+//TODO left/right arrows for scrolling left and right on desktop like pictures on amazon product
 google.charts.load('current', { 'packages': ['corechart'] });
 google.charts.setOnLoadCallback(drawChart);
 
 
 window.onload = function (e) {
-      document.querySelectorAll("input[name='view-options']").forEach(radiobutton=>{
-        radiobutton.addEventListener("change", drawChart());
-      });
-      drawChart();
+    document.querySelectorAll("input[name='view-options']").forEach(radiobutton=>{
+      radiobutton.addEventListener("change", e=>drawChart());
+    });
 };
 
 async function drawChart() {
@@ -30,36 +29,56 @@ async function drawChart() {
         // Sammeln aller Kategorien und deren Farben
         let response = await fetch('/api/categories');
         let categories = await response.json();
+        categories.sort((a, b) => a.id - b.id); // Sortieren der Kategorien nach ID
 
 
         console.debug('UserData:', userData); // Prüfe die gesamten zurückgegebenen Daten
         console.debug('UserData Data:', userData.data); // Prüfe spezifisch userData.data
 
-
-        categories.sort((a, b) => a.id - b.id); // Sortieren der Kategorien nach ID
-
         categories.forEach(category => {
             databaseData[0].push(category.name); // Hinzufügen der Kategorienamen als Überschriften
-            categoryStyles[category.name] = { color: category.color }; // Speichern der Farben für jede Kategorie
+            categoryStyles[category.name] = { color: category.color}; // Speichern der Farben für jede Kategorie
         });
 
+
+        // Finden des ersten gültigen Datums in den Daten
         userData.data.forEach(element => {
-            if (firstDate === undefined && element.date) {
+            if (!firstDate && element.date) {
                 firstDate = element.date;
-                currentDate = stringToDate(firstDate);
             }
-
-            let rowData = [element.date];
-
-            categories.forEach(category => {
-                rowData.push(element[category.name] ?? 0);
-            });
-
-            databaseData.push(rowData);
-            currentDate = addDays(currentDate, 1);
         });
+        // Falls kein gültiges Datum gefunden wurde, kannst du ein Standarddatum setzen
+        if (!firstDate) {
+            firstDate = '2002-02-02'; // Hier ein passendes Standarddatum setzen, falls nötig
+        }
 
-        //TODO nicht interpolierte Punkte weiß einfärben
+
+         // Datenpunkte zu den entsprechenden Datumseinträgen hinzufügen
+         let dataByDate = {}; // Objekt zur Sammlung der Daten pro Datum
+
+         userData.data.forEach(element => {
+             let date = element.date;
+             if (!dataByDate[date]) {
+                 dataByDate[date] = [date]; // Erste Spalte im Datenarray ist das Datum
+                 categories.forEach(category => {
+                     dataByDate[date].push(0); // Initialisieren aller Kategorienwerte mit 0
+                 });
+             }
+ 
+             // Werte für jede Kategorie zum entsprechenden Datum hinzufügen
+             categories.forEach(category => {
+                 dataByDate[date][categories.indexOf(category) + 1] += element[category.name] ?? 0;
+             });
+         });
+ 
+         // Datenzeilen aus dem dataByDate Objekt in das databaseData Array einfügen
+         Object.values(dataByDate).forEach(row => {
+             databaseData.push(row);
+         });
+
+
+        
+        //TODO nichtinterpolierte Punkte weiß einfärben
 
         // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
         ersetzeNullenMitInterpoliertenWerten(databaseData);
@@ -74,14 +93,14 @@ async function drawChart() {
         let options = {
             curveType: 'function',
             legend: 'none',
-            width: window.innerWidth / 7 * daysTillToday(firstDate) / viewoption[selectedValue],
+            width: Math.max(window.innerWidth / 7 * daysTillToday(firstDate) / viewoption[selectedValue], window.innerWidth * 0.95),
             height: window.innerHeight - 140 - convertRemToPixels(4) - 50,
             colors: Object.values(categoryStyles).map(style => style.color),
             lineWidth: 3,
             pointSize: 5 / viewoption[selectedValue],
             backgroundColor: { fill: 'transparent' },
             chartArea: { 'width': '99%', 'height': '90%' },
-            hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25 } },
+            hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25} },
             vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
             tooltip: { isHtml: true }
         };

@@ -1,25 +1,16 @@
-const buttonQuestion = {
-    "btn-fat": "Dein Körperfettanteil in Prozent:",
-    "btn-weight": "Dein Körpergewicht in Kilogramm:",
-    "btn-muscle": "Deine Museklmasse in Prozent:"
-}
-/*const tablePrompt = {
-    "btn-fat": ,
-    "btn-weight": ,
-    "btn-muscle": 
-}*/
-
-let categories = {};
+let categories = [];
 
 // Kategorien und Einheiten dynamisch laden
 // Kategorien und Einheiten dynamisch laden
 async function loadCategories() {
     try {
         let response = await fetch('/api/categories');
-        let categories = await response.json();
+        categories = await response.json();
 
         // Sortieren der Kategorien nach ID
         categories.sort((a, b) => a.id - b.id);
+
+        
 
         let mainButtons = document.getElementById('main-buttons');
         mainButtons.innerHTML = ''; // Leeren des Inhalts
@@ -35,11 +26,11 @@ async function loadCategories() {
             button.style.borderColor = lightenColor(category.color, 0);
 
             button.id = `btn-${category.name.toLowerCase()}`; // ID basierend auf dem Kategorienamen
-            button.addEventListener('click', leftClick);
-            button.addEventListener('contextmenu', rightClick);
+            button.addEventListener('click', left);
+            button.addEventListener('contextmenu', right);
             mainButtons.appendChild(button);
         });
-
+        
         console.debug('Dynamisch generierte Buttons:', categories);
     } catch (error) {
         console.error('Fehler beim Laden der Kategorien:', error);
@@ -169,17 +160,18 @@ window.addEventListener("touchcancel", (e) => {
     draggedTouchNode = undefined;
 });
 
-async function leftClick(e) {
-    let buttonId = e.target.id;  // ID des Buttons, z.B. "btn-fat"
-    console.debug("BBB: " + buttonId);
-    let category = categories.find(categ => categ.name === buttonId);
+async function left(e) {
+    let buttonName = e.target.innerHTML;  // Name des Buttons/der Kategorie, z.B. "Gewicht"
+    console.debug("BBB: " + buttonName);
+    console.debug(categories);
+    let category = categories.find(categ => categ.name === buttonName);
     if (!category) {
-        console.error('Kategorie nicht gefunden für Button ID:', buttonId);
+        console.error('Kategorie nicht gefunden für Button:', buttonName);
         return;
     }
 
     let unit = category.unit;
-    let userInput = parseFloat(window.prompt(`Dein ${buttonQuestion[buttonId]} in ${unit}:`).replace(',', '.'));
+    let userInput = parseFloat(window.prompt(`Dein(e) ${buttonName} in ${unit}:`).replace(',', '.'));
     if (!userInput) {
         console.debug("Keine Benutzereingabe");
         return;
@@ -188,9 +180,9 @@ async function leftClick(e) {
     let data = await fetch("/api/data",  {
         method: "POST",
         body: JSON.stringify({
-            category: buttonId,  // Button ID wird als Kategorie verwendet
+            category: buttonName,  // buttonName wird als Kategorie verwendet
             data: userInput,
-            user: getUserId(),
+            user: getUserId()
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -202,7 +194,7 @@ async function leftClick(e) {
     await drawChart();
 }
 
-async function rightClick(e) { //edit old data
+async function right(e) { //edit old data
     //alert("right clicked!");
     e.preventDefault(); //kein kontextmenü
     window.location.assign("/edit");
@@ -250,7 +242,7 @@ function checkToHideProfile(e) {
 }
 
 
-function buttonSwipeUp(e) {
+function buttonSwipeUp(e) { //TODO only swipe up and down on "Balken" otherwise scroll down/up
     const buttonMenu = document.getElementsByClassName("button-menu")[0];
     let startY = e.touches[0].clientY;
     let originalY = buttonMenu.getBoundingClientRect().top;

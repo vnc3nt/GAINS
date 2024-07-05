@@ -9,7 +9,9 @@
     padding: 0px;
     border-radius: 10px;
     border: solid 1px;
-    border-color: var(--selected-color)
+    border-color: var(--selected-color);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
   }
 
 
@@ -39,7 +41,7 @@
   text-align: center;
   box-sizing: border-box;
   padding: 10px;
-  background-color: rgba(var(--button-color),50);
+  background-color: var(--button-color);
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
   border-radius: 5px;

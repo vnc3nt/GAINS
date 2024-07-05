@@ -84,16 +84,13 @@ class Data(Resource):
         if user:
             user_id = user.id
             
-            # Kategorie-ID für den gegebenen Kategorienamen abrufen oder neue Kategorie hinzufügen
+            # Kategorie-ID für den gegebenen Kategorienamen abrufen
             category_name = given_data["category"]
             value = given_data["data"]
             category_obj = db.session.query(category).filter(category.userId == user_id, category.name == category_name).first()
             
             if not category_obj:
-                new_category = category(userId=user_id, name=category_name, color="default_color")  # Standardfarbe setzen
-                db.session.add(new_category)
-                db.session.flush()  # Damit wir die ID sofort erhalten
-                category_id = new_category.id
+                print("Error: No such category found.")
             else:
                 category_id = category_obj.id
             
