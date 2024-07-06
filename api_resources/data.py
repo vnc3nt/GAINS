@@ -113,7 +113,7 @@ class Data(Resource):
 
 class Categories(Resource):
     def get(self):
-        categories = category.query.all()  # Query zur Datenbank für alle Kategorien
+        categories = category.query.filter_by(userId = session.get(USERID)).all()  # Query zur Datenbank für alle Kategorien
         return jsonify([{
             'id': categ.id,
             'userId': categ.userId,
@@ -123,31 +123,32 @@ class Categories(Resource):
         } for categ in categories])
 
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('userId', type=int, required=True)
-        parser.add_argument('name', type=str, required=True)
-        parser.add_argument('color', type=str, required=True)
-        parser.add_argument('unit', type=str, required=True)
-        args = parser.parse_args()
+        given_data = post_arguments.parse_args(strict=True)
+        user = db.session.query(users).filter(users.id == session.get(USERID)).first()
 
-        # Hier können Sie die Datenbank entsprechend aktualisieren oder neue Kategorien hinzufügen
-        # Beispiel:
-        new_category = category(
-            userId=args['userId'],
-            name=args['name'],
-            color=args['color'],
-            unit=args['unit']
-        )
-        db.session.add(new_category)
-        db.session.commit()
 
-        return jsonify({
-            'message': 'Kategorie erfolgreich hinzugefügt',
-            'category': {
-                'id': new_category.id,
-                'userId': new_category.userId,
-                'name': new_category.name,
-                'color': new_category.color,
-                'unit': new_category.unit
-            }
-        }), 201
+        if user:
+            user_id = user.id
+            
+            # Kategorie-ID für den gegebenen Kategorienamen abrufen
+            category_id = db.session.query(func.max(category.id)).scalar() + 1
+            category_name = given_data["name"]
+            category_unit = given_data["unit"]
+            category_color = given_data["color"]
+            
+            # Bestehende Daten für den aktuellen Tag und die Kategorie abrufen
+            existing_category = db.session.query(category).filter(category.userId == user_id, category.name == category_name).first()
+            
+            if existing_category is None:
+                # Neue Datenzeile einfügen
+                new_category = category(userId=user_id, id=category_id, unit=category_unit, color=category_color)
+                db.session.add(new_category)
+            else:
+                # Kategorie existiert bereits
+                print("Kategorie existiert bereits")
+            
+            db.session.commit()
+            return {}, 200
+        else:
+            print("Benutzer nicht gefunden")
+            return {"message": "Benutzer nicht gefunden"}, 404

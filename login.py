@@ -35,7 +35,7 @@ def hash_pw(password:str) -> str:
 def loginChecker(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        existingToken = db.session.query(token).filter(token.userid == session.get(USERID)).first() # TODO sure about that? not out of session the user?
+        existingToken = db.session.query(token).filter(token.userid == session.get(USERID)).first()
         if existingToken:
             existingToken.expireTime = update_expire_time()
             db.session.commit()

@@ -1,19 +1,61 @@
+
+
+document.addEventListener('DOMContentLoaded', loadButtons);
+document.addEventListener('DOMContentLoaded', buttonSwipeUp);
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded');
+    const saveBtn = document.getElementById('saveCategoryBtn');
+    const cancelBtn = document.getElementById('cancelCategoryBtn');
+    
+    if (saveBtn) {
+        console.log('Save button found');
+        saveBtn.addEventListener('click', saveCategory);
+    } else {
+        console.log('Save button not found');
+    }
+    
+    if (cancelBtn) {
+        console.log('Cancel button found');
+        cancelBtn.addEventListener('click', hideAddCategoryModal);
+    } else {
+        console.log('Cancel button not found');
+    }
+});
+
+
+
+let touchStartTime = null;
+let touchStartX = null;
+let touchStartY = null;
+let touchX = 0;
+let touchY = 0;
+let moveDistance = 0;
+let globalDatatransfer;
+let lastTarget = null;
+let allowDrop = false;
+let draggedTouchNode = undefined;
+
+const TOUCH_DRAG = "drag";
+const TOUCH_NORMAL = "normal";
+let touchSimulation = TOUCH_NORMAL;
+
+const RIGHT_CLICK_TOUCH = 300;  // ms 
+const DRAG_DISTANCE = 25;  // px²
+
 let categories = [];
 
-// Kategorien und Einheiten dynamisch laden
-// Kategorien und Einheiten dynamisch laden
-async function loadCategories() {
+async function loadButtons() {
+    let mainButtons = document.getElementById('main-buttons');
+    mainButtons.innerHTML = ''; // Leeren des Inhalts
+
     try {
         let response = await fetch('/api/categories');
         categories = await response.json();
 
         // Sortieren der Kategorien nach ID
         categories.sort((a, b) => a.id - b.id);
-
-        
-
-        let mainButtons = document.getElementById('main-buttons');
-        mainButtons.innerHTML = ''; // Leeren des Inhalts
 
         categories.forEach(category => {
             let button = document.createElement('button');
@@ -35,28 +77,19 @@ async function loadCategories() {
     } catch (error) {
         console.error('Fehler beim Laden der Kategorien:', error);
     }
+
+    // Hinzufügen des '+' Buttons am Ende
+    let addButton = document.createElement('button');
+    addButton.classList.add('category-button', 'add');
+    addButton.innerText = "+";
+
+    addButton.style.backgroundColor = lightenColor('#8C8C8C', -40);
+    addButton.style.borderColor = lightenColor('#8C8C8C', 0);
+
+    addButton.id = 'btn-add';
+    addButton.addEventListener('click', showAddCategoryModal);
+    mainButtons.appendChild(addButton);
 }
-
-document.addEventListener('DOMContentLoaded', loadCategories);
-
-
-let touchStartTime = null;
-let touchStartX = null;
-let touchStartY = null;
-let touchX = 0;
-let touchY = 0;
-let moveDistance = 0;
-let globalDatatransfer;
-let lastTarget = null;
-let allowDrop = false;
-let draggedTouchNode = undefined;
-
-const TOUCH_DRAG = "drag";
-const TOUCH_NORMAL = "normal";
-let touchSimulation = TOUCH_NORMAL;
-
-const RIGHT_CLICK_TOUCH = 300;  // ms 
-const DRAG_DISTANCE = 25;  // px²
 
 window.addEventListener("touchstart", (e) => {
     touchX = e.touches[0].clientX;
@@ -183,7 +216,7 @@ async function left(e) {
     await drawChart();
 }
 
-async function right(e) { //edit old data
+async function right(e) { //TODO edit old data ->
     //alert("right clicked!");
     e.preventDefault(); //kein kontextmenü
     window.location.assign("/edit");
@@ -229,12 +262,8 @@ function checkToHideProfile(e) {
     });
 }
 
-// Aufrufen der Funktion beim Laden der Seite
-document.addEventListener('DOMContentLoaded', buttonSwipeUp);
-
 function buttonSwipeUp() {
     const buttonMenu = document.querySelector(".button-menu");
-    const menuContent = buttonMenu.querySelector(".MainButtons"); // Annahme: Der scrollbare Inhalt ist in einem Element mit der Klasse "menu-content"
     let startY, startHeight, isSwipeValid = false;
     const minHeight = 20; // Minimale Höhe in vh
     const maxHeight = 60; // Maximale Höhe in vh
@@ -297,7 +326,6 @@ function buttonSwipeUp() {
         const currentHeight = (buttonMenu.offsetHeight / window.innerHeight) * 100;
         startHeight = currentHeight > (minHeight + maxHeight) / 2 ? maxHeight : minHeight;
         isSwipeValid = !isMenuFullyExpanded();
-        if (isSwipeValid) e.preventDefault();
     });
 
     buttonMenu.addEventListener("touchmove", (e) => {
@@ -369,4 +397,60 @@ function lightenColor(color, percent) {
     // RGB-Werte zu HEX umwandeln
     let hex = `#${(r).toString(16).padStart(2, '0')}${(g).toString(16).padStart(2, '0')}${(b).toString(16).padStart(2, '0')}`;
     return hex;
+}
+
+
+
+
+function showAddCategoryModal() {
+    console.log('showAddCategoryModal was called');
+    document.getElementById('addCategoryModal').style.display = 'block';
+}
+
+function hideAddCategoryModal() {
+    console.log('hideAddCategoryModal was called');
+    const modal = document.getElementById('addCategoryModal');
+    if (modal) {
+        console.log('Modal found, hiding it');
+        modal.style.display = 'none';
+    } else {
+        console.log('Modal not found');
+    }
+    // Clear input fields
+    document.getElementById('categoryName').value = '';
+    document.getElementById('categoryUnit').value = '';
+    document.getElementById('categoryColor').value = '#aaaaaa';
+}
+
+async function saveCategory() {
+    const name = document.getElementById('categoryName').value;
+    const unit = document.getElementById('categoryUnit').value;
+    const color = document.getElementById('categoryColor').value;
+
+    if (!name || !unit || !color) {
+        alert('Bitte füllen Sie alle Felder aus.');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/categories', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, color, unit }),
+        });
+
+        if (response.ok) {
+            let result = await response.json();
+            alert('Neue Kategorie erfolgreich hinzugefügt!');
+            hideAddCategoryModal();
+            await loadButtons(); // Reload buttons after adding a new category
+        } else {
+            throw new Error('Fehler beim Hinzufügen der Kategorie');
+        }
+    } catch (error) {
+        console.error('Fehler:', error);
+        alert('Es gab einen Fehler beim Hinzufügen der Kategorie.');
+    }
 }
