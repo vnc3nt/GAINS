@@ -215,7 +215,6 @@ function checkToHideProfile(e) {
         const deltaY = event.touches[0].clientY - startY;
         if(deltaY > 0){
             profileMenu.style.transform = `translateY(${deltaY}px)`;
-            profileMenu.style.transform += `scale(.97)`;
         }
         else {
             profileMenu.style.transform = `translateY(${deltaY/10}px)`;
@@ -247,10 +246,15 @@ function buttonSwipeUp(e) {
     let startY = e.touches[0].clientY;
     let originalY = buttonMenu.getBoundingClientRect().top;
     let isSwipeValid = false;
+    
 
     buttonMenu.addEventListener("touchstart", (event) => {
         startY = event.touches[0].clientY;
         originalY = buttonMenu.getBoundingClientRect().top;
+        elementHeightPx = buttonMenu.offsetHeight;
+        viewportHeightPx = window.innerHeight;
+        elementHeightVh = (elementHeightPx / viewportHeightPx) * 100;
+        originalHeight = buttonMenu.offsetHeight;
 
         // Prüfen, ob das Touch-Event innerhalb der obersten 20px des Menüs beginnt
         if (startY <= originalY + 20) {
@@ -266,58 +270,66 @@ function buttonSwipeUp(e) {
         if (!isSwipeValid) return;
 
         const deltaY = event.touches[0].clientY - startY;
-
-        if (startY > 590) {
+        let newHeight;
+        
+        console.debug('fgh' + elementHeightVh);
+        // Aktuelle Höhe des Menüs in vh
+        const currentHeightVh = (buttonMenu.offsetHeight / window.innerHeight) * 100;
+        console.debug(startY);
+        if (elementHeightVh  >= 79) {
             if (deltaY > 0) {
-                buttonMenu.style.transform = `translateY(${deltaY / 10}px)`;
+                newHeight = originalHeight - deltaY;
             } else {
-                if (Math.abs(deltaY) < 400) {
-                    buttonMenu.style.transform = `translateY(${deltaY}px)`;
+                if (currentHeightVh < 21) {
+                    newHeight = originalHeight - deltaY /10;
                 } else {
-                    buttonMenu.style.transform = `translateY(${-380 + deltaY / 20}px)`;
+                    newHeight = originalHeight + deltaY /10;
                 }
             }
         }
-        if (startY <= 590) {
+        if (elementHeightVh <= 21) {
+            console.debug("deltaaa" +deltaY);
             if (deltaY < 0) {
-                buttonMenu.style.transform = `translateY(${-400 + deltaY / 10}px)`;
+                newHeight = originalHeight + deltaY;
             } else {
-                if (Math.abs(deltaY) < 400) {
-                    buttonMenu.style.transform = `translateY(${-400 + deltaY}px)`;
+                if (currentElementHeightVh >= 80) {
+                    newHeight = 80/100 * viewportHeightPx + deltaY;
                 } else {
-                    buttonMenu.style.transform = `translateY(${-380 + deltaY / 20}px)`;
+                    newHeight = originalHeight + deltaY;
                 }
             }
         }
+        buttonMenu.style.height = `${newHeight}px`;
     });
 
     buttonMenu.addEventListener("touchend", () => {
         if (!isSwipeValid) return;
 
-        const threshold = 0;
+        const threshold = 20;
 
         if (startY <= 500) {
             if (buttonMenu.getBoundingClientRect().top - originalY < threshold) {
-                // nach unten schließen
-                buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(-50vh)";
-            } else {
                 // zurück zur Ausgangsposition
-                buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(0vh)";
+                buttonMenu.style.transition = "height 0.1s ease";
+                buttonMenu.style.height = `${originalHeight}px`;
+            } else {
+                // nach unten schließen
+                buttonMenu.style.transition = "height 0.1s ease";
+                buttonMenu.style.height = "20vh"; // oder die gewünschte minimale Höhe
             }
         } else {
             if (originalY - buttonMenu.getBoundingClientRect().top > threshold) {
-                // nach oben expanden
-                buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(-50vh)";
+                // nach oben expandieren
+                buttonMenu.style.transition = "height 0.1s ease";
+                buttonMenu.style.height = "80vh"; // oder die gewünschte maximale Höhe
             } else {
                 // zurück zur Ausgangsposition
-                buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(0vh)";
+                buttonMenu.style.transition = "height 0.1s ease";
+                buttonMenu.style.height = `${originalHeight}px`;
             }
         }
     });
+
 }
 
 
@@ -328,11 +340,11 @@ function expandButtonsDesktop(e) {
     console.debug("algoo: " + startY);
 
     if (startY > 500) {
-        buttonMenu.style.transform = 'translateY(-50%)';
+        buttonMenu.style.height = '80vh';
         e.target.style.transform = 'rotate(-180deg)';
     }
     else {
-        buttonMenu.style.transform = 'translateY(0%)';
+        buttonMenu.style.height = '20vh';
         e.target.style.transform = 'rotate(0deg)';
     }
 }

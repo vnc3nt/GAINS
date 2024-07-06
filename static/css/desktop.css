@@ -27,11 +27,11 @@
 }
 
 .more-menu-btn {
-  position: absolute;
+  position: sticky;
   width: 1.5rem;
   height: 1.5rem;
   top: 0px;
-  right: 0px;
+  left: 98%;
   font-size: 1rem;
   cursor: pointer;
   user-select: none;
