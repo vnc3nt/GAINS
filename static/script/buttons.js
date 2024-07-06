@@ -62,17 +62,6 @@ window.addEventListener("touchstart", (e) => {
     touchX = e.touches[0].clientX;
     touchY = e.touches[0].clientY;
     let actualTarget = document.elementFromPoint(touchX, touchY);
-    if (actualTarget.className === "muscle" || actualTarget.className === "fat" || actualTarget.className === "weight"){
-        if (e.touches.length >= 2) {
-            return;
-        }
-        e.preventDefault();
-        touchStartTime = e.timeStamp;    // timeStamp in ms
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        //console.debug("Touch start:", touchStartTime);
-    }
-
     //Funktion zum anmieren des profilemenus
     checkToHideProfile(e);
 
@@ -240,96 +229,107 @@ function checkToHideProfile(e) {
     });
 }
 
+// Aufrufen der Funktion beim Laden der Seite
+document.addEventListener('DOMContentLoaded', buttonSwipeUp);
 
-function buttonSwipeUp(e) {
-    const buttonMenu = document.getElementsByClassName("button-menu")[0];
-    let startY = e.touches[0].clientY;
-    let originalY = buttonMenu.getBoundingClientRect().top;
-    let isSwipeValid = false;
-    
+function buttonSwipeUp() {
+    const buttonMenu = document.querySelector(".button-menu");
+    const menuContent = buttonMenu.querySelector(".MainButtons"); // Annahme: Der scrollbare Inhalt ist in einem Element mit der Klasse "menu-content"
+    let startY, startHeight, isSwipeValid = false;
+    const minHeight = 20; // Minimale Höhe in vh
+    const maxHeight = 60; // Maximale Höhe in vh
 
-    buttonMenu.addEventListener("touchstart", (event) => {
-        startY = event.touches[0].clientY;
-        originalY = buttonMenu.getBoundingClientRect().top;
-        elementHeightPx = buttonMenu.offsetHeight;
-        viewportHeightPx = window.innerHeight;
-        elementHeightVh = (elementHeightPx / viewportHeightPx) * 100;
-        originalHeight = buttonMenu.offsetHeight;
+    function vh(v) {
+        return (v * window.innerHeight) / 100;
+    }
 
-        // Prüfen, ob das Touch-Event innerhalb der obersten 20px des Menüs beginnt
-        if (startY <= originalY + 20) {
-            isSwipeValid = true;
-            // Standard-Scrollverhalten des Containers verhindern
-            event.preventDefault();
-        } else {
-            isSwipeValid = false;
+    function setHeight(height) {
+        buttonMenu.style.height = `${height}vh`;
+    }
+
+    function elasticEffect(height) {
+        const factor = 0.5;
+        
+        if (height > maxHeight) {
+            const overshoot = height - maxHeight;
+            return maxHeight + Math.log1p(overshoot * factor) / factor;
+        } else if (height < minHeight) {
+            const undershoot = minHeight - height;
+            return minHeight - Math.log1p(undershoot * factor) / factor;
         }
+        
+        return height;
+    }
+
+    function animateToHeight(from, to, duration = 300) {
+        const startTime = performance.now();
+        
+        function animate(currentTime) {
+            const elapsedTime = currentTime - startTime;
+            if (elapsedTime > duration) {
+                setHeight(to);
+                return;
+            }
+
+            const progress = elapsedTime / duration;
+            const easeProgress = 1 - Math.pow(1 - progress, 4);
+            const currentHeight = from + (to - from) * easeProgress;
+            
+            const elasticHeight = elasticEffect(currentHeight);
+            setHeight(elasticHeight);
+
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    function isMenuFullyExpanded() {
+        return (buttonMenu.offsetHeight / window.innerHeight) * 100 >= maxHeight;
+    }
+
+    function isMenuAtTop() {
+        return buttonMenu.scrollTop === 0;
+    }
+
+    buttonMenu.addEventListener("touchstart", (e) => {
+        startY = e.touches[0].clientY;
+        const currentHeight = (buttonMenu.offsetHeight / window.innerHeight) * 100;
+        startHeight = currentHeight > (minHeight + maxHeight) / 2 ? maxHeight : minHeight;
+        isSwipeValid = !isMenuFullyExpanded();
+        if (isSwipeValid) e.preventDefault();
     });
 
-    buttonMenu.addEventListener("touchmove", (event) => {
-        if (!isSwipeValid) return;
+    buttonMenu.addEventListener("touchmove", (e) => {
 
-        const deltaY = event.touches[0].clientY - startY;
-        let newHeight;
+
         
-        console.debug('fgh' + elementHeightVh);
-        // Aktuelle Höhe des Menüs in vh
-        const currentHeightVh = (buttonMenu.offsetHeight / window.innerHeight) * 100;
-        console.debug(startY);
-        if (elementHeightVh  >= 79) {
-            if (deltaY > 0) {
-                newHeight = originalHeight - deltaY;
-            } else {
-                if (currentHeightVh < 21) {
-                    newHeight = originalHeight - deltaY /10;
-                } else {
-                    newHeight = originalHeight + deltaY /10;
-                }
-            }
+
+        const currentY = e.touches[0].clientY;
+        const deltaY = startY - currentY;
+        let newHeight = startHeight + (deltaY / window.innerHeight) * 100;
+
+
+        if (!isSwipeValid) {
+            console.debug(isMenuAtTop());
+            isSwipeValid= (isMenuFullyExpanded() && isMenuAtTop() && newHeight <= startHeight);
         }
-        if (elementHeightVh <= 21) {
-            console.debug("deltaaa" +deltaY);
-            if (deltaY < 0) {
-                newHeight = originalHeight + deltaY;
-            } else {
-                if (currentElementHeightVh >= 80) {
-                    newHeight = 80/100 * viewportHeightPx + deltaY;
-                } else {
-                    newHeight = originalHeight + deltaY;
-                }
-            }
-        }
-        buttonMenu.style.height = `${newHeight}px`;
+
+        if (!isSwipeValid) return;
+        e.preventDefault();
+
+        newHeight = elasticEffect(newHeight);
+        setHeight(newHeight);
     });
 
     buttonMenu.addEventListener("touchend", () => {
         if (!isSwipeValid) return;
 
-        const threshold = 20;
+        const currentHeight = (buttonMenu.offsetHeight / window.innerHeight) * 100;
+        const targetHeight = currentHeight > (minHeight + maxHeight) / 2 ? maxHeight : minHeight;
 
-        if (startY <= 500) {
-            if (buttonMenu.getBoundingClientRect().top - originalY < threshold) {
-                // zurück zur Ausgangsposition
-                buttonMenu.style.transition = "height 0.1s ease";
-                buttonMenu.style.height = `${originalHeight}px`;
-            } else {
-                // nach unten schließen
-                buttonMenu.style.transition = "height 0.1s ease";
-                buttonMenu.style.height = "20vh"; // oder die gewünschte minimale Höhe
-            }
-        } else {
-            if (originalY - buttonMenu.getBoundingClientRect().top > threshold) {
-                // nach oben expandieren
-                buttonMenu.style.transition = "height 0.1s ease";
-                buttonMenu.style.height = "80vh"; // oder die gewünschte maximale Höhe
-            } else {
-                // zurück zur Ausgangsposition
-                buttonMenu.style.transition = "height 0.1s ease";
-                buttonMenu.style.height = `${originalHeight}px`;
-            }
-        }
+        animateToHeight(currentHeight, targetHeight);
     });
-
 }
 
 
