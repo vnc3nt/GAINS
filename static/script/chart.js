@@ -71,11 +71,6 @@ async function drawChart() {
              });
          });
 
-        console.table(dataByDate);
-         
-
-
-         console.table(dataByDate);
  
          // Datenzeilen aus dem dataByDate Objekt in das databaseData Array einfügen
          Object.values(dataByDate).forEach(row => {
@@ -96,6 +91,7 @@ async function drawChart() {
          document.querySelector(".max").textContent = Math.round((maxValue + 5) / 5) * 5;
         let selectedValue = document.querySelector("input[type=radio][name='view-options']:checked").value;
 
+        console.debug(daysTillToday(firstDate));
         let options = {
             curveType: 'function',
             legend: 'none',
@@ -106,7 +102,7 @@ async function drawChart() {
             pointSize: 5 / viewoption[selectedValue],
             backgroundColor: { fill: 'transparent' },
             chartArea: { 'width': '99%', 'height': '90%' },
-            hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25} },
+            hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate)/4 - 0.25} }, /* TODO /4 entfernen sobald interpoliert Werte richtig eingefügt werden*/
             vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
             tooltip: { isHtml: true }
         };
