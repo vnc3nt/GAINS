@@ -68,7 +68,13 @@ class Categories(Resource):
             
             if existing_category is None:
                 # Neue Datenzeile einfügen
-                new_category = category(id=category_id, userId=user_id, name=category_name, unit=category_unit, color=category_color)
+                new_category = category(
+                    id=category_id,
+                    userId=user_id,
+                    name=category_name,
+                    unit=category_unit,
+                    color=category_color
+                )
                 db.session.add(new_category)
                 
             else:

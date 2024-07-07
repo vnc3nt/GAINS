@@ -70,6 +70,12 @@ async function drawChart() {
                  dataByDate[date][categories.indexOf(category) + 1] += element[category.name] ?? 0;
              });
          });
+
+        console.table(dataByDate);
+         
+
+
+         console.table(dataByDate);
  
          // Datenzeilen aus dem dataByDate Objekt in das databaseData Array einfügen
          Object.values(dataByDate).forEach(row => {
