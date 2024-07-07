@@ -169,26 +169,34 @@ body {
 }
 
 .login {
-    padding-top: 120px;
+    padding-top: 150px;
     text-align: center;
 }
 
-.login input {
+input {
     padding: 10px;
-    margin: 10px;
-    width: 50%;
+    width: 90%;
+    margin-bottom: 10px;
+    margin-inline: 10px;
     max-width: 200px;
     color: var(--text-color);
     border: solid;
     border-width: 1px;
     border-radius: 10px;
     border-color: rgba(120, 120, 120, .9);
+    align-content: center;
+    background-color: var(--selected-color);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
 }
 
 button {
     touch-action: auto;
     margin: 10px;
     color: var(--text-color);
+    background-color: var(--button-color);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
     border: solid;
     padding: 10px;
     -webkit-user-select: none; /* Safari */
@@ -200,6 +208,9 @@ button {
     width: 50%;
     max-width: 200px;
     border-color: rgba(120, 120, 120, .9);
+    white-space: nowrap; /* Verhindert Umbruch des Textes */
+  overflow: hidden; /* Versteckt den überlaufenden Text */
+  text-overflow: ellipsis; /* Setzt "..." am Ende des abgeschnittenen Textes */
 }
 
 .backbutton {
@@ -441,7 +452,7 @@ a {
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 5;
   left: 0;
   top: 0;
   width: 100%;
@@ -450,21 +461,47 @@ a {
 }
 
 .modal-content {
-  background-color: #fefefe;
+  background-color: var(--button-color);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
   margin: 15% auto;
   padding: 20px;
-  border: 1px solid #888;
-  width: 300px;
+  border-radius: 5px;
+  border: solid 1px;
+  border-color: var(--selected-color);
+  width: 50vw;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.modal-content input {
+input[type=color] {
+  width: 2rem;
+  height: 2rem;
+  padding: 0px;
+  border-radius: 50%;
+}
+
+input[type=color]::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+}
+
+input[type=color]::-webkit-color-swatch-wrapper {
+    border: none;
+    border-radius: 50%;
+    padding: 0;
+}
+
+.modal-buttons{
+  display: inline;
   width: 100%;
-  margin-bottom: 10px;
-  padding: 5px;
+  text-align: center;
 }
 
-.modal-buttons {
-  text-align: right;
+.modal-buttons button{
+  width: 35%;
 }
 
 
