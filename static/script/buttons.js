@@ -423,37 +423,6 @@ function hideAddCategoryModal() {
 }
 
 async function saveCategory() {
-
-
-
-    if (!userInput) {
-        console.debug("Keine Benutzereingabe");
-        return;
-    }
-
-    let data = await fetch("/api/data",  {
-        method: "POST",
-        body: JSON.stringify({
-            category: buttonName,  // buttonName wird als Kategorie verwendet
-            data: userInput,
-            user: getUserId()
-        }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
-    .then((response) => response.json())
-    .catch((error) => console.error('Fehler beim Speichern der Daten:', error));
-
-    hideAddCategoryModal();
-    await loadButtons(); // Reload buttons after adding a new category
-
-
-
-
-
-
-
     const name = document.getElementById('categoryName').value;
     const unit = document.getElementById('categoryUnit').value;
     const color = document.getElementById('categoryColor').value;
@@ -471,7 +440,7 @@ async function saveCategory() {
             },
             body: JSON.stringify({ name, color, unit }),
         });
-
+        console.debug(response);
         if (response.ok) {
             let result = await response.json();
             alert('Neue Kategorie erfolgreich hinzugefügt!');
