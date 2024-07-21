@@ -44,19 +44,8 @@ async function drawChart() {
 
          // Datenpunkte zu den entsprechenden Datumseinträgen hinzufügen
          let dataByDate = {}; // Objekt zur Sammlung der Daten pro Datum
-         
+         let filled = {};
          userData.data.forEach(element => {
-             if (firstDate === undefined && element.date) {
-                firstDate = element.date;
-                currentDate = stringToDate(firstDate);
-            }
-    
-            let elementDate = stringToDate(element.date);
-            console.debug(currentDate);
-            while (currentDate < elementDate) {
-                databaseData.push([dateToString(currentDate), 1, 2, 0, 0, 0]);
-                currentDate = addDays(currentDate, 1);
-            }
             
              let date = element.date;
              if (!dataByDate[date]) {
@@ -65,11 +54,6 @@ async function drawChart() {
                      dataByDate[date].push(0); // Initialisieren aller Kategorienwerte mit 0
                  });
              }
-             
-
-
-
-
  
              // Werte für jede Kategorie zum entsprechenden Datum hinzufügen
              categories.forEach(category => {
@@ -82,6 +66,7 @@ async function drawChart() {
              databaseData.push(row);
          });
 
+
          // Finden des ersten gültigen Datums in den Daten
         firstDate = databaseData[1][0];
         
@@ -90,6 +75,23 @@ async function drawChart() {
             firstDate = '2002-02-02'; // Hier ein passendes Standarddatum setzen, falls nötig
         }
 
+        console.table(databaseData);
+        // let nextDay = databaseData[1]?.slice(0, 1)[0] ?? firstDate;
+        let nextDay = undefined;
+        for (let i = 1; i < databaseData.length; i++) {
+            let row = databaseData[i];
+            nextDay = nextDay ?? row[0];
+            console.log(row[0] !== nextDay && daysTillToday(nextDay) > 0);
+            while (row[0] !== nextDay && daysTillToday(nextDay) > 0) {
+                console.log("spammmmmmme");
+                databaseData.splice(i, 0, [nextDay].concat(new Array(row.length - 1).fill(0)));
+                i++;
+                nextDay = dateToString(addDays(stringToDate(nextDay), 1));
+            }
+            nextDay = dateToString(addDays(stringToDate(nextDay), 1));
+        }
+        console.table(databaseData);
+        console.debug("dbsjkjbdskbkbdsk", typeof firstDate);
 
         
         //TODO nichtinterpolierte Punkte weiß einfärben
@@ -116,7 +118,7 @@ async function drawChart() {
             pointSize: 5 / viewoption[selectedValue],
             backgroundColor: { fill: 'transparent' },
             chartArea: { 'width': '99%', 'height': '90%' },
-            hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate)/4 - 0.25} }, /* TODO /4 entfernen sobald interpoliert Werte richtig eingefügt werden*/
+            hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25} },
             vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
             tooltip: { isHtml: true }
         };
@@ -166,7 +168,7 @@ function ersetzeNullenMitInterpoliertenWerten(databaseData) {
 
     for (let i = 1; i < databaseData.length; i++) {
         for (let j = 1; j < spaltenAnzahl; j++) {
-            if (databaseData[i][j] == 0) {
+            if (databaseData[i][j] === 0) {
                 if (nullStreckenStart[j] === 0) {
                     vorherigeWerte[j] = Number(databaseData[i - 1][j]);
                     nullStreckenStart[j] = i;
