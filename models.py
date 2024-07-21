@@ -28,7 +28,7 @@ class data(db.Model):
 class newdata(db.Model):
     userid=db.Column(db.BIGINT, ForeignKey("users.id"), nullable=False, primary_key=True)
     date=db.Column(db.DATE, nullable=False, primary_key=True, default=current_date)
-    categoryId=db.Column(db.BIGINT,ForeignKey("catergory.id"), nullable=False, primary_key=True)
+    categoryId=db.Column(db.BIGINT,ForeignKey("category.id"), nullable=False, primary_key=True)
     data=db.Column(db.Numeric(5,2), nullable=True)
 
 class category(db.Model):

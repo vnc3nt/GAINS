@@ -1,13 +1,30 @@
-const buttonQuestion = {
-    "btn-fat": "Dein Körperfettanteil in Prozent:",
-    "btn-weight": "Dein Körpergewicht in Kilogramm:",
-    "btn-muscle": "Deine Museklmasse in Prozent:"
-}
-/*const tablePrompt = {
-    "btn-fat": ,
-    "btn-weight": ,
-    "btn-muscle": 
-}*/
+
+
+document.addEventListener('DOMContentLoaded', loadButtons);
+document.addEventListener('DOMContentLoaded', buttonSwipeUp);
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded');
+    const saveBtn = document.getElementById('saveCategoryBtn');
+    const cancelBtn = document.getElementById('cancelCategoryBtn');
+    
+    if (saveBtn) {
+        console.log('Save button found');
+        saveBtn.addEventListener('click', saveCategory);
+    } else {
+        console.log('Save button not found');
+    }
+    
+    if (cancelBtn) {
+        console.log('Cancel button found');
+        cancelBtn.addEventListener('click', hideAddCategoryModal);
+    } else {
+        console.log('Cancel button not found');
+    }
+});
+
+
 
 let touchStartTime = null;
 let touchStartX = null;
@@ -27,21 +44,57 @@ let touchSimulation = TOUCH_NORMAL;
 const RIGHT_CLICK_TOUCH = 300;  // ms 
 const DRAG_DISTANCE = 25;  // px²
 
+let categories = [];
+
+async function loadButtons() {
+    let mainButtons = document.getElementById('main-buttons');
+    mainButtons.innerHTML = ''; // Leeren des Inhalts
+
+    try {
+        let response = await fetch('/api/categories');
+        categories = await response.json();
+
+        // Sortieren der Kategorien nach ID
+        categories.sort((a, b) => a.id - b.id);
+
+        categories.forEach(category => {
+            let button = document.createElement('button');
+            button.classList.add('category-button'); // Allgemeine CSS-Klasse für Kategorie-Buttons
+            button.classList.add(category.name.toLowerCase()); // CSS-Klasse basierend auf dem Kategorienamen
+            button.innerText = category.name;
+
+            // Stil für Hintergrundfarbe aus der Datenbank
+            button.style.backgroundColor = lightenColor(category.color, -40);
+            button.style.borderColor = lightenColor(category.color, 0);
+
+            button.id = `btn-${category.name.toLowerCase()}`; // ID basierend auf dem Kategorienamen
+            button.addEventListener('click', left);
+            button.addEventListener('contextmenu', right);
+            mainButtons.appendChild(button);
+        });
+        
+        console.debug('Dynamisch generierte Buttons:', categories);
+    } catch (error) {
+        console.error('Fehler beim Laden der Kategorien:', error);
+    }
+
+    // Hinzufügen des '+' Buttons am Ende
+    let addButton = document.createElement('button');
+    addButton.classList.add('category-button', 'add');
+    addButton.innerText = "+";
+
+    addButton.style.backgroundColor = lightenColor('#8C8C8C', -40);
+    addButton.style.borderColor = lightenColor('#8C8C8C', 0);
+
+    addButton.id = 'btn-add';
+    addButton.addEventListener('click', showAddCategoryModal);
+    mainButtons.appendChild(addButton);
+}
+
 window.addEventListener("touchstart", (e) => {
     touchX = e.touches[0].clientX;
     touchY = e.touches[0].clientY;
     let actualTarget = document.elementFromPoint(touchX, touchY);
-    if (actualTarget.className === "muscle" || actualTarget.className === "fat" || actualTarget.className === "weight"){
-        if (e.touches.length >= 2) {
-            return;
-        }
-        e.preventDefault();
-        touchStartTime = e.timeStamp;    // timeStamp in ms
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        //console.debug("Touch start:", touchStartTime);
-    }
-
     //Funktion zum anmieren des profilemenus
     checkToHideProfile(e);
 
@@ -129,68 +182,41 @@ window.addEventListener("touchcancel", (e) => {
     draggedTouchNode = undefined;
 });
 
-async function leftClick(e) {
-    let userInput = parseFloat(window.prompt(buttonQuestion[e.target.id]).replace(',', '.'));
-    if (!userInput) {
-        console.debug("no userInput");
+async function left(e) {
+    let buttonName = e.target.innerHTML;  // Name des Buttons/der Kategorie, z.B. "Gewicht"
+    console.debug("BBB: " + buttonName);
+    console.debug(categories);
+    let category = categories.find(categ => categ.name === buttonName);
+    if (!category) {
+        console.error('Kategorie nicht gefunden für Button:', buttonName);
         return;
     }
-    console.log(e.target.id);
-    console.log(userInput);
 
-    if (e.target.id === "btn-fat"){
-        let data = await fetch("/api/data",  {
+    let unit = category.unit;
+    let userInput = parseFloat(window.prompt(`Dein(e) ${buttonName} in ${unit}:`).replace(',', '.'));
+    if (!userInput) {
+        console.debug("Keine Benutzereingabe");
+        return;
+    }
+
+    let data = await fetch("/api/data",  {
         method: "POST",
         body: JSON.stringify({
-            fat: userInput,
-            user: getUserId(),
-            // date: "abc"  // post has no date
+            category: buttonName,  // buttonName wird als Kategorie verwendet
+            data: userInput,
+            user: getUserId()
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
     })
     .then((response) => response.json())
-    .catch((json) => console.log(json));
-    }
-
-    if (e.target.id === "btn-weight"){
-        let data = await fetch("/api/data",  {
-        method: "POST",
-        body: JSON.stringify({
-            weight: userInput,
-            user: getUserId(),
-            // date: "abc"  // post has no date
-        }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
-    .then((response) => response.json())
-    .catch((json) => console.log(json));
-    }
-
-    if (e.target.id === "btn-muscle"){
-        let data = await fetch("/api/data",  {
-        method: "POST",
-        body: JSON.stringify({
-            muscle: userInput,
-            user: getUserId(),
-            // date: "abc"  // post has no date
-        }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
-    .then((response) => response.json())
-    .catch((json) => console.log(json));
-    }
+    .catch((error) => console.error('Fehler beim Speichern der Daten:', error));
     
     await drawChart();
-    //alert("left clicked!");
 }
 
-async function rightClick(e) { //edit old data
+async function right(e) { //TODO edit old data ->
     //alert("right clicked!");
     e.preventDefault(); //kein kontextmenü
     window.location.assign("/edit");
@@ -211,7 +237,6 @@ function checkToHideProfile(e) {
         const deltaY = event.touches[0].clientY - startY;
         if(deltaY > 0){
             profileMenu.style.transform = `translateY(${deltaY}px)`;
-            profileMenu.style.transform += `scale(.97)`;
         }
         else {
             profileMenu.style.transform = `translateY(${deltaY/10}px)`;
@@ -237,85 +262,104 @@ function checkToHideProfile(e) {
     });
 }
 
+function buttonSwipeUp() {
+    const buttonMenu = document.querySelector(".button-menu");
+    let startY, startHeight, isSwipeValid = false;
+    const minHeight = 20; // Minimale Höhe in vh
+    const maxHeight = 60; // Maximale Höhe in vh
 
-function buttonSwipeUp(e) {
-    const buttonMenu = document.getElementsByClassName("button-menu")[0];
-    let startY = e.touches[0].clientY;
-    let originalY = buttonMenu.getBoundingClientRect().top;
-    
+    function vh(v) {
+        return (v * window.innerHeight) / 100;
+    }
 
-    buttonMenu.addEventListener("touchstart", (event) => {
-        startY = event.touches[0].clientY;
-        originalY = buttonMenu.getBoundingClientRect().top;
-        console.debug("devvv" + originalY);
-    });
+    function setHeight(height) {
+        buttonMenu.style.height = `${height}vh`;
+    }
 
-    buttonMenu.addEventListener("touchmove", (event) => {
-        const deltaY = event.touches[0].clientY - startY;
-
-        console.debug("adsdasasadssad " + startY);
-            
-        if (startY > 590){
-            if(deltaY > 0) {
-                buttonMenu.style.transform = `translateY(${deltaY/10}px)`;
-            }
-            
-            else {
-                if (Math.abs(deltaY) < 400){
-                    buttonMenu.style.transform = `translateY(${deltaY}px)`;
-                }
-                else{
-                    buttonMenu.style.transform = `translateY(${-380 + deltaY/20}px)`;
-                    
-                }
-            }
-        }
-        if (startY <= 590) {
-            if(deltaY < 0) {
-                buttonMenu.style.transform = `translateY(${-400 +deltaY/10}px)`;
-            }
-            
-            else {
-                if (Math.abs(deltaY) < 400){
-                    buttonMenu.style.transform = `translateY(${-400 +deltaY}px)`;
-                }
-                else{
-                    buttonMenu.style.transform = `translateY(${-380 +deltaY/20}px)`;
-                    
-                }
-            }
+    function elasticEffect(height) {
+        const factor = 0.5;
+        
+        if (height > maxHeight) {
+            const overshoot = height - maxHeight;
+            return maxHeight + Math.log1p(overshoot * factor) / factor;
+        } else if (height < minHeight) {
+            const undershoot = minHeight - height;
+            return minHeight - Math.log1p(undershoot * factor) / factor;
         }
         
+        return height;
+    }
+
+    function animateToHeight(from, to, duration = 300) {
+        const startTime = performance.now();
+        
+        function animate(currentTime) {
+            const elapsedTime = currentTime - startTime;
+            if (elapsedTime > duration) {
+                setHeight(to);
+                return;
+            }
+
+            const progress = elapsedTime / duration;
+            const easeProgress = 1 - Math.pow(1 - progress, 4);
+            const currentHeight = from + (to - from) * easeProgress;
+            
+            const elasticHeight = elasticEffect(currentHeight);
+            setHeight(elasticHeight);
+
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    function isMenuFullyExpanded() {
+        return (buttonMenu.offsetHeight / window.innerHeight) * 100 >= maxHeight;
+    }
+
+    function isMenuAtTop() {
+        return buttonMenu.scrollTop === 0;
+    }
+
+    buttonMenu.addEventListener("touchstart", (e) => {
+        startY = e.touches[0].clientY;
+        const currentHeight = (buttonMenu.offsetHeight / window.innerHeight) * 100;
+        startHeight = currentHeight > (minHeight + maxHeight) / 2 ? maxHeight : minHeight;
+        isSwipeValid = !isMenuFullyExpanded();
+    });
+
+    buttonMenu.addEventListener("touchmove", (e) => {
+
+
+        
+
+        const currentY = e.touches[0].clientY;
+        const deltaY = startY - currentY;
+        let newHeight = startHeight + (deltaY / window.innerHeight) * 100;
+
+
+        if (!isSwipeValid) {
+            console.debug(isMenuAtTop());
+            isSwipeValid= (isMenuFullyExpanded() && isMenuAtTop() && newHeight <= startHeight);
+        }
+
+        if (!isSwipeValid) return;
+        e.preventDefault();
+
+        newHeight = elasticEffect(newHeight);
+        setHeight(newHeight);
     });
 
     buttonMenu.addEventListener("touchend", () => {
-        // Prüfe, ob der Bereich überschritten wurde
-        const threshold = 0;
-    
-        if (startY <= 500) {
-            if (buttonMenu.getBoundingClientRect().top - originalY < threshold) {
-                // nach unten schließen
-                buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(-50vh)";
-            } else {
-                // zurück zur Ausgangsposition
-                buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(0vh)";
-            }
-        } else {
-            if (originalY - buttonMenu.getBoundingClientRect().top > threshold) {
-                // nach oben expanden
-                buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(-50vh)"; //zurück zur Ausgangsposition            
-            } else {
-                // zurück zur Ausgangsposition
-                buttonMenu.style.transition = "transform 0.1s ease";
-                buttonMenu.style.transform = "translateY(0vh)";
-            }
-        }
+        if (!isSwipeValid) return;
+
+        const currentHeight = (buttonMenu.offsetHeight / window.innerHeight) * 100;
+        const targetHeight = currentHeight > (minHeight + maxHeight) / 2 ? maxHeight : minHeight;
+
+        animateToHeight(currentHeight, targetHeight);
     });
-    
 }
+
 
 function expandButtonsDesktop(e) {
     const buttonMenu = document.getElementsByClassName("button-menu")[0];
@@ -324,11 +368,89 @@ function expandButtonsDesktop(e) {
     console.debug("algoo: " + startY);
 
     if (startY > 500) {
-        buttonMenu.style.transform = 'translateY(-50%)';
-        e.target.style.transform = 'rotate(-45deg)';
+        buttonMenu.style.height = '80vh';
+        e.target.style.transform = 'rotate(-180deg)';
     }
     else {
-        buttonMenu.style.transform = 'translateY(0%)';
+        buttonMenu.style.height = '20vh';
         e.target.style.transform = 'rotate(0deg)';
+    }
+}
+
+
+function lightenColor(color, percent) {
+    // Farbe in RGB-Werte aufteilen
+    let r = parseInt(color.substring(1, 3), 16);
+    let g = parseInt(color.substring(3, 5), 16);
+    let b = parseInt(color.substring(5, 7), 16);
+
+    // Helligkeit erhöhen
+    r = Math.floor(r * (1 + percent / 100));
+    g = Math.floor(g * (1 + percent / 100));
+    b = Math.floor(b * (1 + percent / 100));
+
+    // Grenzwerte sicherstellen (0 bis 255)
+    r = Math.min(r, 255);
+    g = Math.min(g, 255);
+    b = Math.min(b, 255);
+
+    // RGB-Werte zu HEX umwandeln
+    let hex = `#${(r).toString(16).padStart(2, '0')}${(g).toString(16).padStart(2, '0')}${(b).toString(16).padStart(2, '0')}`;
+    return hex;
+}
+
+
+
+
+function showAddCategoryModal() {
+    console.log('showAddCategoryModal was called');
+    document.getElementById('addCategoryModal').style.display = 'block';
+}
+
+function hideAddCategoryModal() {
+    console.log('hideAddCategoryModal was called');
+    const modal = document.getElementById('addCategoryModal');
+    if (modal) {
+        console.log('Modal found, hiding it');
+        modal.style.display = 'none';
+    } else {
+        console.log('Modal not found');
+    }
+    // Clear input fields
+    document.getElementById('categoryName').value = '';
+    document.getElementById('categoryUnit').value = '';
+    document.getElementById('categoryColor').value = '#991199';
+}
+
+async function saveCategory() {
+    const name = document.getElementById('categoryName').value;
+    const unit = document.getElementById('categoryUnit').value;
+    const color = document.getElementById('categoryColor').value;
+
+    if (!name || !unit || !color) {
+        alert('Bitte füllen Sie alle Felder aus.');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/categories', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, color, unit }),
+        });
+        console.debug(response);
+        if (response.ok) {
+            let result = await response.json();
+            alert('Neue Kategorie erfolgreich hinzugefügt!');
+            hideAddCategoryModal();
+            await loadButtons(); // Reload buttons after adding a new category
+        } else {
+            throw new Error('Fehler beim Hinzufügen der Kategorie');
+        }
+    } catch (error) {
+        console.error('Fehler:', error);
+        alert('Es gab einen Fehler beim Hinzufügen der Kategorie.');
     }
 }

@@ -23,7 +23,7 @@ async function leftClick(e) {
       console.debug("no userInput");
       return;
   }
-  console.log(e.target.id);
+  console.log(e.target.innerText);
   console.log(userInput);
 
   if (e.target.id === "btn-fat"){ //TODO von Button verhalten zu Daten bearbeiten -> Datum von Event abgreifen statt Button.id

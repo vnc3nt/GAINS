@@ -28,12 +28,30 @@
 {% include "snippets/data.html" %}
 <br>
 <div class="button-menu">
-    <div class="bar"></div>
-    <div class="MainButtons">
-        <button class="weight" id="btn-weight" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Gewicht </button>
-        <button class="fat" id="btn-fat" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Körper&shy;fett </button>
-        <button class="muscle" id="btn-muscle" onclick="leftClick(event)" oncontextmenu="return rightClick(event)"> Muskel&shy;masse </button>
+    <div class="bar-background">
+        <div class="bar"></div>
     </div>
-    <button class="more-menu-btn" id="more-menu-btn" onclick="expandButtonsDesktop(event)"> + </button>
+    <div class="MainButtons" id="main-buttons">
+        <!-- Hier werden die dynamisch generierten Buttons eingefügt -->
+    </div>
+    <button class="more-menu-btn" id="more-menu-btn" onclick="expandButtonsDesktop(event)"> ▲ </button>
 </div>
+
+<div id="addCategoryModal" class="modal">
+    <div class="modal-content">
+        <h2>Neue Kategorie hinzufügen</h2>
+        <input type="text" id="categoryName" placeholder="Name">
+        <input type="text" id="categoryUnit" placeholder="Einheit">
+        <input type="color" id="categoryColor" value="#991199">
+        <div class="modal-buttons">
+            <button id="cancelCategoryBtn">Abbrechen</button>
+            <button id="saveCategoryBtn">Speichern</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript Code wird hier eingefügt
+</script>
+
 {% endblock content %}

@@ -6,7 +6,7 @@
       --text-color: black;
       --website-background-color: #f1f1f1;
       --color-scheme: light;
-      --button-color: #d9d9d9;
+      --button-color: #d9d9d94a;
       --selected-color: #ffffff;
     }
   }
@@ -15,8 +15,8 @@
       --text-color: #f5f6fa;
       --website-background-color: #121212;
       --color-scheme: dark;
-      --button-color: #1e1e1e;
-      --selected-color: #3d3d3d;
+      --button-color: #1e1e1e4a;
+      --selected-color: #3d3d3d4a;
     }
   }
 
@@ -45,14 +45,14 @@ body {
 .button-menu {
   position: fixed;
   right: 0px;
-  top: calc(100vh - 150px);
+  bottom: 0px;
   width: 100vw;
-  height: 80vh;
+  height: 20vh;
   border-radius: 10px 10px 0 0;
   border: solid 1px;
   border-color: var(--selected-color);
   margin: 0px;
-  overflow: hidden;
+  overflow-y: scroll;
   z-index: 0;
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
@@ -61,14 +61,14 @@ body {
   user-select: auto;
   z-index: 3;
 }
-
+.button-menu::-webkit-scrollbar {
+  display: none;
+}
 
 .MainButtons button {
     touch-action: auto;
-    border-width: 3px;
-    border-radius: 10px;
     height: 90px;
-    min-width: 30%;
+    width: 27%;
     border: solid;
     padding: 10px;
     border-width: 3px;
@@ -79,31 +79,24 @@ body {
   touch-action: auto;
   position: absolute;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
   top: 10px;
-  width: 93%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
 
-.fat {
-    border-color: rgba(20, 0, 150, .9) !important;
-    background-color: rgba(20, 0, 150, .5);
-    font-size: 1.2rem;
+.category-button {
+  border-width: 1px;
+  border-style: solid;
+  font-size: 1.2rem;
+  white-space: nowrap; /* Verhindert Umbruch des Textes */
+  overflow: hidden; /* Versteckt den überlaufenden Text */
+  text-overflow: ellipsis; /* Setzt "..." am Ende des abgeschnittenen Textes */
 }
 
-.weight {
-    border-color: rgba(120, 120, 120, .9) !important;
-    background-color: rgba(120, 120, 120, .5);
-    font-size: 1.2rem;
-}
-
-.muscle {
-    border-color: rgba(115, 0, 0, .9) !important;
-    background-color: rgba(115, 0, 0, .5);
-    font-size: 1.2rem;
-}
 
 .google-visualization-tooltip {
   border: solid 1px !important;
@@ -111,6 +104,8 @@ body {
   border-radius: 10px !important;
   border-color: var(--selected-color)!important;
   box-shadow: none !important;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
 }
 
 .google-visualization-tooltip > ul > li > span {
@@ -151,7 +146,7 @@ body {
   top: calc(4rem - 40px);
   right: 0px;
   padding: 10px;
-  background-color: rgba(var(--button-color),50);
+  background-color: var(--button-color);
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
   border-radius: 5px;
@@ -174,26 +169,34 @@ body {
 }
 
 .login {
-    padding-top: 120px;
+    padding-top: 150px;
     text-align: center;
 }
 
-.login input {
+input {
     padding: 10px;
-    margin: 10px;
-    width: 50%;
+    width: 60%;
+    margin-bottom: 10px;
+    margin-inline: 10px;
     max-width: 200px;
     color: var(--text-color);
     border: solid;
     border-width: 1px;
     border-radius: 10px;
     border-color: rgba(120, 120, 120, .9);
+    align-content: center;
+    background-color: var(--selected-color);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
 }
 
 button {
     touch-action: auto;
     margin: 10px;
     color: var(--text-color);
+    background-color: var(--button-color);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
     border: solid;
     padding: 10px;
     -webkit-user-select: none; /* Safari */
@@ -205,6 +208,9 @@ button {
     width: 50%;
     max-width: 200px;
     border-color: rgba(120, 120, 120, .9);
+    white-space: nowrap; /* Verhindert Umbruch des Textes */
+  overflow: hidden; /* Versteckt den überlaufenden Text */
+  text-overflow: ellipsis; /* Setzt "..." am Ende des abgeschnittenen Textes */
 }
 
 .backbutton {
@@ -441,4 +447,77 @@ details> summary {
 
 a {
   cursor: pointer;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 5;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: var(--button-color);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 5px;
+  border: solid 1px;
+  border-color: var(--selected-color);
+  width: 50vw;
+  max-width: 550px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+h2 {
+  width: 100%;
+}
+
+input#categoryUnit {
+  width: 20%;
+}
+
+input[type=color] {
+  width: 2rem;
+  height: 2rem;
+  padding: 0px;
+  border-radius: 50%;
+}
+
+input[type=color]::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+}
+
+input[type=color]::-webkit-color-swatch-wrapper {
+    border: none;
+    border-radius: 50%;
+    padding: 0;
+}
+
+.modal-buttons{
+  display: inline;
+  width: 100%;
+  text-align: center;
+}
+
+.modal-buttons button{
+  width: 35%;
+}
+
+
+.disable-scroll {
+  overflow-y: hidden;
+}
+
+.enable-scroll {
+  overflow-y: auto;
 }

@@ -1,7 +1,7 @@
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from flask_restful.reqparse import RequestParser
 from flask import json, jsonify, session
-from sqlalchemy import text
+from sqlalchemy import func
 from models import db, users, current_date, token, data, newdata, category #newdata und category statt data implementieren
 
 from datetime import datetime
@@ -11,25 +11,19 @@ from constants import USERID
 #TODO export und import der Daten -> Backup
 
 post_arguments = RequestParser(bundle_errors=True)
+
 post_arguments.add_argument(
-    name = "fat",
+    name = "category",
+    type = str,
+    nullable = False,
+    required = True
+)
+
+post_arguments.add_argument(
+    name = "data",
     type = float, # 47,55
     nullable = True,
-    required = False
-)
-
-post_arguments.add_argument(
-    name = "weight",
-    type = float, # 47,52
-    nullable = True,
-    required = False
-)
-
-post_arguments.add_argument(
-    name = "muscle",
-    type = float, # 47,54
-    nullable = True,
-    required = False
+    required = True
 )
 
 post_arguments.add_argument(
@@ -50,51 +44,70 @@ patch_arguments.add_argument(
 
 class Data(Resource):
     def get(self):
-        existingData = db.session.query(data).filter(data.userid == session.get(USERID)).order_by(data.date).all()
-        username = db.session.query(users).filter(users.id == session.get(USERID)).first().username
-        output = [
-            {
-                'userid': i.userid,
-                'date': datetime.strftime(i.date, "%d-%m-%Y"),
-                'fat': float(i.fat) if i.fat is not None else None,
-                'weight': float(i.weight) if i.weight is not None else None,
-                'muscle': float(i.muscle) if i.muscle is not None else None
+        user_id = session.get(USERID)
+        
+        # Abfrage der Kategorien für den Nutzer
+        categories = db.session.query(category).filter(category.userId == user_id).all()
+        category_map = {categ.id: categ.name for categ in categories}
+        
+        # Abfrage der Daten
+        existing_data = db.session.query(newdata).filter(newdata.userid == user_id).order_by(newdata.date).all()
+        username = db.session.query(users).filter(users.id == user_id).first().username
+        
+        # Strukturierung der Daten für die Ausgabe
+        output = []
+        for i in existing_data:
+            entry = {
+                'userId': i.userid,
+                'date': datetime.strftime(i.date, "%d-%m-%Y")
             }
-            for i in existingData
-        ]
-        return {
-            "maxValue": list(map(
-                lambda v : float(v) if isinstance(v, Decimal) and v is not None else v,
-                db.session.execute(text("select max(muscle), max(weight), max(fat) from data inner join users on users.id=data.userid where users.id=%s" % session.get(USERID))).first()
-            )),
+            if i.categoryId in category_map:
+                entry[category_map[i.categoryId]] = float(i.data) if i.data is not None else None
+            output.append(entry)
+        
+        # Maximalwerte für jede Kategorie berechnen
+        max_values = {}
+        for categ_id, categ_name in category_map.items():
+            max_value = db.session.query(func.max(newdata.data)).filter(newdata.userid == user_id, newdata.categoryId == categ_id).scalar()
+            max_values[categ_name] = float(max_value) if max_value is not None else None
+        
+        return jsonify({
+            "maxValue": max_values,
             "data": output,
             "username": username
-        }, 200
-    
+        })
+
     def post(self):
-        givenData = post_arguments.parse_args(strict = True)
-        print(givenData)
+        given_data = post_arguments.parse_args(strict=True)
         user = db.session.query(users).filter(users.id == session.get(USERID)).first()
-        print(user)
+        
         if user:
-            userID = user.id
-            existingData = db.session.query(data).filter(data.userid == userID, data.date == current_date()).first()
-            print(existingData)
-            if existingData is None:
-                fat = givenData.fat if givenData.fat is not None else None
-                weight = givenData.weight if givenData.weight is not None else None
-                muscle = givenData.muscle if givenData.muscle is not None else None
-                newData = data(userid = userID, date = current_date(), fat = fat, weight = weight, muscle = muscle)
-                #print(newData)
-                db.session.add(newData)
+            user_id = user.id
+            
+            # Kategorie-ID für den gegebenen Kategorienamen abrufen
+            category_name = given_data["category"]
+            value = given_data["data"]
+            category_obj = db.session.query(category).filter(category.userId == user_id, category.name == category_name).first()
+            
+            if not category_obj:
+                print("Error: No such category found.")
             else:
-                if givenData.fat is not None:
-                    existingData.fat = givenData.fat
-                if givenData.weight is not None:
-                    existingData.weight = givenData.weight
-                if givenData.muscle is not None:
-                    existingData.muscle = givenData.muscle
+                category_id = category_obj.id
+            
+            # Bestehende Daten für den aktuellen Tag und die Kategorie abrufen
+            existing_data = db.session.query(newdata).filter(newdata.userid == user_id, newdata.date == current_date(), newdata.categoryId == category_id).first()
+            
+            if existing_data is None:
+                # Neue Datenzeile einfügen
+                new_data = newdata(userid=user_id, date=current_date(), categoryId=category_id, data=value)
+                db.session.add(new_data)
+            else:
+                # Vorhandene Datenzeile aktualisieren
+                existing_data.data = value
+            
             db.session.commit()
             return {}, 200
         else:
             print("Benutzer nicht gefunden")
+            return {"message": "Benutzer nicht gefunden"}, 404
+
