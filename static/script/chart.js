@@ -35,7 +35,7 @@ async function drawChart() {
     
 
         categories.forEach(category => {
-            databaseData[0].push(category.name); // Hinzufügen der Kategorienamen als Überschriften
+            databaseData[0].push(category.name, {type:'string', role:'style'}); // Hinzufügen der Kategorienamen als Überschriften
             categoryStyles[category.name] = { color: category.color}; // Speichern der Farben für jede Kategorie
         });
 
@@ -51,13 +51,13 @@ async function drawChart() {
              if (!dataByDate[date]) {
                  dataByDate[date] = [date]; // Erste Spalte im Datenarray ist das Datum
                  categories.forEach(category => {
-                     dataByDate[date].push(0); // Initialisieren aller Kategorienwerte mit 0
+                     dataByDate[date].push(0, 'point { fill-color: #ffffff; }'); // Initialisieren aller Kategorienwerte mit 0
                  });
              }
  
              // Werte für jede Kategorie zum entsprechenden Datum hinzufügen
              categories.forEach(category => {
-                 dataByDate[date][categories.indexOf(category) + 1] += element[category.name] ?? 0;
+                 dataByDate[date][2 * categories.indexOf(category) + 1] += element[category.name] ?? 0;
              });
          });
 
@@ -83,15 +83,17 @@ async function drawChart() {
             nextDay = nextDay ?? row[0];
             console.log(row[0] !== nextDay && daysTillToday(nextDay) > 0);
             while (row[0] !== nextDay && daysTillToday(nextDay) > 0) {
-                console.log("spammmmmmme");
-                databaseData.splice(i, 0, [nextDay].concat(new Array(row.length - 1).fill(0)));
+                let t = [nextDay]
+                for (let j = 0; j < row.length - 1; j+=2) {
+                    t.push(0, `point { fill-color: ${lightenColor(categories[j / 2].color, +40)}; }`);
+                }
+                databaseData.splice(i, 0, t);
                 i++;
                 nextDay = dateToString(addDays(stringToDate(nextDay), 1));
             }
             nextDay = dateToString(addDays(stringToDate(nextDay), 1));
         }
         console.table(databaseData);
-        console.debug("dbsjkjbdskbkbdsk", typeof firstDate);
 
         
         //TODO nichtinterpolierte Punkte weiß einfärben
