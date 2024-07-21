@@ -23,7 +23,7 @@ async function drawChart() {
             });
         let databaseData = [['Datum']];
         let firstDate = undefined;
-        let currentDate = undefined;
+        let currentDate = stringToDate(userData.data[0].date);
         let categoryStyles = {}; // Objekt zur Speicherung von Farben und Stilen je nach Kategorie
 
         // Sammeln aller Kategorien und deren Farben
@@ -32,8 +32,7 @@ async function drawChart() {
         categories.sort((a, b) => a.id - b.id); // Sortieren der Kategorien nach ID
 
 
-        console.debug('UserData:', userData); // Prüfe die gesamten zurückgegebenen Daten
-        console.debug('UserData Data:', userData.data); // Prüfe spezifisch userData.data
+    
 
         categories.forEach(category => {
             databaseData[0].push(category.name); // Hinzufügen der Kategorienamen als Überschriften
@@ -41,22 +40,24 @@ async function drawChart() {
         });
 
 
-        // Finden des ersten gültigen Datums in den Daten
-        userData.data.forEach(element => {
-            if (!firstDate && element.date) {
-                firstDate = element.date;
-            }
-        });
-        // Falls kein gültiges Datum gefunden wurde, kannst du ein Standarddatum setzen
-        if (!firstDate) {
-            firstDate = '2002-02-02'; // Hier ein passendes Standarddatum setzen, falls nötig
-        }
-
+               
 
          // Datenpunkte zu den entsprechenden Datumseinträgen hinzufügen
          let dataByDate = {}; // Objekt zur Sammlung der Daten pro Datum
-
+         
          userData.data.forEach(element => {
+             if (firstDate === undefined && element.date) {
+                firstDate = element.date;
+                currentDate = stringToDate(firstDate);
+            }
+    
+            let elementDate = stringToDate(element.date);
+            console.debug(currentDate);
+            while (currentDate < elementDate) {
+                databaseData.push([dateToString(currentDate), 1, 2, 0, 0, 0]);
+                currentDate = addDays(currentDate, 1);
+            }
+            
              let date = element.date;
              if (!dataByDate[date]) {
                  dataByDate[date] = [date]; // Erste Spalte im Datenarray ist das Datum
@@ -64,6 +65,11 @@ async function drawChart() {
                      dataByDate[date].push(0); // Initialisieren aller Kategorienwerte mit 0
                  });
              }
+             
+
+
+
+
  
              // Werte für jede Kategorie zum entsprechenden Datum hinzufügen
              categories.forEach(category => {
@@ -71,15 +77,23 @@ async function drawChart() {
              });
          });
 
- 
          // Datenzeilen aus dem dataByDate Objekt in das databaseData Array einfügen
          Object.values(dataByDate).forEach(row => {
              databaseData.push(row);
          });
 
+         // Finden des ersten gültigen Datums in den Daten
+        firstDate = databaseData[1][0];
+        
+        // Falls kein gültiges Datum gefunden wurde, kannst du ein Standarddatum setzen
+        if (!firstDate) {
+            firstDate = '2002-02-02'; // Hier ein passendes Standarddatum setzen, falls nötig
+        }
+
 
         
         //TODO nichtinterpolierte Punkte weiß einfärben
+
 
         // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
         ersetzeNullenMitInterpoliertenWerten(databaseData);
@@ -91,7 +105,7 @@ async function drawChart() {
          document.querySelector(".max").textContent = Math.round((maxValue + 5) / 5) * 5;
         let selectedValue = document.querySelector("input[type=radio][name='view-options']:checked").value;
 
-        console.debug(daysTillToday(firstDate));
+        
         let options = {
             curveType: 'function',
             legend: 'none',
@@ -152,7 +166,7 @@ function ersetzeNullenMitInterpoliertenWerten(databaseData) {
 
     for (let i = 1; i < databaseData.length; i++) {
         for (let j = 1; j < spaltenAnzahl; j++) {
-            if (databaseData[i][j] === 0) {
+            if (databaseData[i][j] == 0) {
                 if (nullStreckenStart[j] === 0) {
                     vorherigeWerte[j] = Number(databaseData[i - 1][j]);
                     nullStreckenStart[j] = i;
