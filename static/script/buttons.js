@@ -445,7 +445,11 @@ async function saveCategory() {
             let result = await response.json();
             hideAddCategoryModal();
             await loadButtons(); // Reload buttons after adding a new category
-        } else {
+        } 
+        else if (response.status === 403) {
+            alert("Kategorie existiert bereits!");
+        }
+        else {
             throw new Error('Fehler beim Hinzufügen der Kategorie');
         }
     } catch (error) {

@@ -80,9 +80,10 @@ class Categories(Resource):
             else:
                 # Kategorie existiert bereits
                 print("Kategorie existiert bereits")
+                return {}, 403
             
             db.session.commit()
-            return {}, 200
+            return {}, 201
         else:
             print("Benutzer nicht gefunden")
             return {"message": "Benutzer nicht gefunden"}, 404
