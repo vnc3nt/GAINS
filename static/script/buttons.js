@@ -443,7 +443,6 @@ async function saveCategory() {
         console.debug(response);
         if (response.ok) {
             let result = await response.json();
-            alert('Neue Kategorie erfolgreich hinzugefügt!');
             hideAddCategoryModal();
             await loadButtons(); // Reload buttons after adding a new category
         } else {
