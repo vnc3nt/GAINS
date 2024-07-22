@@ -3,10 +3,26 @@
         <li>
             <div class="username"> {{ get_username() }} </div>
         </li>
-        <a href="{{ url_for('logout') }}">
+        <a href="https://www.paypal.com/donate/?hosted_button_id=CP7W77JA8GSUC">
             <li>
-                <div class="logout">Abmelden</div>
+                <ul>
+                    <img class="icon" src="{{url_for('static', filename='img/icons/64x64diamond.png')}}" alt="donate">
+                </ul>
+                <ul>
+                    <div >Spenden</div>
+                </ul>
             </li>
         </a>
+        <a href="{{ url_for('logout') }}">
+            <li>
+                <ul>
+                    <img class="icon" src="{{url_for('static', filename='img/icons/64x64logout.png')}}" alt="logout">
+                </ul>
+                <ul>
+                    <div class="logout">Abmelden</div>
+                </ul>
+            </li>
+        </a>
+        
     </ul>
 </menu>

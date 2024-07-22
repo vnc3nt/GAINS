@@ -33,7 +33,7 @@ body {
   position: absolute;
   top: -10px;
   left: -10px;
-  width: 150px;
+  width: 5.5rem;
 }
 .logo-pic-centered {
   position: absolute;
@@ -403,7 +403,6 @@ details> summary {
   border: solid 1px;
   border-radius: 50%;
   width: 3rem;
-  height: 3rem;
   border-color: var(--selected-color);
   background-color: var(--button-color);
   filter: var(--menu-icon-invert);
@@ -418,6 +417,7 @@ details> summary {
 
 #profile-menu a {
   text-decoration: none;
+  color: var(--text-color);
 }
 
 #profile-menu ul {
@@ -521,3 +521,9 @@ input[type=color]::-webkit-color-swatch-wrapper {
 .enable-scroll {
   overflow-y: auto;
 }
+
+.icon  {
+  height: 1.2rem;
+  padding-right: 0.5rem;
+}
+
