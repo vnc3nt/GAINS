@@ -424,6 +424,7 @@ details> summary {
   margin: 0;
   padding: 0;
   text-align: left;
+  display: grid;
 }
 #profile-menu ul li {
   border-radius: 5px;
