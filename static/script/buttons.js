@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM fully loaded');
     const saveBtn = document.getElementById('saveCategoryBtn');
     const cancelBtn = document.getElementById('cancelCategoryBtn');
+
+    const cancelEditBtn = document.getElementById('cancelEditCategoryBtn');
+    const saveEditedBtn = document.getElementById('saveEditCategoryBtn');
+    const deleteBtn = document.getElementById('deleteCategoryBtn');
     
     if (saveBtn) {
         console.log('Save button found');
@@ -19,6 +23,28 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cancelBtn) {
         console.log('Cancel button found');
         cancelBtn.addEventListener('click', hideAddCategoryModal);
+    } else {
+        console.log('Cancel button not found');
+    }
+
+
+    if (cancelEditBtn) {
+        console.log('Cancel button found');
+        cancelEditBtn.addEventListener('click', hideAddEditCategoryModal);
+    } else {
+        console.log('Save button not found');
+    }
+
+    if (saveEditedBtn) {
+        console.log('Save button found');
+        saveEditedBtn.addEventListener('click', saveEditedCategory);
+    } else {
+        console.log('Save button not found');
+    }
+    
+    if (deleteBtn) {
+        console.log('Delete button found');
+        deleteBtn.addEventListener('click', deleteCategory);
     } else {
         console.log('Cancel button not found');
     }
@@ -219,7 +245,18 @@ async function left(e) {
 async function right(e) { //TODO edit old data ->
     //alert("right clicked!");
     e.preventDefault(); //kein kontextmenü
-    window.location.assign("/edit");
+    let buttonName = e.target.innerHTML;  // Name des Buttons/der Kategorie, z.B. "Gewicht"
+    console.debug("BBB: " + buttonName);
+    console.debug(categories);
+    category = categories.find(categ => categ.name === buttonName);
+    if (!category) {
+        console.error('Kategorie nicht gefunden für Button:', buttonName);
+        return;
+    }
+    
+    editCategory(category);
+    
+
 }
 
 function checkToHideProfile(e) {
@@ -404,6 +441,10 @@ function lightenColor(color, percent) {
 
 function showAddCategoryModal() {
     console.log('showAddCategoryModal was called');
+    // Clear input fields
+    document.getElementById('categoryName').value = '';
+    document.getElementById('categoryUnit').value = '';
+    document.getElementById('categoryColor').value = '#991199';
     document.getElementById('addCategoryModal').style.display = 'block';
 }
 
@@ -416,10 +457,6 @@ function hideAddCategoryModal() {
     } else {
         console.log('Modal not found');
     }
-    // Clear input fields
-    document.getElementById('categoryName').value = '';
-    document.getElementById('categoryUnit').value = '';
-    document.getElementById('categoryColor').value = '#991199';
 }
 
 async function saveCategory() {
@@ -455,5 +492,98 @@ async function saveCategory() {
     } catch (error) {
         console.error('Fehler:', error);
         alert('Es gab einen Fehler beim Hinzufügen der Kategorie.');
+    }
+}
+
+
+function editCategory(category) {
+    console.debug("adfdss",category);
+    document.getElementById("addEditCategoryModalTitle").innerHTML = category.name + " bearbeiten";
+    document.getElementById("editCategoryName").value = category.name;
+    document.getElementById("editCategoryUnit").value = category.unit;
+    document.getElementById("editCategoryColor").value = category.color;
+    showAddEditCategoryModal();
+}
+
+function showAddEditCategoryModal() {
+    console.log('showAddEditCategoryModal was called');
+    document.getElementById('addEditCategoryModal').style.display = 'block';
+}
+
+function hideAddEditCategoryModal() {
+    console.log('hideAddEditCategoryModal was called');
+    const modal = document.getElementById('addEditCategoryModal');
+    if (modal) {
+        console.log('Modal found, hiding it');
+        modal.style.display = 'none';
+    } else {
+        console.log('Modal not found');
+    }
+}
+
+async function saveEditedCategory() {
+    const name = document.getElementById('editCategoryName').value;
+    const unit = document.getElementById('editCategoryUnit').value;
+    const color = document.getElementById('editCategoryColor').value;
+    const originalCategory = categories.find(categ => categ.name === document.getElementById("addEditCategoryModalTitle").innerHTML.replace(" bearbeiten", "").trim());
+    const id = originalCategory.id;
+
+    if (!name || !unit || !color) {
+        alert('Bitte füllen Sie alle Felder aus.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/categories/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, color, unit }),
+        });
+
+        console.debug(response);
+
+        if (response.ok) {
+            const result = await response.json();
+            hideAddEditCategoryModal();
+            await loadButtons(); // Reload buttons after editing a category
+        } else {
+            throw new Error('Fehler beim Aktualisieren der Kategorie');
+        }
+    } catch (error) {
+        console.error('Fehler:', error);
+        alert('Es gab einen Fehler beim Bearbeiten der Kategorie.');
+    }   
+}
+
+async function deleteCategory() {
+    const originalCategory = categories.find(categ => categ.name === document.getElementById("addEditCategoryModalTitle").innerHTML.replace(" bearbeiten", "").trim());
+    const id = originalCategory.id;
+
+    if (!confirm('Sind Sie sicher, dass Sie die Kategorie samt aller Datenpunkte unwiderruflich löschen möchten?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/categories/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response.ok) {
+            await loadButtons(); // Reload buttons after deleting a category
+            await drawChart(); // Reload chart after deleting all categorydata
+            console.log('Kategorie und alle Daten erfolgreich gelöscht.');
+            hideAddEditCategoryModal();
+            
+        } else {
+            throw new Error('Fehler beim Löschen der Kategorie');
+        }
+    } catch (error) {
+        console.error('Fehler:', error);
+        alert('Es gab einen Fehler beim Löschen der Kategorie.');
     }
 }

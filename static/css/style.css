@@ -483,7 +483,21 @@ h2 {
   text-align: center;
 }
 
-input#categoryUnit {
+button#deleteCategoryBtn {
+  background-color: rgba(255, 0, 0, 0.35);
+}
+
+button#cancelEditCategoryBtn,#cancelCategoryBtn {
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding: 0px;
+  line-height: 1rem;
+}
+
+input#categoryUnit, #editCategoryUnit {
   width: 20%;
 }
 

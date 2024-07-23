@@ -7,4 +7,4 @@ api = Api(app)
 
 api.add_resource(Apicheck,"/")
 api.add_resource(Data,"/data","/data/")
-api.add_resource(Categories, "/categories", "/categories/")
+api.add_resource(Categories, "/categories", "/categories/", "/categories/<int:category_id>", "/categories/<int:category_id>/")
