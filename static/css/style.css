@@ -218,7 +218,7 @@ button {
     text-decoration: none;
     color: var(--text-color);
     font-size: 2rem;
-    top: 110px;
+    top: 70px;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
@@ -483,7 +483,21 @@ h2 {
   text-align: center;
 }
 
-input#categoryUnit {
+button#deleteCategoryBtn, #deleteAccountBtn {
+  background-color: rgba(255, 0, 0, 0.35);
+}
+
+button#cancelEditCategoryBtn,#cancelCategoryBtn {
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding: 0px;
+  line-height: 1rem;
+}
+
+input#categoryUnit, #editCategoryUnit {
   width: 20%;
 }
 
@@ -531,3 +545,14 @@ input[type=color]::-webkit-color-swatch-wrapper {
   padding-right: 0.5rem;
 }
 
+.profile-content {
+  position: absolute;
+  top: 180px;
+  width: 100vw;
+  display: grid;
+}
+
+.profile-content button {
+  width: 100%;
+  justify-self: center;
+}

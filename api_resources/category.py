@@ -87,3 +87,55 @@ class Categories(Resource):
         else:
             print("Benutzer nicht gefunden")
             return {"message": "Benutzer nicht gefunden"}, 404
+        
+    def put(self, category_id):
+
+        print("something")
+        given_data = patch_arguments.parse_args(strict=False)
+        user = db.session.query(users).filter(users.id == session.get(USERID)).first()
+
+
+        
+
+        if user:
+            user_id = user.id
+            print(f"Benutzer gefunden: {user_id}")
+
+            existing_category = db.session.query(category).filter(category.userId == user_id, category.id == category_id).first()
+            
+            if existing_category:
+                print(f"Kategorie gefunden: {existing_category.name}")
+                existing_category.name = given_data["name"]
+                existing_category.unit = given_data["unit"]
+                existing_category.color = given_data["color"]
+                
+                db.session.commit()
+                return {}, 200
+            else:
+                print("Kategorie nicht gefunden")
+                return {"message": "Kategorie nicht gefunden"}, 404
+        else:
+            print("Benutzer nicht gefunden")
+            return {"message": "Benutzer nicht gefunden"}, 404
+        
+
+    def delete(self, category_id):
+        user = db.session.query(users).filter(users.id == session.get(USERID)).first()
+        
+        if user:
+            user_id = user.id
+            category_to_delete = db.session.query(category).filter(category.userId == user_id, category.id == category_id).first()
+            
+            if category_to_delete:
+                # Löschen aller verknüpften Daten
+                db.session.query(newdata).filter(newdata.userid == user_id, newdata.categoryId == category_id).delete()
+                
+                # Löschen der Kategorie
+                db.session.delete(category_to_delete)
+                db.session.commit()
+                
+                return {"message": "Kategorie erfolgreich gelöscht"}, 200
+            else:
+                return {"message": "Kategorie nicht gefunden"}, 404
+        else:
+            return {"message": "Benutzer nicht gefunden"}, 404

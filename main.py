@@ -82,7 +82,12 @@ def home():
 @app.route('/edit')
 @validTokenChecker
 def edit():
-    return render_template('edit.html', user_id=session.get(USERID))
+    return render_template('edit.html', user_id=session.get(USERID), get_username=get_username)
+
+@app.route('/profile')
+@validTokenChecker
+def profile():
+    return render_template('profile.html', user_id=session.get(USERID), get_username=get_username)
 
 @app.route("/logout")
 def logout():

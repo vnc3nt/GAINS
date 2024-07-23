@@ -3,9 +3,8 @@
 <title>Home</title>
 {% endblock title %}
 
-<!--TODO alle buttons unten auf eine neue ebene packen die man wie das profilmenü nach oben ziehen kann um statt 3 6 buttons angezeigt zu bekommen und dort ist auch ein button mit einem + um neue Kacheln einzufügen die dann einen neuen Graphen erzeugen den man selbst benennen kann und die farbe bestimmen kann-->
 {% block content %}
-<img class="logo-pic" src="{{url_for('static', filename='img/logo/logo-white.png')}}" alt="GAINS">
+<a href="{{ url_for('home') }}"><img class="logo-pic" src="{{url_for('static', filename='img/logo/logo-white.png')}}" alt="GAINS"></a>
 <div class="profile">
     <details id="profile-menu-btn">
         <summary>
@@ -40,12 +39,31 @@
 <div id="addCategoryModal" class="modal">
     <div class="modal-content">
         <h2>Neue Kategorie hinzufügen</h2>
+
+        <button id="cancelCategoryBtn">🗙</button>
+
+
         <input type="text" id="categoryName" placeholder="Name">
         <input type="text" id="categoryUnit" placeholder="Einheit">
-        <input type="color" id="categoryColor" value="#991199">
+        <input type="color" id="categoryColor">
         <div class="modal-buttons">
-            <button id="cancelCategoryBtn">Abbrechen</button>
             <button id="saveCategoryBtn">Speichern</button>
+        </div>
+    </div>
+</div>
+
+<div id="addEditCategoryModal" class="modal">
+    <div class="modal-content">
+        <h2 id="addEditCategoryModalTitle"> [category] bearbeiten</h2>
+
+        <button id="cancelEditCategoryBtn">🗙</button>
+
+        <input type="text" id="editCategoryName" placeholder="Name">
+        <input type="text" id="editCategoryUnit" placeholder="Einheit">
+        <input type="color" id="editCategoryColor">
+        <div class="modal-buttons">
+            <button id="deleteCategoryBtn">Löschen</button>
+            <button id="saveEditCategoryBtn">Speichern</button>
         </div>
     </div>
 </div>
