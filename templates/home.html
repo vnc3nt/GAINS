@@ -50,8 +50,17 @@
     </div>
 </div>
 
-<script>
-    // JavaScript Code wird hier eingefügt
-</script>
+<div id="addFirstInfoModal" class="modal">
+    <div class="modal-content">
+        <h2>Hi {{ get_username() }}!</h2>
+        Um loszulegen füge unten mithilfe des [+] eine neue Kategorie hinzu, die du tracken möchtest. <br><br>
+        Sobald du deine ersten Daten eingibst, erscheint dein Graph. <br><br>
+        Wechsel mithilfe der Optionen oben rechts die Ansicht. <br><br>
+        Oben drüber findest du dein Profil.
+        <div class="modal-buttons">
+            <button id="okBtn" onclick="hideAddFirstInfoModal()">OK</button>
+        </div>
+    </div>
+</div>
 
 {% endblock content %}
