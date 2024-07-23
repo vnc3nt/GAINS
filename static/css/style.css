@@ -218,7 +218,7 @@ button {
     text-decoration: none;
     color: var(--text-color);
     font-size: 2rem;
-    top: 110px;
+    top: 70px;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
