@@ -30,8 +30,6 @@ async function drawChart() {
         let response = await fetch('/api/categories');
         let categories = await response.json();
         categories.sort((a, b) => a.id - b.id); // Sortieren der Kategorien nach ID
-
-
     
 
         categories.forEach(category => {
@@ -69,11 +67,6 @@ async function drawChart() {
 
          // Finden des ersten gültigen Datums in den Daten
         firstDate = databaseData[1][0];
-        
-        // Falls kein gültiges Datum gefunden wurde, kannst du ein Standarddatum setzen
-        if (!firstDate) {
-            firstDate = '2002-02-02'; // Hier ein passendes Standarddatum setzen, falls nötig
-        }
 
         console.table(databaseData);
         // let nextDay = databaseData[1]?.slice(0, 1)[0] ?? firstDate;
@@ -96,7 +89,6 @@ async function drawChart() {
         console.table(databaseData);
 
         
-        //TODO nichtinterpolierte Punkte weiß einfärben
 
 
         // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
@@ -136,6 +128,7 @@ async function drawChart() {
         container.scrollLeft = options.width + 500;
     } catch (error) {
         console.error('Fehler beim Zeichnen des Charts:', error);
+        showAddFirstInfoModal();
     }
 }
 
@@ -221,4 +214,23 @@ function filterData(databaseData, interval) {
         filteredData.unshift(databaseData[i]);
     }
     return filteredData;
+}
+
+
+
+function showAddFirstInfoModal() {
+    console.debug("showwinnng");
+    console.log('showAddFirstInfoModal was called');
+    document.getElementById('addFirstInfoModal').style.display = 'block';
+}
+
+function hideAddFirstInfoModal() {
+    console.debug('hideAddFirstInfoModal was called');
+    const modal = document.getElementById('addFirstInfoModal');
+    if (modal) {
+        console.log('Modal found, hiding it');
+        modal.style.display = 'none';
+    } else {
+        console.log('Modal not found');
+    }
 }

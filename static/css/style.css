@@ -465,12 +465,12 @@ a {
   background-color: var(--button-color);
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
-  margin: 15% auto;
-  padding: 20px;
+  margin: 20% auto;
+  padding: 1rem;
   border-radius: 5px;
   border: solid 1px;
   border-color: var(--selected-color);
-  width: 50vw;
+  width: 70vw;
   max-width: 550px;
   display: flex;
   flex-wrap: wrap;
@@ -479,6 +479,8 @@ a {
 
 h2 {
   width: 100%;
+  padding-bottom: 1rem;
+  text-align: center;
 }
 
 input#categoryUnit {
@@ -508,6 +510,7 @@ input[type=color]::-webkit-color-swatch-wrapper {
   display: inline;
   width: 100%;
   text-align: center;
+  margin-top: 1rem;
 }
 
 .modal-buttons button{
