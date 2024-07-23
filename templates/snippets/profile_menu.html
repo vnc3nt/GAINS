@@ -1,7 +1,7 @@
 <menu id="profile-menu">
     <ul>
         <li>
-            <div class="username"> {{ get_username() }} </div>
+            <a href="{{ url_for('profile') }}"><div class="username"> {{ get_username() }} </div></a>
         </li>
         <a href="https://www.paypal.com/donate/?hosted_button_id=CP7W77JA8GSUC">
             <li>

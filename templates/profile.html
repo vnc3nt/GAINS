@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+{% block title %}
+<title>profile</title>
+{% endblock title %}
+
+{% block content %}
+<a href="{{ url_for('home') }}"><img class="logo-pic" src="{{url_for('static', filename='img/logo/logo-white.png')}}" alt="GAINS"></a>
+<div class="profile">
+    <details id="profile-menu-btn">
+        <summary>
+            <img class="profile-pic" src="{{url_for('static', filename='img/icons/64x64profile.png')}}" alt="profile">
+        </summary>
+            {% include "snippets/profile_menu.html" %}
+    </details>
+</div>
+<a class="backbutton" href="{{ url_for('home') }}"> ❮ Profil</a>
+
+<div class="profile-content">
+    <button id="changeUsernameBtn">Benutzernamen ändern</button>
+    <button id="changePasswordBtn">Passwort ändern</button>
+    <button id="deleteAccountBtn">Account Löschen</button>
+</div>
+{% endblock content %}
