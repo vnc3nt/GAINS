@@ -68,7 +68,7 @@ const TOUCH_NORMAL = "normal";
 let touchSimulation = TOUCH_NORMAL;
 let firstTarget = undefined;
 
-const RIGHT_CLICK_TOUCH = 300;  // ms 
+const RIGHT_CLICK_TOUCH = 500;  // ms 
 const DRAG_DISTANCE = 250;  // px²
 
 let categories = [];
