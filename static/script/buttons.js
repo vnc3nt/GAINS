@@ -66,9 +66,10 @@ let draggedTouchNode = undefined;
 const TOUCH_DRAG = "drag";
 const TOUCH_NORMAL = "normal";
 let touchSimulation = TOUCH_NORMAL;
+let firstTarget = undefined;
 
 const RIGHT_CLICK_TOUCH = 300;  // ms 
-const DRAG_DISTANCE = 25;  // px²
+const DRAG_DISTANCE = 250;  // px²
 
 let categories = [];
 
@@ -120,11 +121,25 @@ async function loadButtons() {
 window.addEventListener("touchstart", (e) => {
     touchX = e.touches[0].clientX;
     touchY = e.touches[0].clientY;
-    let actualTarget = document.elementFromPoint(touchX, touchY);
-    //Funktion zum anmieren des profilemenus
+    touchStartTime = Date.now();
+    firstTarget = document.elementFromPoint(touchX, touchY);
+
+    if (e.target.className.split(' ')[0] === "category-button") {
+        // Setze einen Timer, um die right() Funktion nach RIGHT_CLICK_TOUCH Millisekunden auszuführen
+        longPressTimeout = setTimeout(() => {
+            let actualTarget = document.elementFromPoint(touchX, touchY);
+            if (actualTarget === firstTarget) { // block clicks when it has been swiped
+                console.debug("yesyesyes");
+                e.preventDefault();
+                right(e);
+            }
+        }, RIGHT_CLICK_TOUCH);
+    }
+
+    // Funktion zum Animieren des Profilmenüs
     checkToHideProfile(e);
 
-    buttonSwipeUp(e)
+    buttonSwipeUp(e);
 });
 
 
@@ -132,7 +147,7 @@ window.addEventListener("touchmove", (e) => {
     touchX = e.touches[0].clientX;
     touchY = e.touches[0].clientY;
     if (e.target != null) {
-        if (e.target.className === "muscle" || e.target.className === "fat" || e.target.className === "weight"){
+        if (e.target.className.split(' ')[0] === "category-button"){
             if (e.touches.length >= 2) { 
                 touchSimulation = TOUCH_NORMAL;
                 return;
@@ -142,6 +157,7 @@ window.addEventListener("touchmove", (e) => {
                 let moveY = touchStartY - e.touches[0].clientY;
                 moveDistance = moveX * moveX + moveY * moveY;
                 if (moveDistance >= DRAG_DISTANCE) {
+                    clearTimeout(longPressTimeout);
                     let draggedTouchNode = findNextDraggable(e.target);
                     if (draggedTouchNode) {
                         globalDatatransfer = new DataTransfer();
@@ -175,22 +191,26 @@ window.addEventListener("touchend", (e) => {
     touchY = e.changedTouches[0].clientY;
     let actualTarget = document.elementFromPoint(touchX, touchY);
     //console.debug(actualTarget.className);
+
+    clearTimeout(longPressTimeout);
+
     if (e.target != null) {
-        if (e.target.className === "muscle" || e.target.className === "fat" || e.target.className === "weight"){
-            console.log("touch end diff:", e.timeStamp - touchStartTime);
+        if (e.target.className.split(' ')[0] === "category-button"){
+            console.log("touch end diff:", Date.now() - touchStartTime);
             if (!touchStartTime || e.touches.length >= 2) {
                 touchStartTime = null;
                 return;
             }
 
-            let diff = e.timeStamp - touchStartTime;  // ms 
+            let diff = Date.now() - touchStartTime;  // ms 
             //console.debug("end touch target", e.target);
             
             touchSimulation = TOUCH_NORMAL;
-            if (moveDistance < DRAG_DISTANCE) { // block clicks when it has been swiped
+            if (actualTarget === firstTarget) { // block clicks when it has been swiped
                 if (diff >= RIGHT_CLICK_TOUCH && touchSimulation === TOUCH_NORMAL) {
+                    console.debug("yesyesyes");
                     e.preventDefault(); 
-                    rightClick(e);
+                    right(e);
                 }
             }
             touchStartTime = null;
@@ -199,6 +219,7 @@ window.addEventListener("touchend", (e) => {
 });
 
 window.addEventListener("touchcancel", (e) => {
+    clearTimeout(longPressTimeout);
     console.debug("touch cancel");
     if (touchSimulation == 0) {}
     touchStartTime = null;
