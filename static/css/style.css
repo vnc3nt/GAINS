@@ -190,7 +190,7 @@ input {
     -webkit-backdrop-filter: blur(7px);
 }
 
-button {
+button, input[type=submit], input[type=reset] {
     touch-action: auto;
     margin: 10px;
     color: var(--text-color);
@@ -209,8 +209,8 @@ button {
     max-width: 200px;
     border-color: rgba(120, 120, 120, .9);
     white-space: nowrap; /* Verhindert Umbruch des Textes */
-  overflow: hidden; /* Versteckt den überlaufenden Text */
-  text-overflow: ellipsis; /* Setzt "..." am Ende des abgeschnittenen Textes */
+    overflow: hidden; /* Versteckt den überlaufenden Text */
+    text-overflow: ellipsis; /* Setzt "..." am Ende des abgeschnittenen Textes */
 }
 
 .backbutton {

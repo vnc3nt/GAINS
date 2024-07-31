@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, redirect, request, jsonify, s
 from models import db, users, token, newdata, category
 import os
 from api import app as api_app
-from login import checkuser, loginChecker, validTokenChecker, logoutUser, checkRegistration, hash_pw
+from login import change_username, checkuser, loginChecker, validTokenChecker, logoutUser, checkRegistration, hash_pw
 import secrets
 from constants import USERID, TOKEN
 from time import time
@@ -84,9 +84,13 @@ def home():
 def edit():
     return render_template('edit.html', user_id=session.get(USERID), get_username=get_username)
 
-@app.route('/profile')
+@app.route('/profile', methods=["GET", "POST"])
 @validTokenChecker
 def profile():
+    if request.method == "POST":
+        action = request.form.get("action")
+        if action == "change_username":
+            result = change_username(request.form.get("new_username"))
     return render_template('profile.html', user_id=session.get(USERID), get_username=get_username)
 
 @app.route("/logout")
