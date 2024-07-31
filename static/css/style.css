@@ -157,7 +157,7 @@ body {
 
 .min {
   position: absolute;
-  bottom: 30px;
+  bottom: 7vh;
   right: 0px;
   padding: 10px;
   background-color: var(--button-color);

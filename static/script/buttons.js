@@ -490,6 +490,16 @@ async function saveCategory() {
         return;
     }
 
+    else if (name.includes(" ")) {
+        alert('Bitte nutzen Sie keine Leerzeichen im Namen.');
+        return;
+    }
+
+    else if (unit.includes(" ")) {
+        alert('Bitte nutzen Sie keine Leerzeichen in der Einheit.');
+        return;
+    }
+
     try {
         const response = await fetch('/api/categories', {
             method: 'POST',
@@ -551,6 +561,16 @@ async function saveEditedCategory() {
 
     if (!name || !unit || !color) {
         alert('Bitte füllen Sie alle Felder aus.');
+        return;
+    }
+
+    else if (name.includes(" ")) {
+        alert('Bitte nutzen Sie keine Leerzeichen im Namen.');
+        return;
+    }
+
+    else if (unit.includes(" ")) {
+        alert('Bitte nutzen Sie keine Leerzeichen in der Einheit.');
         return;
     }
 
