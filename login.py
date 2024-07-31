@@ -1,3 +1,4 @@
+from typing import Optional
 from models import db,users,token,update_expire_time
 import hashlib
 from flask import session, redirect
@@ -11,6 +12,21 @@ def checkuser(username:str, password:str) -> bool:
         return False
     userpw = user.password
     return userpw == hash_pw(password)
+
+def change_username(new_username: Optional[str]):
+    print(new_username)
+    if not new_username:  # stops also empty string
+        return "Blank/no username"
+    
+    u = db.session.query(users).filter(users.id == session.get(USERID)).first()
+    u.username = new_username
+    print("Changed username")
+    try:
+        db.session.commit()
+    except:
+        return "Username already exists"
+    return None  # no issues
+
 
 def checkRegistration(username:str, password_1:str, password_2:str) -> bool:
     user = db.session.query(users).filter(users.username == username).first()
