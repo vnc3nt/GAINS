@@ -108,7 +108,7 @@ async function loadButtons() {
     // Hinzufügen des '+' Buttons am Ende
     let addButton = document.createElement('button');
     addButton.classList.add('category-button', 'add');
-    addButton.innerText = "+";
+    addButton.innerHTML = '<img src="static/img/icons/96x96-add.png" alt="+">';
 
     addButton.style.backgroundColor = lightenColor('#8C8C8C', -40);
     addButton.style.borderColor = lightenColor('#8C8C8C', 0);
