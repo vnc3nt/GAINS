@@ -2,6 +2,7 @@ let dialogNormalShowModal = HTMLDialogElement.prototype.showModal;
 HTMLDialogElement.prototype.showModal = function () {
 
     // add your background stuff here
+    
 
     dialogNormalShowModal.apply(this, arguments);
 };
