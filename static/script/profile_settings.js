@@ -40,6 +40,10 @@ window.addEventListener("DOMContentLoaded", (e) => {
     let delete_account_btn = document.getElementById("deleteAccountBtn");
     let delete_acc_dialog = document.getElementById("delete-account-dialog");
 
+    delete_acc_dialog.querySelector("input[type=reset]").addEventListener("click", (e) => {
+        delete_acc_dialog.close();
+    })
+
     delete_account_btn.addEventListener("click", (e) => {
         delete_acc_dialog.showModal();
         delete_acc_dialog.querySelector("input#password").focus();
