@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, redirect, request, jsonify, s
 from models import db, users, token, newdata, category
 import os
 from api import app as api_app
-from login import change_username, checkuser, delete_account, loginChecker, validTokenChecker, logoutUser, checkRegistration, hash_pw
+from login import change_password, change_username, checkuser, delete_account, loginChecker, validTokenChecker, logoutUser, checkRegistration, hash_pw
 import secrets
 from constants import USERID, TOKEN
 from time import time
@@ -89,11 +89,19 @@ def edit():
 def profile():
     if request.method == "POST":
         action = request.form.get("action")
-        if action == "change_username":
+        if action == "change-username":
             result = change_username(request.form.get("new_username"))
 
         elif action == "delete-account":
             result = delete_account(request.form.get("password"))
+            if result is None:
+                return redirect("/login")
+
+        elif action == "change-password":
+            current_pw = request.form.get("current-password")
+            new_pw = request.form.get("new-password")
+            new_pw_confirm = request.form.get("new-password-confirmation")
+            result = change_password(current_pw, new_pw, new_pw_confirm)
             if result is None:
                 return redirect("/login")
         

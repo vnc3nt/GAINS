@@ -37,6 +37,25 @@ def change_username(new_username: Optional[str]):
         return "Username already exists"
     return None  # no issues
 
+def change_password(cur_pw, new_pw, new_pw_confirm):
+    if not cur_pw or not new_pw or not new_pw_confirm:
+        return "Blank password"
+    
+    u = db.session.query(users).filter(users.id == session.get(USERID)).first()
+    valid_pw = checkuser(u.username, cur_pw)
+    if not valid_pw:
+        return "Falsches Passwort"
+    
+    elif new_pw != new_pw_confirm:
+        return "Neues Passwort und Best&auml;tigung sind verschieden"
+    
+    elif len(new_pw) < 8:
+        return "Passwort muss mindestens 8 Zeichen lang sein"
+
+    u.password = hash_pw(new_pw)
+    db.session.commit()
+    logoutUser(session.get(TOKEN))
+
 
 def checkRegistration(username:str, password_1:str, password_2:str) -> bool:
     user = db.session.query(users).filter(users.username == username).first()

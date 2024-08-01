@@ -31,7 +31,7 @@
 
     <dialog id="change-user-name-dialog">
         <form action="" method="post">
-            <input type="hidden" value="change_username" name="action" />
+            <input type="hidden" value="change-username" name="action" />
             <input type="text" placeholder="Neuer Benutzername" name="new_username" /><br>
             <input type="reset" value="Abbrechen" />
             <input type="submit" value="Benutzernamen ändern" />
@@ -48,10 +48,11 @@
     </dialog>
     <dialog id="change-password-dialog">
         <form action="" method="post">
-            <input type="password" name="current_password" id="current_passwor">
-            <input type="new_password" name="new-password" />
-            <input type="password_confirm" name="new-password-confirmation" />
-            <input type="submit" name="Passwort &auml;ndern" />
+            <input type="hidden" name="action" value="change-password">
+            <input type="password" name="current-password" id="current_passwor" placeholder="Aktuelles Passwort" autocomplete="current-password" /><br>
+            <input type="password" name="new-password" placeholder="Neues Passwort" autocomplete="new-password" /><br>
+            <input type="password" name="new-password-confirmation" placeholder="Neues Passwort best&auml;tigen" autocomplete="new-password" /><br>
+            <input type="submit" value="Passwort &auml;ndern" />
         </form>
     </dialog>
 </div>

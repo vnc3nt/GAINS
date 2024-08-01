@@ -45,3 +45,14 @@ window.addEventListener("DOMContentLoaded", (e) => {
         delete_acc_dialog.querySelector("input#password").focus();
     });
 });
+
+
+window.addEventListener("DOMContentLoaded", (e) => {
+    let change_password_btn = document.getElementById("changePasswordBtn");
+    let change_password_dialog = document.getElementById("change-password-dialog");
+
+    change_password_btn.addEventListener("click", (e) => {
+        change_password_dialog.showModal();
+        change_password_dialog.querySelector("input").focus();
+    });
+})
