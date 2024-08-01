@@ -5,26 +5,30 @@
 {% block head_tags %}
 <style>
     body {
-        background-image: url('static/img/background/login.png');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position-x: center;
-        background-attachment: fixed;
-        animation: blur 2s ease 0s;
-        -webkit-animation: blur 3s ease 0s;
-        -moz-animation: blur 3s ease 0s;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background-image: conic-gradient(from var(--angle),#27002c, #000000, #27002c );
+        animation: animation 15s ease-in-out infinite;
+        height: 100vh;
+        background-size: 200% 200%;
+        backdrop-filter: blur(150px);
+        background-position: bottom;
         margin: 0;
     }
-    @keyframes blur {
+
+    @property --angle {
+        syntax: "<angle>";
+        initial-value: 0deg;
+        inherits: false;
+    }
+
+    @keyframes animation {
         0% {
-            backdrop-filter: blur(3px);
-            -webkit-backdrop-filter: blur(3px);
+            --angle: -45deg;
+        }
+        50% {
+            --angle: 45deg;
         }
         100% {
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            --angle: -45deg;
         }
     }
 </style>
@@ -33,14 +37,14 @@
 <img class="logo-pic-centered" src="{{ url_for('static', filename='img/logo/logo.png') }}" alt="GAINS">
 <div class="login">
     <form action="" method="post">
-        <input type="text" name="username_input" placeholder="username"><br>
+        <input type="text" name="username_input" placeholder="Benutzername"><br><br>
         <!--TODO add email-->
-        <input type="password" name="password_input_1" placeholder="password"><br>
-        <input type="password" name="password_input_2" placeholder="password"><br>
-        <button name="register_btn">registrieren</button>
+        <input type="password" name="password_input_1" placeholder="Passwort"><br>
+        <input type="password" name="password_input_2" placeholder="Passwort"><br>
+        <button name="register_btn">Registrieren</button>
     </form>
     <p>
-        <a href="/login">Anmelden</a>
+        <a href="/login">Abbrechen</a>
     </p>
 </div>
 {% endblock content %}

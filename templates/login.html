@@ -38,10 +38,10 @@
 <img class="logo-pic-centered" src="{{url_for('static', filename='img/logo/logo.png')}}" alt="GAINS">
 <div class="login">
     <form action="" method="post">
-        <input type="text" name="username_input" placeholder="username"><br>
-        <input type="password" name="password_input" placeholder="password"><br>
-        <button name="login_btn">einloggen</button>
+        <input type="text" name="username_input" placeholder="Benutzername"><br>
+        <input type="password" name="password_input" placeholder="Passwort"><br>
+        <button name="login_btn">Einloggen</button>
     </form>
-    <a href="{{ url_for('register') }}" class="register">neu registrieren</a>
+    <a href="{{ url_for('register') }}" class="register">Neu registrieren</a>
 </div>
 {% endblock content %}
