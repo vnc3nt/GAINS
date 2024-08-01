@@ -574,7 +574,11 @@ dialog {
   background-color: var(--button-color);
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
-  margin: min(20%, 10rem) auto;
+  top: min(20%, 10rem);
+  left: 50%;
+  transform: translateX(-50%);
+  position: fixed;
+  margin: 0;
   padding: 1rem;
   border-radius: 5px;
   border: solid 1px;

@@ -2,7 +2,7 @@ from typing import Optional
 from models import category, db, newdata,users,token,update_expire_time
 import hashlib
 from flask import session, redirect
-from constants import USERID, TOKEN
+from constants import USERID, TOKEN, USERNAME_REGEX
 from functools import wraps
 from time import time
 
@@ -12,6 +12,9 @@ def checkuser(username:str, password:str) -> bool:
         return False
     userpw = user.password
     return userpw == hash_pw(password)
+
+def check_username(username: str) -> bool:
+    return USERNAME_REGEX.fullmatch(username) is not None
 
 def delete_account(pw: Optional[str]):
     if not pw:
@@ -36,6 +39,9 @@ def change_username(new_username: Optional[str]):
     print(new_username)
     if not new_username:  # stops also empty string
         return "Blank/no username"
+
+    if not check_username(new_username):
+        return "Benutzername darf keine Leerzeichen enthalten"
     
     u = db.session.query(users).filter(users.id == session.get(USERID)).first()
     u.username = new_username
