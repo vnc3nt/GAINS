@@ -1,5 +1,5 @@
 from typing import Optional
-from models import db,users,token,update_expire_time
+from models import category, db, newdata,users,token,update_expire_time
 import hashlib
 from flask import session, redirect
 from constants import USERID, TOKEN
@@ -19,9 +19,18 @@ def delete_account(pw: Optional[str]):
     u = db.session.query(users).filter(users.id == session.get(USERID)).first()
     valid_pw = checkuser(u.username, pw)
     if valid_pw:
-        delete_user_data()
+        delete_user_data(u.id)
     else:
         return "Falsches Passwort"
+
+def delete_user_data(id: int):
+    newdata.query.filter_by(userid=id).delete()
+    token.query.filter_by(userid=id).delete()
+    category.query.filter_by(userId=id).delete()
+    users.query.filter_by(id=id).delete()
+
+    db.session.commit()
+
 
 def change_username(new_username: Optional[str]):
     print(new_username)
