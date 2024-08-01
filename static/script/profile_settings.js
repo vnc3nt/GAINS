@@ -12,14 +12,12 @@ let dialogCloseOnClick = (e) => {
     }
 };
 
-
 window.addEventListener("keydown", (e) => {
-    console.log(e.key);
     if (e.key == "Escape") {
         let bg_modal = document.getElementById("modal-background");
         bg_modal.style.display = "none";
     }
-})
+}, true)
 
 HTMLDialogElement.prototype.showModal = function () {
     let bg_modal = document.getElementById("modal-background");
