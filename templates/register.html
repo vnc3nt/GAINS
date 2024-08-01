@@ -2,8 +2,35 @@
 {% block title %}
 <title>register</title>
 {% endblock title %}
+{% block head_tags %}
+<style>
+    body {
+        background-image: url('static/img/background/login.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position-x: center;
+        background-attachment: fixed;
+        animation: blur 2s ease 0s;
+        -webkit-animation: blur 3s ease 0s;
+        -moz-animation: blur 3s ease 0s;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        margin: 0;
+    }
+    @keyframes blur {
+        0% {
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+        100% {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+    }
+</style>
+{% endblock head_tags %}
 {% block content %}
-<img class="logo-pic-centered" src="{{url_for('static', filename='img/logo/logo.png')}}" alt="GAINS">
+<img class="logo-pic-centered" src="{{ url_for('static', filename='img/logo/logo.png') }}" alt="GAINS">
 <div class="login">
     <form action="" method="post">
         <input type="text" name="username_input" placeholder="username"><br>
@@ -12,5 +39,8 @@
         <input type="password" name="password_input_2" placeholder="password"><br>
         <button name="register_btn">registrieren</button>
     </form>
+    <p>
+        <a href="/login">Anmelden</a>
+    </p>
 </div>
 {% endblock content %}
