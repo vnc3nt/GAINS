@@ -102,6 +102,13 @@ body {
   text-overflow: ellipsis; /* Setzt "..." am Ende des abgeschnittenen Textes */
 }
 
+.category-button img {
+  width: 2rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
 
 .google-visualization-tooltip {
   border: solid 1px !important;
