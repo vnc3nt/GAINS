@@ -27,7 +27,7 @@
     <button id="changeProfilePic">Profilbild ändern</button>
     <button id="changeUsernameBtn">Benutzernamen ändern</button>
     <button id="changePasswordBtn">Passwort ändern</button>
-    <button id="deleteAccountBtn">Account Löschen</button>
+    <button id="deleteAccountBtn" class="deleteAccountBtn">Account Löschen</button>
 
     <dialog id="change-user-name-dialog">
         <form action="" method="post">
@@ -35,6 +35,23 @@
             <input type="text" placeholder="Neuer Benutzername" name="new_username" /><br>
             <input type="reset" value="Abbrechen" />
             <input type="submit" value="Benutzernamen ändern" />
+        </form>
+    </dialog>
+    <dialog id="delete-account-dialog">
+        <form action="" method="post">
+            <input type="hidden" name="action" value="delete-account">
+            <p>Bitte gebe dein Passwort ein, um deinen Account zu l&ouml;schen</p>
+            <input type="password" name="password" id="password" placeholder="Passwort">
+            <br>
+            <input type="submit" value="Account löschen" class="deleteAccountBtn">
+        </form>
+    </dialog>
+    <dialog id="change-password-dialog">
+        <form action="" method="post">
+            <input type="password" name="current_password" id="current_passwor">
+            <input type="new_password" name="new-password" />
+            <input type="password_confirm" name="new-password-confirmation" />
+            <input type="submit" name="Passwort &auml;ndern" />
         </form>
     </dialog>
 </div>

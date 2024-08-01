@@ -13,6 +13,16 @@ def checkuser(username:str, password:str) -> bool:
     userpw = user.password
     return userpw == hash_pw(password)
 
+def delete_account(pw: Optional[str]):
+    if not pw:
+        return "Blank password"
+    u = db.session.query(users).filter(users.id == session.get(USERID)).first()
+    valid_pw = checkuser(u.username, pw)
+    if valid_pw:
+        delete_user_data()
+    else:
+        return "Falsches Passwort"
+
 def change_username(new_username: Optional[str]):
     print(new_username)
     if not new_username:  # stops also empty string
