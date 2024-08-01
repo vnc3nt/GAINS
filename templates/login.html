@@ -5,26 +5,30 @@
 {% block head_tags %}
 <style>
     body {
-        background-image: url('static/img/background/login.png');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position-x: center;
-        background-attachment: fixed;
-        animation: blur 2s ease 0s;
-        -webkit-animation: blur 3s ease 0s;
-        -moz-animation: blur 3s ease 0s;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background-image: conic-gradient(from var(--angle),#27002c, #000000, #27002c );
+        animation: animation 15s ease-in-out infinite;
+        height: 100vh;
+        background-size: 200% 200%;
+        backdrop-filter: blur(150px);
+        background-position: bottom;
         margin: 0;
     }
-    @keyframes blur {
+
+    @property --angle {
+        syntax: "<angle>";
+        initial-value: 0deg;
+        inherits: false;
+    }
+
+    @keyframes animation {
         0% {
-            backdrop-filter: blur(3px);
-            -webkit-backdrop-filter: blur(3px);
+            --angle: -45deg;
+        }
+        50% {
+            --angle: 45deg;
         }
         100% {
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            --angle: -45deg;
         }
     }
 </style>
