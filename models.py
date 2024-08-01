@@ -18,13 +18,6 @@ class users(db.Model):
     username=db.Column(db.String(30), nullable=False)
     password=db.Column(db.String(128), nullable=False)
 
-class data(db.Model):
-    userid=db.Column(db.BIGINT, ForeignKey("users.id"), nullable=False, primary_key=True)
-    date=db.Column(db.DATE, nullable=False, primary_key=True, default=current_date)
-    fat=db.Column(db.Numeric(4,2), nullable=True)
-    weight=db.Column(db.Numeric(5,2), nullable=True)
-    muscle=db.Column(db.Numeric(4,2), nullable=True)
-
 class newdata(db.Model):
     userid=db.Column(db.BIGINT, ForeignKey("users.id"), nullable=False, primary_key=True)
     date=db.Column(db.DATE, nullable=False, primary_key=True, default=current_date)
