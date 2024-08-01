@@ -1,3 +1,12 @@
+let dialogNormalShowModal = HTMLDialogElement.prototype.showModal;
+HTMLDialogElement.prototype.showModal = function () {
+
+    // add your background stuff here
+
+    dialogNormalShowModal.apply(this, arguments);
+};
+
+
 window.addEventListener("DOMContentLoaded", (e) => {
     let change_user_name_btn = document.getElementById("changeUsernameBtn");
     let change_username_dialog = document.getElementById("change-user-name-dialog");
