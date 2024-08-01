@@ -23,14 +23,15 @@
     DIE PROFIL-SEITE IST NOCH IN BEARBEITUNG UND FUNKTIONIERT NICHT KORREKT! <br><br>
 
 
-    <button id="changeLanguage">Sprache ändern</button>
-    <button id="changeProfilePic">Profilbild ändern</button>
+    <button class="not-implemented" id="changeLanguage">Sprache ändern</button>
+    <button class="not-implemented" id="changeProfilePic">Profilbild ändern</button>
     <button id="changeUsernameBtn">Benutzernamen ändern</button>
     <button id="changePasswordBtn">Passwort ändern</button>
     <button id="deleteAccountBtn" class="deleteAccountBtn">Account Löschen</button>
 
     <dialog id="change-user-name-dialog">
         <form action="" method="post">
+            <h2>Benutzernamen ändern</h2>
             <input type="hidden" value="change-username" name="action" />
             <input type="text" placeholder="Neuer Benutzername" name="new_username" /><br>
             <input type="reset" value="Abbrechen" />
@@ -39,8 +40,8 @@
     </dialog>
     <dialog id="delete-account-dialog">
         <form action="" method="post">
+            <h2>Account löschen</h2>
             <input type="hidden" name="action" value="delete-account">
-            <p>Bitte gebe dein Passwort ein, um deinen Account zu l&ouml;schen</p>
             <input type="password" name="password" id="password" placeholder="Passwort">
             <br>
             <input type="submit" value="Account löschen" class="deleteAccountBtn">
@@ -48,10 +49,13 @@
     </dialog>
     <dialog id="change-password-dialog">
         <form action="" method="post">
+            <h2>Passwort ändern</h2>
+
             <input type="hidden" name="action" value="change-password">
             <input type="password" name="current-password" id="current_passwor" placeholder="Aktuelles Passwort" autocomplete="current-password" /><br>
             <input type="password" name="new-password" placeholder="Neues Passwort" autocomplete="new-password" /><br>
             <input type="password" name="new-password-confirmation" placeholder="Neues Passwort best&auml;tigen" autocomplete="new-password" /><br>
+            <input type="reset" value="Abbrechen" />
             <input type="submit" value="Passwort &auml;ndern" />
         </form>
     </dialog>

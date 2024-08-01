@@ -569,3 +569,21 @@ input[type=color]::-webkit-color-swatch-wrapper {
   width: 100%;
   justify-self: center;
 }
+
+dialog {
+  background-color: var(--button-color);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  margin: min(20%, 10rem) auto;
+  padding: 1rem;
+  border-radius: 5px;
+  border: solid 1px;
+  border-color: var(--selected-color);
+  width: 70vw;
+  max-width: 550px;
+  text-align: center;
+}
+
+.not-implemented {
+  filter: opacity(50%);
+}

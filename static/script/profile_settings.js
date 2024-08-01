@@ -51,6 +51,10 @@ window.addEventListener("DOMContentLoaded", (e) => {
     let change_password_btn = document.getElementById("changePasswordBtn");
     let change_password_dialog = document.getElementById("change-password-dialog");
 
+    change_password_dialog.querySelector("input[type=reset]").addEventListener("click", (e) => {
+        change_password_dialog.close();
+    })
+
     change_password_btn.addEventListener("click", (e) => {
         change_password_dialog.showModal();
         change_password_dialog.querySelector("input").focus();
