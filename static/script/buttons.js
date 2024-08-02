@@ -126,8 +126,12 @@ async function loadButtons() {
     addButton.classList.add('category-button', 'add');
     addButton.innerHTML = '<img src="static/img/icons/96x96-add.png" alt="+">';
 
-    addButton.style.backgroundColor = lightenColor('#8C8C8C', -40);
-    addButton.style.borderColor = lightenColor('#8C8C8C', 0);
+    const rootStyles = getComputedStyle(document.documentElement);
+    const buttonColor = rootStyles.getPropertyValue('--selected-color').trim();
+
+
+    addButton.style.backgroundColor = lightenColor(buttonColor, -40);
+    addButton.style.borderColor = lightenColor(buttonColor, 0);
 
     addButton.id = 'btn-add';
     addButton.addEventListener('click', showAddCategoryModal);
@@ -612,6 +616,7 @@ async function saveEditedCategory() {
             const result = await response.json();
             hideAddEditCategoryModal();
             await loadButtons(); // Reload buttons after editing a category
+            await drawChart();
         } else {
             throw new Error('Fehler beim Aktualisieren der Kategorie');
         }

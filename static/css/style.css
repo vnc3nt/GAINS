@@ -45,6 +45,10 @@ body {
     background-color: var(--website-background-color);
 }
 
+.addButton {
+  background-color: var(--button-color);
+}
+
 
 .logo-pic {
   position: absolute;
