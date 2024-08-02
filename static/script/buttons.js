@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.addEventListener("click", (e) => {
             if (!e.target.classList.contains("modal")) return;
 
-            if (content.offsetTop > e.y || content.offsetTop + content.offsetHeight < e.y || content.offsetLeft - content.offsetWidth / 2 > e.x || content.offsetLeft + content.offsetWidth / 2 < e.x) {
+            if (content.offsetTop > e.y || content.offsetTop + content.offsetHeight < e.y || content.offsetLeft > e.x || content.offsetLeft + content.offsetWidth / 2 < e.x) {
                 modal.style.display = "none";
             }
         }, true);
