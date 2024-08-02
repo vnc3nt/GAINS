@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Cancel button not found');
     }
 
-    console.debug("Hello");
     for (let modal of document.getElementsByClassName("modal")) {
         let content = modal.querySelector(".modal-content");
         modal.addEventListener("click", (e) => {
@@ -76,6 +75,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, true);
     }
+
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            for (let modal of document.getElementsByClassName("modal")) {
+                modal.style.display = "none";
+            }
+        }
+    }, true);
 });
 
 
