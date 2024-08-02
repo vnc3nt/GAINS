@@ -1,24 +1,36 @@
 @charset "UTF-8";
 
 /*TODO variables not working*/
-@media (prefers-color-scheme: light) or (prefers-color-scheme: no-preference) {
+@media (prefers-color-scheme: light) {
     html:not(.dark-mode) {
       --text-color: black;
-      --website-background-color: #f1f1f1;
+      --website-background-color: #f3f3f3;
       --color-scheme: light;
-      --button-color: #d9d9d94a;
-      --selected-color: #ffffff;
+      --button-color: #ffffff94;
+      --selected-color: #cbcbcbb3;
+      --button-text-color: #ffffff;
       width: 100%;
       height: 100%;
     }
+
+    img {
+      filter: drop-shadow(0px 0px 1px black);
+    }
+
+
+    .category-button img {
+      filter: none;
+    }
+
   }
-  @media (prefers-color-scheme: dark) {
+  @media (prefers-color-scheme: dark) or (prefers-color-scheme: no-preference) {
     html:not(.light-mode) {
       --text-color: #f5f6fa;
-      --website-background-color: #121212;
+      --website-background-color: #000000;
       --color-scheme: dark;
-      --button-color: #1e1e1e4a;
-      --selected-color: #3d3d3d4a;
+      --button-color: #5050504a;
+      --selected-color: #6969694a;
+      --button-text-color: #ffffff;
       height: 100%;
     }
   }
@@ -30,7 +42,7 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
-    
+    background-color: var(--website-background-color);
 }
 
 
@@ -80,6 +92,7 @@ body {
     padding: 10px;
     border-width: 3px;
     border-radius: 10px;
+    color: var(--button-text-color);
 }
 
 .MainButtons {
@@ -418,7 +431,6 @@ details> summary {
   width: 3rem;
   border-color: var(--selected-color);
   background-color: var(--button-color);
-  filter: var(--menu-icon-invert);
 }
 .profile-pic:active {
   transform: scale(95%);
