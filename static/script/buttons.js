@@ -64,6 +64,18 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.log('Cancel button not found');
     }
+
+    console.debug("Hello");
+    for (let modal of document.getElementsByClassName("modal")) {
+        let content = modal.querySelector(".modal-content");
+        modal.addEventListener("click", (e) => {
+            if (!e.target.classList.contains("modal")) return;
+
+            if (content.offsetTop > e.y || content.offsetTop + content.offsetHeight < e.y || content.offsetLeft - content.offsetWidth / 2 > e.x || content.offsetLeft + content.offsetWidth / 2 < e.x) {
+                modal.style.display = "none";
+            }
+        }, true);
+    }
 });
 
 
