@@ -79,6 +79,7 @@ body {
   animation: profile-menu .2s ease;
   user-select: auto;
   z-index: 3;
+  background-color: var(--website-background-color);
 }
 .button-menu::-webkit-scrollbar {
   display: none;
@@ -429,7 +430,7 @@ details> summary {
   border-radius: 50%;
   width: 3rem;
   border-color: var(--selected-color);
-  background-color: var(--button-color);
+  background-color: var(--website-background-color);
 }
 .profile-pic:active {
   transform: scale(95%);
