@@ -8,12 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM fully loaded');
     const saveBtn = document.getElementById('saveCategoryBtn');
     const cancelBtn = document.getElementById('cancelCategoryBtn');
-    const addModal = document.getElementById('addCategoryModal');
+    //const addModal = document.getElementById('addCategoryModal');
 
     const cancelEditBtn = document.getElementById('cancelEditCategoryBtn');
     const saveEditedBtn = document.getElementById('saveEditCategoryBtn');
     const deleteBtn = document.getElementById('deleteCategoryBtn');
-    const editModal = document.getElementById('addEditCategoryModal');
+    //const editModal = document.getElementById('addEditCategoryModal');
     
     if (saveBtn) {
         console.log('Save button found');
@@ -29,13 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Cancel button not found');
     }
 
-    if (addModal) {
+    /*if (addModal) {
         console.log('addModal found');
         addModal.addEventListener('click', hideAddCategoryModal);
     } else {
         console.log('addModal not found');
     }
-
+*/
 
     if (cancelEditBtn) {
         console.log('Cancel button found');
@@ -44,12 +44,12 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Save button not found');
     }
 
-    if (editModal) {
+    /*if (editModal) {
         console.log('editModal found');
         editModal.addEventListener('click', hideAddEditCategoryModal);
     } else {
         console.log('editModal not found');
-    }
+    }*/
 
     if (saveEditedBtn) {
         console.log('Save button found');
@@ -574,17 +574,15 @@ function showAddEditCategoryModal() {
     document.getElementById('addEditCategoryModal').style.display = 'block';
 }
 
-function hideAddEditCategoryModal(e) {
-    let elem = e.target;
-    if (elem.className == "modal" || elem.className == "cancel") {
-        console.log('hideAddEditCategoryModal was called');
-        const modal = document.getElementById('addEditCategoryModal');
-        if (modal) {
-            console.log('Modal found, hiding it');
-            modal.style.display = 'none';
-        } else {
-            console.log('Modal not found');
-        }
+function hideAddEditCategoryModal() {
+
+    console.log('hideAddEditCategoryModal was called');
+    const modal = document.getElementById('addEditCategoryModal');
+    if (modal) {
+        console.log('Modal found, hiding it');
+        modal.style.display = 'none';
+    } else {
+        console.log('Modal not found');
     }
     
 }
