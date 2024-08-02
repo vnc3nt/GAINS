@@ -141,9 +141,8 @@ body {
 
 .scrollwindow {
     position: absolute;
-    top: calc(4rem + 50px);
+    top: calc(4rem + 35px);
     position: absolute;
-    top: calc(4rem + 50px);
     overflow-x: scroll;
     overflow-y: hidden;
     touch-action: pan-x; /*no gummy-scrolleffect on mobile when scrolling up and down*/
