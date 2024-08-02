@@ -14,7 +14,7 @@ def checkuser(username:str, password:str) -> bool:
     return userpw == hash_pw(password)
 
 def check_username(username: str) -> bool:
-    return USERNAME_REGEX.fullmatch(username) is not None
+    return USERNAME_REGEX.fullmatch(username) is None
 
 def delete_account(pw: Optional[str]):
     if not pw:

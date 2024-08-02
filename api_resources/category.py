@@ -124,14 +124,13 @@ class Categories(Resource):
         
         if user:
             user_id = user.id
-            category_to_delete = db.session.query(category).filter(category.userId == user_id, category.id == category_id).first()
+            category_to_delete = db.session.query(category).filter(category.userId == user_id, category.id == category_id).delete()
             
             if category_to_delete:
                 # Löschen aller verknüpften Daten
                 db.session.query(newdata).filter(newdata.userid == user_id, newdata.categoryId == category_id).delete()
                 
                 # Löschen der Kategorie
-                db.session.delete(category_to_delete)
                 db.session.commit()
                 
                 return {"message": "Kategorie erfolgreich gelöscht"}, 200

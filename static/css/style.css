@@ -6,8 +6,8 @@
       --text-color: black;
       --website-background-color: #f3f3f3;
       --color-scheme: light;
-      --button-color: #ffffff94;
-      --selected-color: #cbcbcbb3;
+      --button-color: #ffffffe3;
+      --selected-color: #e9e9e9;
       --button-text-color: #ffffff;
       width: 100%;
       height: 100%;
@@ -45,6 +45,10 @@ body {
     background-color: var(--website-background-color);
 }
 
+.addButton {
+  background-color: var(--button-color);
+}
+
 
 .logo-pic {
   position: absolute;
@@ -79,6 +83,7 @@ body {
   animation: profile-menu .2s ease;
   user-select: auto;
   z-index: 3;
+  background-color: var(--website-background-color);
 }
 .button-menu::-webkit-scrollbar {
   display: none;
@@ -141,9 +146,8 @@ body {
 
 .scrollwindow {
     position: absolute;
-    top: calc(4rem + 50px);
+    top: calc(4rem + 35px);
     position: absolute;
-    top: calc(4rem + 50px);
     overflow-x: scroll;
     overflow-y: hidden;
     touch-action: pan-x; /*no gummy-scrolleffect on mobile when scrolling up and down*/
@@ -430,7 +434,7 @@ details> summary {
   border-radius: 50%;
   width: 3rem;
   border-color: var(--selected-color);
-  background-color: var(--button-color);
+  background-color: var(--website-background-color);
 }
 .profile-pic:active {
   transform: scale(95%);

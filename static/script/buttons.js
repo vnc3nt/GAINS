@@ -8,12 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM fully loaded');
     const saveBtn = document.getElementById('saveCategoryBtn');
     const cancelBtn = document.getElementById('cancelCategoryBtn');
-    const addModal = document.getElementById('addCategoryModal');
+    //const addModal = document.getElementById('addCategoryModal');
 
     const cancelEditBtn = document.getElementById('cancelEditCategoryBtn');
     const saveEditedBtn = document.getElementById('saveEditCategoryBtn');
     const deleteBtn = document.getElementById('deleteCategoryBtn');
-    const editModal = document.getElementById('addEditCategoryModal');
+    //const editModal = document.getElementById('addEditCategoryModal');
     
     if (saveBtn) {
         console.log('Save button found');
@@ -29,13 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Cancel button not found');
     }
 
-    if (addModal) {
+    /*if (addModal) {
         console.log('addModal found');
         addModal.addEventListener('click', hideAddCategoryModal);
     } else {
         console.log('addModal not found');
     }
-
+*/
 
     if (cancelEditBtn) {
         console.log('Cancel button found');
@@ -44,12 +44,12 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Save button not found');
     }
 
-    if (editModal) {
+    /*if (editModal) {
         console.log('editModal found');
         editModal.addEventListener('click', hideAddEditCategoryModal);
     } else {
         console.log('editModal not found');
-    }
+    }*/
 
     if (saveEditedBtn) {
         console.log('Save button found');
@@ -64,6 +64,25 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.log('Cancel button not found');
     }
+
+    for (let modal of document.getElementsByClassName("modal")) {
+        let content = modal.querySelector(".modal-content");
+        modal.addEventListener("click", (e) => {
+            if (!e.target.classList.contains("modal")) return;
+
+            if (content.offsetTop > e.y || content.offsetTop + content.offsetHeight < e.y || content.offsetLeft > e.x || content.offsetLeft + content.offsetWidth / 2 < e.x) {
+                modal.style.display = "none";
+            }
+        }, true);
+    }
+
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            for (let modal of document.getElementsByClassName("modal")) {
+                modal.style.display = "none";
+            }
+        }
+    }, true);
 });
 
 
@@ -126,8 +145,12 @@ async function loadButtons() {
     addButton.classList.add('category-button', 'add');
     addButton.innerHTML = '<img src="static/img/icons/96x96-add.png" alt="+">';
 
-    addButton.style.backgroundColor = lightenColor('#8C8C8C', -40);
-    addButton.style.borderColor = lightenColor('#8C8C8C', 0);
+    const rootStyles = getComputedStyle(document.documentElement);
+    const buttonColor = rootStyles.getPropertyValue('--selected-color').trim();
+
+
+    addButton.style.backgroundColor = lightenColor(buttonColor, -40);
+    addButton.style.borderColor = lightenColor(buttonColor, 0);
 
     addButton.id = 'btn-add';
     addButton.addEventListener('click', showAddCategoryModal);
@@ -562,17 +585,15 @@ function showAddEditCategoryModal() {
     document.getElementById('addEditCategoryModal').style.display = 'block';
 }
 
-function hideAddEditCategoryModal(e) {
-    let elem = e.target;
-    if (elem.className == "modal" || elem.className == "cancle") {
-        console.log('hideAddEditCategoryModal was called');
-        const modal = document.getElementById('addEditCategoryModal');
-        if (modal) {
-            console.log('Modal found, hiding it');
-            modal.style.display = 'none';
-        } else {
-            console.log('Modal not found');
-        }
+function hideAddEditCategoryModal() {
+
+    console.log('hideAddEditCategoryModal was called');
+    const modal = document.getElementById('addEditCategoryModal');
+    if (modal) {
+        console.log('Modal found, hiding it');
+        modal.style.display = 'none';
+    } else {
+        console.log('Modal not found');
     }
     
 }
@@ -614,6 +635,7 @@ async function saveEditedCategory() {
             const result = await response.json();
             hideAddEditCategoryModal();
             await loadButtons(); // Reload buttons after editing a category
+            await drawChart();
         } else {
             throw new Error('Fehler beim Aktualisieren der Kategorie');
         }
