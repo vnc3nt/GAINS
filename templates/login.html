@@ -4,15 +4,27 @@
 {% endblock title %}
 {% block head_tags %}
 <style>
-    body {
-        background-image: conic-gradient(from var(--angle),#27002c, #000000, #27002c );
-        animation: animation 15s ease-in-out infinite;
-        height: 100vh;
-        background-size: 200% 200%;
-        backdrop-filter: blur(150px);
-        background-position: bottom;
-        margin: 0;
+    @media (prefers-color-scheme: dark), (prefers-color-scheme: no-preference) {
+        html:not(.light-mode) body {
+            background-image: conic-gradient(from var(--angle), #27002c, #000000, #27002c);
+        }
     }
+
+    @media (prefers-color-scheme: light) {
+        html:not(.dark-mode) body {
+            background-image: conic-gradient(from var(--angle), #27002c, #ffffff, #27002c);
+        }
+    }
+
+    body {
+                background-image: conic-gradient(from var(--angle),#27002c, #000000, #27002c );
+                animation: animation 15s ease-in-out infinite;
+                height: 100vh;
+                background-size: 200% 200%;
+                backdrop-filter: blur(150px);
+                background-position: bottom;
+                margin: 0;
+            }
 
     @property --angle {
         syntax: "<angle>";
