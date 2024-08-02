@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse
 from flask_restful.reqparse import RequestParser
 from flask import json, jsonify, session
 from sqlalchemy import func
-from models import db, users, current_date, token, data, newdata, category #newdata und category statt data implementieren
+from models import db, users, current_date, token, newdata, category #newdata und category statt data implementieren
 
 from datetime import datetime
 from decimal import Decimal

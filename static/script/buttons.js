@@ -240,9 +240,14 @@ async function left(e) {
     }
 
     let unit = category.unit;
-    let userInput = parseFloat(window.prompt(`Dein(e) ${buttonName} in ${unit}:`).replace(',', '.'));
+    let userInput = parseFloat(window.prompt(`${buttonName} in ${unit}:`).replace(',', '.'));
     if (!userInput) {
         console.debug("Keine Benutzereingabe");
+        return;
+    }
+
+    if (userInput < 0) {
+        console.debug("negative Eingabe");
         return;
     }
 

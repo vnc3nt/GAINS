@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, redirect, request, jsonify, s
 from models import db, users, token, newdata, category
 import os
 from api import app as api_app
-from login import change_username, checkuser, loginChecker, validTokenChecker, logoutUser, checkRegistration, hash_pw
+from login import change_password, change_username, check_username, checkuser, delete_account, loginChecker, validTokenChecker, logoutUser, checkRegistration, hash_pw
 import secrets
 from constants import USERID, TOKEN
 from time import time
@@ -63,7 +63,7 @@ def register():
         username_input = request.form.get("username_input")
         password_1 = request.form.get("password_input_1")
         password_2 = request.form.get("password_input_2")
-        if username_input is not None and password_1 is not None and password_2 is not None and checkRegistration(username_input, password_1, password_2):
+        if username_input is not None and password_1 is not None and password_2 is not None and checkRegistration(username_input, password_1, password_2) and check_username(username_input):
             # successful logged in
             # token cleanup
             
@@ -89,8 +89,25 @@ def edit():
 def profile():
     if request.method == "POST":
         action = request.form.get("action")
-        if action == "change_username":
+        if action == "change-username":
             result = change_username(request.form.get("new_username"))
+
+        elif action == "delete-account":
+            result = delete_account(request.form.get("password"))
+            if result is None:
+                return redirect("/login")
+
+        elif action == "change-password":
+            current_pw = request.form.get("current-password")
+            new_pw = request.form.get("new-password")
+            new_pw_confirm = request.form.get("new-password-confirmation")
+            result = change_password(current_pw, new_pw, new_pw_confirm)
+            if result is None:
+                return redirect("/login")
+        
+        else:
+            result = "Unbekannte Aktion"
+        print(f"{result=}")
     return render_template('profile.html', user_id=session.get(USERID), get_username=get_username)
 
 @app.route("/logout")

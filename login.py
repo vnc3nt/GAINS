@@ -1,8 +1,8 @@
 from typing import Optional
-from models import db,users,token,update_expire_time
+from models import category, db, newdata,users,token,update_expire_time
 import hashlib
 from flask import session, redirect
-from constants import USERID, TOKEN
+from constants import USERID, TOKEN, USERNAME_REGEX
 from functools import wraps
 from time import time
 
@@ -13,10 +13,35 @@ def checkuser(username:str, password:str) -> bool:
     userpw = user.password
     return userpw == hash_pw(password)
 
+def check_username(username: str) -> bool:
+    return USERNAME_REGEX.fullmatch(username) is not None
+
+def delete_account(pw: Optional[str]):
+    if not pw:
+        return "Blank password"
+    u = db.session.query(users).filter(users.id == session.get(USERID)).first()
+    valid_pw = checkuser(u.username, pw)
+    if valid_pw:
+        delete_user_data(u.id)
+    else:
+        return "Falsches Passwort"
+
+def delete_user_data(id: int):
+    newdata.query.filter_by(userid=id).delete()
+    token.query.filter_by(userid=id).delete()
+    category.query.filter_by(userId=id).delete()
+    users.query.filter_by(id=id).delete()
+
+    db.session.commit()
+
+
 def change_username(new_username: Optional[str]):
     print(new_username)
     if not new_username:  # stops also empty string
         return "Blank/no username"
+
+    if not check_username(new_username):
+        return "Benutzername darf keine Leerzeichen enthalten"
     
     u = db.session.query(users).filter(users.id == session.get(USERID)).first()
     u.username = new_username
@@ -26,6 +51,25 @@ def change_username(new_username: Optional[str]):
     except:
         return "Username already exists"
     return None  # no issues
+
+def change_password(cur_pw, new_pw, new_pw_confirm):
+    if not cur_pw or not new_pw or not new_pw_confirm:
+        return "Blank password"
+    
+    u = db.session.query(users).filter(users.id == session.get(USERID)).first()
+    valid_pw = checkuser(u.username, cur_pw)
+    if not valid_pw:
+        return "Falsches Passwort"
+    
+    elif new_pw != new_pw_confirm:
+        return "Neues Passwort und Best&auml;tigung sind verschieden"
+    
+    elif len(new_pw) < 8:
+        return "Passwort muss mindestens 8 Zeichen lang sein"
+
+    u.password = hash_pw(new_pw)
+    db.session.commit()
+    logoutUser(session.get(TOKEN))
 
 
 def checkRegistration(username:str, password_1:str, password_2:str) -> bool:

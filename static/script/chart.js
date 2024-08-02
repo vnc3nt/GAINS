@@ -49,7 +49,7 @@ async function drawChart() {
              if (!dataByDate[date]) {
                  dataByDate[date] = [date]; // Erste Spalte im Datenarray ist das Datum
                  categories.forEach(category => {
-                     dataByDate[date].push(0, 'point { fill-color: #ffffff; }'); // Initialisieren aller Kategorienwerte mit 0
+                     dataByDate[date].push(0, 'point { fill-color: #ffffff; stroke-color: #000000; stroke-width: 1 }'); // Initialisieren aller Kategorienwerte mit 0
                  });
              }
  
