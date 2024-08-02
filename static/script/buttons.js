@@ -564,7 +564,7 @@ function showAddEditCategoryModal() {
 
 function hideAddEditCategoryModal(e) {
     let elem = e.target;
-    if (elem.className == "modal" || elem.className == "cancle") {
+    if (elem.className == "modal" || elem.className == "cancel") {
         console.log('hideAddEditCategoryModal was called');
         const modal = document.getElementById('addEditCategoryModal');
         if (modal) {
