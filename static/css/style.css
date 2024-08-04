@@ -617,3 +617,7 @@ dialog {
 .not-implemented {
   filter: opacity(50%);
 }
+
+.regex {
+  display: none;
+}
