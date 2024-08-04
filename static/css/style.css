@@ -143,6 +143,7 @@ body {
   -webkit-backdrop-filter: blur(7px);
 }
 
+
 .google-visualization-tooltip > ul > li > span {
   color: var(--text-color) !important;
   font-size: 1rem !important;

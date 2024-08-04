@@ -22,7 +22,7 @@ function generateTooltip(date, category, value) {
     let unit = category.unit;
     let color = category.color;
 
-    return `<p>am ${date} in ${name}: <span class="bold">${value}</span>${unit}</p>`
+    return `<div class="google-visualization-tooltip">am ${date} in ${name}: <span class="bold">${value}</span>${unit}</div>`
 
 }
 
@@ -45,7 +45,7 @@ async function drawChart() {
 
 
         categories.forEach(category => {
-            databaseData[0].push(category.name, { type: 'string', role: 'style' }); // Hinzufügen der Kategorienamen als Überschriften
+            databaseData[0].push(category.name, { type: 'string', role: 'style' }, { type: 'string', role: 'tooltip', 'p': { html: true } }); // Hinzufügen der Kategorienamen als Überschriften
             categoryStyles[category.name] = { color: category.color }; // Speichern der Farben für jede Kategorie
         });
 
@@ -109,12 +109,16 @@ async function drawChart() {
             nextDay = dateToString(addDays(stringToDate(nextDay), 1));
         }
         console.table(databaseData);
-
-
-
-
         // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
         ersetzeNullenMitInterpoliertenWerten(databaseData);
+
+        // Create tooltips
+        for (let i = 1; i < databaseData.length; i++) {
+            let row = databaseData[i];
+            for (let j = 0; j < row.length - 1; j += COLUMN_PER_VALUE) {
+                row[j + 3] = generateTooltip(row[0], categories[j / COLUMN_PER_VALUE], row[j + 1]);
+            }
+        }
 
         let data = google.visualization.arrayToDataTable(databaseData);
 
@@ -136,13 +140,10 @@ async function drawChart() {
             chartArea: { 'width': '99%', 'height': '90%' },
             hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25 } },
             vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
-            tooltip: { isHtml: true }
+            tooltip: { isHtml: true, trigger: "selection" }
         };
 
-
         let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-
 
         chart.draw(data, options);
 
