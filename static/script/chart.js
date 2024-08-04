@@ -132,7 +132,7 @@ async function drawChart() {
             curveType: 'function',
             legend: 'none',
             width: Math.max(window.innerWidth / 7 * daysTillToday(firstDate) / viewoption[selectedValue], window.innerWidth * 0.95),
-            height: window.innerHeight - 140 - convertRemToPixels(4) - 35,
+            height: window.innerHeight - convertRemToPixels(16),
             colors: categories.map(style => style.color),
             lineWidth: 3,
             pointSize: 5 / viewoption[selectedValue],
