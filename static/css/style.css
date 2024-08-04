@@ -438,7 +438,7 @@ details> summary {
   border-radius: 50%;
   width: 3rem;
   border-color: var(--selected-color);
-  background-color: var(--website-background-color);
+  background-color: var(--button-color);
 }
 .profile-pic:active {
   transform: scale(95%);
