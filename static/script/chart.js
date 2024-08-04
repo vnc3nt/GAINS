@@ -8,9 +8,9 @@ google.charts.load('current', { 'packages': ['corechart'] });
 google.charts.setOnLoadCallback(drawChart);
 
 
-window.onload = function (e) {
-    document.querySelectorAll("input[name='view-options']").forEach(radiobutton=>{
-      radiobutton.addEventListener("change", e=>drawChart());
+window.onload = function(e) {
+    document.querySelectorAll("input[name='view-options']").forEach(radiobutton => {
+        radiobutton.addEventListener("change", e => drawChart());
     });
 };
 
@@ -30,42 +30,40 @@ async function drawChart() {
         let response = await fetch('/api/categories');
         let categories = await response.json();
         categories.sort((a, b) => a.id - b.id); // Sortieren der Kategorien nach ID
-    
+
 
         categories.forEach(category => {
-            databaseData[0].push(category.name, {type:'string', role:'style'}); // Hinzufügen der Kategorienamen als Überschriften
-            categoryStyles[category.name] = { color: category.color}; // Speichern der Farben für jede Kategorie
+            databaseData[0].push(category.name, { type: 'string', role: 'style' }); // Hinzufügen der Kategorienamen als Überschriften
+            categoryStyles[category.name] = { color: category.color }; // Speichern der Farben für jede Kategorie
         });
 
 
-               
-
-         // Datenpunkte zu den entsprechenden Datumseinträgen hinzufügen
-         let dataByDate = {}; // Objekt zur Sammlung der Daten pro Datum
-         let filled = {};
-         userData.data.forEach(element => {
-            
-             let date = element.date;
-             if (!dataByDate[date]) {
-                 dataByDate[date] = [date]; // Erste Spalte im Datenarray ist das Datum
-                 categories.forEach(category => {
-                     dataByDate[date].push(0, 'point { fill-color: #ffffff; stroke-color: #000000; stroke-width: 1 }'); // Initialisieren aller Kategorienwerte mit 0
-                 });
-             }
- 
-             // Werte für jede Kategorie zum entsprechenden Datum hinzufügen
-             categories.forEach(category => {
-                 dataByDate[date][2 * categories.indexOf(category) + 1] += element[category.name] ?? 0;
-             });
-         });
-
-         // Datenzeilen aus dem dataByDate Objekt in das databaseData Array einfügen
-         Object.values(dataByDate).forEach(row => {
-             databaseData.push(row);
-         });
 
 
-         // Finden des ersten gültigen Datums in den Daten
+        // Datenpunkte zu den entsprechenden Datumseinträgen hinzufügen
+        let dataByDate = {}; // Objekt zur Sammlung der Daten pro Datum
+        userData.data.forEach(element => {
+
+            let date = element.date;
+            if (!dataByDate[date]) {
+                dataByDate[date] = [date]; // Erste Spalte im Datenarray ist das Datum
+                categories.forEach(category => {
+                    dataByDate[date].push(0, 'point { fill-color: #ffffff; stroke-color: #000000; stroke-width: 1 }'); // Initialisieren aller Kategorienwerte mit 0
+                });
+            }
+
+            // Werte für jede Kategorie zum entsprechenden Datum hinzufügen
+            categories.forEach(category => {
+                dataByDate[date][2 * categories.indexOf(category) + 1] += element[category.name] ?? 0;
+            });
+        });
+        // Datenzeilen aus dem dataByDate Objekt in das databaseData Array einfügen
+        Object.values(dataByDate).forEach(row => {
+            databaseData.push(row);
+        });
+
+
+        // Finden des ersten gültigen Datums in den Daten
         firstDate = databaseData[1][0];
 
         console.table(databaseData);
@@ -77,7 +75,7 @@ async function drawChart() {
             console.log(row[0] !== nextDay && daysTillToday(nextDay) > 0);
             while (row[0] !== nextDay && daysTillToday(nextDay) > 0) {
                 let t = [nextDay]
-                for (let j = 0; j < row.length - 1; j+=2) {
+                for (let j = 0; j < row.length - 1; j += 2) {
                     t.push(0, `point { fill-color: ${lightenColor(categories[j / 2].color, +40)}; }`);
                 }
                 databaseData.splice(i, 0, t);
@@ -88,7 +86,7 @@ async function drawChart() {
         }
         console.table(databaseData);
 
-        
+
 
 
         // Aufruf der Funktion, um Nullen mit interpolierten Werten zu ersetzen
@@ -96,31 +94,31 @@ async function drawChart() {
 
         let data = google.visualization.arrayToDataTable(databaseData);
 
-         // Höchsten Wert für die Y-Achse berechnen
-         let maxValue = Math.max(...Object.values(userData.maxValue));
-         document.querySelector(".max").textContent = Math.round((maxValue + 5) / 5) * 5;
+        // Höchsten Wert für die Y-Achse berechnen
+        let maxValue = Math.max(...Object.values(userData.maxValue));
+        document.querySelector(".max").textContent = Math.round((maxValue + 5) / 5) * 5;
         let selectedValue = document.querySelector("input[type=radio][name='view-options']:checked").value;
 
-        
+
         let options = {
             curveType: 'function',
             legend: 'none',
             width: Math.max(window.innerWidth / 7 * daysTillToday(firstDate) / viewoption[selectedValue], window.innerWidth * 0.95),
-            height: window.innerHeight - 140 - convertRemToPixels(4) -35,
+            height: window.innerHeight - 140 - convertRemToPixels(4) - 35,
             colors: categories.map(style => style.color),
             lineWidth: 3,
             pointSize: 5 / viewoption[selectedValue],
             backgroundColor: { fill: 'transparent' },
             chartArea: { 'width': '99%', 'height': '90%' },
-            hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25} },
+            hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25 } },
             vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
             tooltip: { isHtml: true }
         };
-        
+
 
         let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
-        
+
 
         chart.draw(data, options);
 
