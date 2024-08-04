@@ -143,11 +143,11 @@ body {
   border-radius: 10px !important;
   border-color: var(--selected-color)!important;
   box-shadow: none !important;
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
-  padding: .5rem;
-  min-width: 7rem;
-  z-index: 1;
+  backdrop-filter: blur(7px) !important;
+  -webkit-backdrop-filter: blur(7px) !important;
+  padding: .5rem !important;
+  min-width: 7rem !important;
+  z-index: 1 !important;
 }
 
 
