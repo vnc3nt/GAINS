@@ -22,6 +22,10 @@
       filter: none;
     }
 
+    .logo-pic {
+        filter: brightness(0.1) opacity(0.35);
+    }
+
   }
   @media (prefers-color-scheme: dark) or (prefers-color-scheme: no-preference) {
     html:not(.light-mode) {
