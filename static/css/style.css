@@ -145,12 +145,39 @@ body {
   box-shadow: none !important;
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
+  padding: .5rem;
+  min-width: 7rem;
+  z-index: 1;
 }
+
 
 .google-visualization-tooltip > ul > li > span {
   color: var(--text-color) !important;
   font-size: 1rem !important;
 }
+
+.tooltipName {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.tooltipDate {
+  opacity: 80%;
+  font-size: .8rem;
+}
+
+.tooltipData {
+  display: flex;
+  justify-content: right;
+  font-size: 1rem;
+}
+
+.tooltipValue {
+  font-weight: bold;
+  display: inline;
+  justify-content: end;
+}
+
 
 .scrollwindow {
     position: absolute;
