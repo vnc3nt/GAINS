@@ -52,14 +52,14 @@ body {
 
 .logo-pic {
   position: absolute;
-  top: -10px;
-  left: -10px;
+  top: -.72rem;
+  left: -.72rem;
   width: 3.05rem;
   padding: 1rem;
 }
 .logo-pic-centered {
   position: absolute;
-  top: -10px;
+  top: -.72rem;
   left: calc(50% - 3rem);
   width: 6rem;
   padding-top: 2rem;
