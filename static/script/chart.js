@@ -77,7 +77,7 @@ async function drawChart() {
             while (row[0] !== nextDay && daysTillToday(nextDay) > 0) {
                 let t = [nextDay]
                 for (let j = 0; j < row.length - 1; j += 2) {
-                    t.push(0, "");
+                    t.push(0, "point { fill-color: " + lightenColor(categories[j / 2].color, +40) + "; }");
                 }
                 databaseData.splice(i, 0, t);
                 i++;
@@ -161,38 +161,64 @@ function addDays(date, days) {
 }
 
 function ersetzeNullenMitInterpoliertenWerten(databaseData) {
-    let spaltenAnzahl = databaseData[0].length; // Anzahl der Spalten dynamisch festlegen
+    console.log("db", databaseData);
+    let columnCount = databaseData[0].length; // Anzahl der Spalten dynamisch festlegen
+    let categoryCount = (columnCount - 1) / 2;
 
-    let vorherigeWerte = new Array(spaltenAnzahl).fill(0);
-    let zukünftigeWerte = new Array(spaltenAnzahl).fill(0);
-    let nullStreckenStart = new Array(spaltenAnzahl).fill(0);
+    // remove end of graph (no interpolation) by setting them to NaN
+    let foundCategories = new Array(categoryCount).fill(0);
+    for (let i = databaseData.length - 1; i >= 1; i--) {
+        let row = databaseData[i];
+        for (let j = 0; j < categoryCount; j++) {
+            if (foundCategories[j] === 1) continue;
+
+            let categoryIndex = 2*j+1;
+            if (row[categoryIndex] !== 0) {
+                foundCategories[j] = 1;
+            }
+            else {
+                row[categoryIndex] = NaN;
+            }
+
+        }
+
+        if (foundCategories.reduce((a, b) => a+b) === categoryCount) {
+            break;
+        }
+    }
+
+
+    // interpolierte werte
+    let previousValues = new Array(columnCount).fill(0);
+    let futureValues = new Array(columnCount).fill(0);
+    let nullStreckenStart = new Array(columnCount).fill(0);
 
     for (let i = 1; i < databaseData.length; i++) {
-        for (let j = 1; j < spaltenAnzahl; j++) {
+        for (let j = 1; j < columnCount; j++) {
             if (databaseData[i][j] === 0) {
                 if (nullStreckenStart[j] === 0) {
-                    vorherigeWerte[j] = Number(databaseData[i - 1][j]);
+                    previousValues[j] = Number(databaseData[i - 1][j]);
                     nullStreckenStart[j] = i;
                 }
             } else {
                 if (nullStreckenStart[j] > 0) {
-                    zukünftigeWerte[j] = Number(databaseData[i][j]);
-                    let schrittweite = (zukünftigeWerte[j] - vorherigeWerte[j]) / (i - nullStreckenStart[j] + 1);
+                    futureValues[j] = Number(databaseData[i][j]);
+                    let schrittweite = (futureValues[j] - previousValues[j]) / (i - nullStreckenStart[j] + 1);
                     for (let k = nullStreckenStart[j]; k < i; k++) {
-                        databaseData[k][j] = Number((vorherigeWerte[j] + schrittweite * (k - nullStreckenStart[j] + 1)).toFixed(2));
+                        databaseData[k][j] = Number((previousValues[j] + schrittweite * (k - nullStreckenStart[j] + 1)).toFixed(2));
                     }
                     nullStreckenStart[j] = 0;
                 }
-                vorherigeWerte[j] = Number(databaseData[i][j]);
+                previousValues[j] = Number(databaseData[i][j]);
             }
         }
     }
 
     // Behandlung für den Fall, dass das Array mit Nullen endet
-    for (let j = 1; j < spaltenAnzahl; j++) {
+    for (let j = 1; j < columnCount; j++) {
         if (nullStreckenStart[j] > 0) {
             for (let k = nullStreckenStart[j]; k < databaseData.length; k++) {
-                databaseData[k][j] = Number(vorherigeWerte[j].toFixed(2)); // Verwenden Sie den letzten Nicht-Null-Wert
+                databaseData[k][j] = Number(previousValues[j].toFixed(2)); // Verwenden Sie den letzten Nicht-Null-Wert
             }
         }
     }
