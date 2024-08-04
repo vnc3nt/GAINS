@@ -66,7 +66,8 @@ async function drawChart() {
         // Finden des ersten gültigen Datums in den Daten
         firstDate = databaseData[1][0];
 
-        console.table(databaseData);
+        console.log(databaseData);
+        console.log(dataByDate);
         // let nextDay = databaseData[1]?.slice(0, 1)[0] ?? firstDate;
         let nextDay = undefined;
         for (let i = 1; i < databaseData.length; i++) {
@@ -76,11 +77,18 @@ async function drawChart() {
             while (row[0] !== nextDay && daysTillToday(nextDay) > 0) {
                 let t = [nextDay]
                 for (let j = 0; j < row.length - 1; j += 2) {
-                    t.push(0, `point { fill-color: ${lightenColor(categories[j / 2].color, +40)}; }`);
+                    t.push(0, "");
                 }
                 databaseData.splice(i, 0, t);
                 i++;
                 nextDay = dateToString(addDays(stringToDate(nextDay), 1));
+            }
+
+            // individual dot color in chart
+            for (let j = 0; j < row.length - 1; j+=2) {
+                if (row[j + 1] === 0) {
+                    row[j + 2] = "point { fill-color: " + lightenColor(categories[j / 2].color, +40) + "; }";
+                }
             }
             nextDay = dateToString(addDays(stringToDate(nextDay), 1));
         }
