@@ -22,6 +22,14 @@
       filter: none;
     }
 
+    .logo-pic{
+        filter: brightness(0.1) opacity(0.35);
+    }
+
+    .logo-pic-centered {
+      filter: brightness(1) ;
+    }
+
   }
   @media (prefers-color-scheme: dark) or (prefers-color-scheme: no-preference) {
     html:not(.light-mode) {
@@ -52,14 +60,14 @@ body {
 
 .logo-pic {
   position: absolute;
-  top: -10px;
-  left: -10px;
-  width: 3.05rem;
+  top: -.72rem;
+  left: -.72rem;
+  width: 3.14rem;
   padding: 1rem;
 }
 .logo-pic-centered {
   position: absolute;
-  top: -10px;
+  top: -.72rem;
   left: calc(50% - 3rem);
   width: 6rem;
   padding-top: 2rem;
@@ -434,7 +442,7 @@ details> summary {
   border-radius: 50%;
   width: 3rem;
   border-color: var(--selected-color);
-  background-color: var(--website-background-color);
+  background-color: var(--button-color);
 }
 .profile-pic:active {
   transform: scale(95%);

@@ -14,6 +14,10 @@
         html:not(.dark-mode) body {
             background-image: conic-gradient(from var(--angle), #660074, #ffffff, #660074);
         }
+
+        .logo-pic {
+            filter: brightness(0.1) opacity(0.35);
+        }
     }
 
     body {
@@ -43,16 +47,18 @@
             --angle: -45deg;
         }
     }
+
+    
 </style>
 {% endblock head_tags %}
 {% block content %}
 <img class="logo-pic-centered" src="{{ url_for('static', filename='img/logo/logo.png') }}" alt="GAINS">
 <div class="login">
     <form action="" method="post">
-        <input type="text" name="username_input" placeholder="Benutzername"><br><br>
+        <img class="regex" id="usernameCheck" src="{{ url_for('static', filename='img/icons/check.png') }}"><img class="regex" id="usernameX" src="{{ url_for('static', filename='img/icons/x.png') }}"></div> <input type="text" name="username_input" placeholder="Benutzername"><br><br>
         <!--TODO add email-->
-        <input type="password" name="password_input_1" placeholder="Passwort"><br>
-        <input type="password" name="password_input_2" placeholder="Passwort"><br>
+        <img class="regex" id="firstPWCheck" src="{{ url_for('static', filename='img/icons/check.png') }}"><img class="regex" id="firstPWX" src="{{ url_for('static', filename='img/icons/x.png') }}"></div> <input type="password" name="password_input_1" placeholder="Passwort"><br>
+        <img class="regex" id="secondPWCheck" src="{{ url_for('static', filename='img/icons/check.png') }}"><img class="regex" id="secondPWX" src="{{ url_for('static', filename='img/icons/x.png') }}"></div> <input type="password" name="password_input_2" placeholder="Passwort"><br>
         <button name="register_btn">Registrieren</button>
     </form>
     <p>
