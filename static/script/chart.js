@@ -141,7 +141,7 @@ async function drawChart() {
             chartArea: { 'width': '99%', 'height': '90%' },
             hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25 } },
             vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
-            tooltip: { isHtml: true, trigger: "selection" }
+            tooltip: { isHtml: true } /*, trigger: "selection" entfernt da so besser auf mobile*/
         };
 
         let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
