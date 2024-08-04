@@ -3,6 +3,8 @@ const viewoption = {
     "month": 4.5,
     "year": 55
 }
+
+const COLUMN_PER_VALUE = 3
 //TODO left/right arrows for scrolling left and right on desktop like pictures on amazon product
 google.charts.load('current', { 'packages': ['corechart'] });
 google.charts.setOnLoadCallback(drawChart);
@@ -13,6 +15,16 @@ window.onload = function(e) {
         radiobutton.addEventListener("change", e => drawChart());
     });
 };
+
+
+function generateTooltip(date, category, value) {
+    let name = category.name
+    let unit = category.unit;
+    let color = category.color;
+
+    return `<p>am ${date} in ${name}: <span class="bold">${value}</span>${unit}</p>`
+
+}
 
 async function drawChart() {
     try {
@@ -48,13 +60,17 @@ async function drawChart() {
             if (!dataByDate[date]) {
                 dataByDate[date] = [date]; // Erste Spalte im Datenarray ist das Datum
                 categories.forEach(category => {
-                    dataByDate[date].push(0, 'point { fill-color: #ffffff; stroke-color: #000000; stroke-width: 1 }'); // Initialisieren aller Kategorienwerte mit 0
+                    dataByDate[date].push(
+                        0,
+                        'point { fill-color: #ffffff; stroke-color: #000000; stroke-width: 1 }',
+                        "hoho"
+                    ); // Initialisieren aller Kategorienwerte mit 0
                 });
             }
 
             // Werte für jede Kategorie zum entsprechenden Datum hinzufügen
             categories.forEach(category => {
-                dataByDate[date][2 * categories.indexOf(category) + 1] += element[category.name] ?? 0;
+                dataByDate[date][COLUMN_PER_VALUE * categories.indexOf(category) + 1] += element[category.name] ?? 0;
             });
         });
         // Datenzeilen aus dem dataByDate Objekt in das databaseData Array einfügen
@@ -77,7 +93,7 @@ async function drawChart() {
             while (row[0] !== nextDay && daysTillToday(nextDay) > 0) {
                 let t = [nextDay]
                 for (let j = 0; j < row.length - 1; j += 2) {
-                    t.push(0, "point { fill-color: " + lightenColor(categories[j / 2].color, +40) + "; }");
+                    t.push(0, "point { fill-color: " + lightenColor(categories[j / COLUMN_PER_VALUE].color, +40) + "; }", "abcd")  // interpoliert
                 }
                 databaseData.splice(i, 0, t);
                 i++;
@@ -85,9 +101,9 @@ async function drawChart() {
             }
 
             // individual dot color in chart
-            for (let j = 0; j < row.length - 1; j+=2) {
+            for (let j = 0; j < row.length - 1; j += COLUMN_PER_VALUE) {
                 if (row[j + 1] === 0) {
-                    row[j + 2] = "point { fill-color: " + lightenColor(categories[j / 2].color, +40) + "; }";
+                    row[j + 2] = "point { fill-color: " + lightenColor(categories[j / COLUMN_PER_VALUE].color, +40) + "; }";
                 }
             }
             nextDay = dateToString(addDays(stringToDate(nextDay), 1));
@@ -163,7 +179,7 @@ function addDays(date, days) {
 function ersetzeNullenMitInterpoliertenWerten(databaseData) {
     console.log("db", databaseData);
     let columnCount = databaseData[0].length; // Anzahl der Spalten dynamisch festlegen
-    let categoryCount = (columnCount - 1) / 2;
+    let categoryCount = (columnCount - 1) / COLUMN_PER_VALUE;
 
     // remove end of graph (no interpolation) by setting them to NaN
     let foundCategories = new Array(categoryCount).fill(0);
@@ -172,7 +188,7 @@ function ersetzeNullenMitInterpoliertenWerten(databaseData) {
         for (let j = 0; j < categoryCount; j++) {
             if (foundCategories[j] === 1) continue;
 
-            let categoryIndex = 2*j+1;
+            let categoryIndex = COLUMN_PER_VALUE * j + 1;
             if (row[categoryIndex] !== 0) {
                 foundCategories[j] = 1;
             }
@@ -182,7 +198,7 @@ function ersetzeNullenMitInterpoliertenWerten(databaseData) {
 
         }
 
-        if (foundCategories.reduce((a, b) => a+b) === categoryCount) {
+        if (foundCategories.reduce((a, b) => a + b) === categoryCount) {
             break;
         }
     }
