@@ -55,10 +55,14 @@
 <img class="logo-pic-centered" src="{{ url_for('static', filename='img/logo/logo.png') }}" alt="GAINS">
 <div class="login">
     <form action="" method="post">
-        <img class="regex" id="usernameCheck" src="{{ url_for('static', filename='img/icons/check.png') }}"><img class="regex" id="usernameX" src="{{ url_for('static', filename='img/icons/x.png') }}"> <input type="text" name="username_input" placeholder="Benutzername"><br><br>
+        <input type="text" id="username_input" name="username_input" placeholder="Benutzername"><br>
+        <img class="regex" id="usernameCheck"><div class="regexFeedback" id="usernameAvailable">Benutzername ist verfügbar</div>
+        <img class="regex" id="usernameX"><div class="regexFeedback" id="usernameNotAvailable">Benutzername ist bereits vergeben</div><br><br>
         <!--TODO add email-->
-        <img class="regex" id="firstPWCheck" src="{{ url_for('static', filename='img/icons/check.png') }}"><img class="regex" id="firstPWX" src="{{ url_for('static', filename='img/icons/x.png') }}"> <input type="password" name="password_input_1" placeholder="Passwort"><br>
-        <img class="regex" id="secondPWCheck" src="{{ url_for('static', filename='img/icons/check.png') }}"><img class="regex" id="secondPWX" src="{{ url_for('static', filename='img/icons/x.png') }}"> <input type="password" name="password_input_2" placeholder="Passwort"><br>
+        <input type="password" id="password_input_1" name="password_input_1" placeholder="Passwort"><br>
+        <input type="password" id="password_input_2" name="password_input_2" placeholder="Passwort"><br>
+        <img class="regex" id="firstPWCheck"><img class="regex" id="firstPWX"><div class="regexFeedback" id="passwordMin8">Passwort muss mindestens 8 Zeichen lang sein</div><br>
+        <img class="regex" id="secondPWCheck"><img class="regex" id="secondPWX"><div class="regexFeedback" id="passwordNotTheSame">Passwort muss identisch sein</div><br><br>
         <button name="register_btn">Registrieren</button>
     </form>
     <p>

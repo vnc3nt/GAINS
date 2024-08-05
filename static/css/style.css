@@ -143,8 +143,12 @@ body {
   border-radius: 10px !important;
   border-color: var(--selected-color)!important;
   box-shadow: none !important;
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(7px) !important;
+  -webkit-backdrop-filter: blur(7px) !important;
+  padding: .5rem !important;
+  padding-bottom: 0rem !important;
+  min-width: 7rem !important;
+  z-index: 1 !important;
 }
 
 
@@ -152,6 +156,29 @@ body {
   color: var(--text-color) !important;
   font-size: 1rem !important;
 }
+
+.tooltipName {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.tooltipDate {
+  opacity: 80%;
+  font-size: .8rem;
+}
+
+.tooltipData {
+  display: flex;
+  justify-content: right;
+  font-size: 1rem;
+}
+
+.tooltipValue {
+  font-weight: bold;
+  display: inline;
+  justify-content: end;
+}
+
 
 .scrollwindow {
     position: absolute;
@@ -215,6 +242,8 @@ body {
     padding-top: 150px;
     text-align: center;
 }
+
+
 
 input {
     padding: 10px;
@@ -625,4 +654,34 @@ dialog {
 
 .regex {
   display: none;
+  width: 1rem;
+  height: 1rem;
+  background-blend-mode: multiply;
+  mask-size: cover;
+  -webkit-mask-size: cover;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  position: relative;
+  top: 0.1rem;
+}
+
+.regex#usernameCheck,#firstPWCheck,#secondPWCheck {
+  background-color: green;
+  mask-image: url('../img/icons/check.png');
+  -webkit-mask-image: url('../img/icons/check.png');
+}
+
+.regex#usernameX,#firstPWX,#secondPWX {
+  background-color: red;
+  mask-image: url('../img/icons/x.png');
+  -webkit-mask-image: url('../img/icons/x.png');
+}
+
+.regexFeedback {
+  display: none;
+  margin-left: 0.5rem;
+}
+
+#passwordMin8 {
+  display: inline;
 }

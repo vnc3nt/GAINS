@@ -22,7 +22,7 @@ function generateTooltip(date, category, value) {
     let unit = category.unit;
     let color = category.color;
 
-    return `<div class="google-visualization-tooltip">am ${date} in ${name}: <span class="bold">${value}</span>${unit}</div>`
+    return `<div class="tooltipName">${name}</div> <div class="tooltipDate">${date}</div> <div class="tooltipData"><div class="tooltipValue">${value}</div>${unit}</div>`
 
 }
 
@@ -92,7 +92,8 @@ async function drawChart() {
             console.log(row[0] !== nextDay && daysTillToday(nextDay) > 0);
             while (row[0] !== nextDay && daysTillToday(nextDay) > 0) {
                 let t = [nextDay]
-                for (let j = 0; j < row.length - 1; j += 2) {
+                
+                for (let j = 0; j < row.length - 1; j += COLUMN_PER_VALUE) {
                     t.push(0, "point { fill-color: " + lightenColor(categories[j / COLUMN_PER_VALUE].color, +40) + "; }", "abcd")  // interpoliert
                 }
                 databaseData.splice(i, 0, t);
@@ -140,7 +141,7 @@ async function drawChart() {
             chartArea: { 'width': '99%', 'height': '90%' },
             hAxis: { viewWindow: { min: .25, max: daysTillToday(firstDate) - 0.25 } },
             vAxis: { viewWindow: { min: 0, max: maxValue + 10 } },
-            tooltip: { isHtml: true, trigger: "selection" }
+            tooltip: { isHtml: true } /*, trigger: "selection" entfernt da so besser auf mobile*/
         };
 
         let chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
