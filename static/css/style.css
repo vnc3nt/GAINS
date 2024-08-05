@@ -169,6 +169,10 @@ body {
     scroll-padding: 20px;*/
 }
 
+.scrollwindow:has(#curve_chart) {
+    overscroll-behavior: contain;
+}
+
 .scale {
   position: absolute;
   top: calc(4rem + 50px);
