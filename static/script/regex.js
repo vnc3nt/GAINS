@@ -153,6 +153,7 @@ async function checkUsernameExists(username) {
       value: username
     })
   });
+  
 
   const data = await response.json();
   return data.exists;
