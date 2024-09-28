@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, request, jsonify, session
+from flask import Flask, render_template, url_for, redirect, request, jsonify, session, send_file
 from models import db, users, token, newdata, category
 import os
 from api import app as api_app
@@ -128,6 +128,18 @@ def count_entries():  # sourcery skip: use-named-expression
     else:
         return jsonify(error="User not found"), 404
     
+
+@app.route('/impressum')
+def impressum():
+    return render_template('impressum.html')
+
+@app.route('/dpa')
+def dpa():
+    try:
+        return send_file('static/docs/dpa.pdf', 
+                         as_attachment=True)
+    except Exception as e:
+        return str(e)
 
 
 def get_username() -> str:
