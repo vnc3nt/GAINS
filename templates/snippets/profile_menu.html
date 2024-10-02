@@ -15,16 +15,7 @@
                 </ul>
             </li>
         </a>
-        <a href="{{ url_for('logout') }}">
-            <li>
-                <ul>
-                    <img class="icon" src="{{url_for('static', filename='img/icons/96x96-logout.png')}}" alt="logout">
-                </ul>
-                <ul>
-                    <div class="logout">Abmelden</div>
-                </ul>
-            </li>
-        </a>
+        
         <div class="legal">
             <a href="{{ url_for('impressum') }}">
                 <li>
@@ -39,5 +30,16 @@
                 </li>
             </a>
         </div>
+
+        <a href="{{ url_for('logout') }}">
+            <li>
+                <ul>
+                    <img class="icon" src="{{url_for('static', filename='img/icons/96x96-logout.png')}}" alt="logout">
+                </ul>
+                <ul>
+                    <div class="logout">Abmelden</div>
+                </ul>
+            </li>
+        </a>
     </ul>
 </menu>
