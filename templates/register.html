@@ -64,7 +64,7 @@
         <img class="regex" id="firstPWCheck"><img class="regex" id="firstPWX"><div class="regexFeedback" id="passwordMin8">Passwort muss mindestens 8 Zeichen lang sein</div><br>
         <img class="regex" id="secondPWCheck"><img class="regex" id="secondPWX"><div class="regexFeedback" id="passwordNotTheSame">Passwort muss identisch sein</div><br><br>
         <input type="checkbox">Ich habe die Datenschutzerklärung und AGB gelesen und stimme Ihnen zu. <!--TODO muss auch was machen und abfragen ob die checkbox angeklickt wurde bevor man sich registrieren kann-->
-        <button name="register_btn">Registrieren</button>
+        <br><button name="register_btn">Registrieren</button>
     </form>
     <p>
         <a href="/login">Abbrechen</a>
@@ -74,13 +74,13 @@
 <div class="legal">
     <a href="{{ url_for('impressum') }}">
         <li>
-            <ul class="first-ul-width">•</ul>
+            <ul class="first-ul-width"></ul>
             <ul>Impressum</ul>
         </li>
     </a>
     <a href="{{ url_for('dpa') }}" download>
         <li>
-            <ul class="first-ul-width">•</ul>
+            <ul class="first-ul-width"></ul>
             <ul>Datenschutzerklärung</ul>
         </li>
     </a>
