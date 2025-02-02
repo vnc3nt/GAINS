@@ -693,4 +693,6 @@ dialog {
 .legal {
   bottom: 30px;
   text-align: center;
+  
+  list-style: none;
 }
