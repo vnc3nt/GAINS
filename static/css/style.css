@@ -702,3 +702,10 @@ dialog {
   list-style: none;
   filter: invert(.3);
 }
+
+.impressum-content {
+  position: absolute;
+  top: 180px;
+  width: 100vw;
+  display: grid;
+}
