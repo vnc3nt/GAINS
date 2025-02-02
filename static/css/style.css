@@ -695,7 +695,9 @@ dialog {
   bottom: 30px;
   left: 0;
   right: 0;
+  flex-direction: column;
   text-align: center;
   justify-content: center;
+  align-items: center;
   list-style: none;
 }
