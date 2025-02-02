@@ -689,3 +689,8 @@ dialog {
 #passwordMin8 {
   display: inline;
 }
+
+.legal {
+  bottom: 30px;
+  text-align: center;
+}
