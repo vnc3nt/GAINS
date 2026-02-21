@@ -47,8 +47,7 @@ def login():
         if username is not None and password is not None and checkuser(username, password):
             # successful logged in
             # token cleanup
-            for everySession in db.session.query(token).filter(token.expireTime < time()):
-                db.session.delete(everySession)
+            db.session.query(token).filter(token.expireTime < time()).delete()
             session[USERID] = db.session.query(users).filter(users.username==username).first().id #save in session[] currentUserId
             newToken = token(userid=session[USERID], token=secrets.token_urlsafe(96)) # 96 always produces a 128-long string, but idk why
             session[TOKEN] = newToken.token
