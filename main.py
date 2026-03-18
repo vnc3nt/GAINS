@@ -24,7 +24,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{}.lwanriaqqzgqslcendim:{}
 )
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "connect_args": {
-        "options": "-c search_path=gains"
+        "options": "-csearch_path=gains,public"
     }
 }
 app.config.update(
