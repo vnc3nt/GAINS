@@ -15,13 +15,19 @@ with open(".env", "r") as f:
             os.environ[attr] = val.rstrip("\n")
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{}.lwanriaqqzgqslcendim:{}@{}:{}/{}".format(
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{}.{}:{}@{}:{}/{}".format(
     os.environ.get("uname"),
+    os.environ.get("db"),
     os.environ.get("password"),
     os.environ.get("host"),
     os.environ.get("port"),
     os.environ.get("scheme")
 )
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "connect_args": {
+        "options": "-csearch_path=gains,public"
+    }
+}
 app.config.update(
     BUNDLE_ERRORS = True,
     SECRET_KEY = os.urandom(40),
@@ -47,8 +53,7 @@ def login():
         if username is not None and password is not None and checkuser(username, password):
             # successful logged in
             # token cleanup
-            for everySession in db.session.query(token).filter(token.expireTime < time()):
-                db.session.delete(everySession)
+            db.session.query(token).filter(token.expireTime < time()).delete()
             session[USERID] = db.session.query(users).filter(users.username==username).first().id #save in session[] currentUserId
             newToken = token(userid=session[USERID], token=secrets.token_urlsafe(96)) # 96 always produces a 128-long string, but idk why
             session[TOKEN] = newToken.token
